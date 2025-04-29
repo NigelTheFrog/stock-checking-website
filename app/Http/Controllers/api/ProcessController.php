@@ -98,8 +98,10 @@ class ProcessController extends Controller
                 'dbtcsodet.color' => $color,
                 'dbtcsodet.remark' => $request->remark,
                 'dbtcsodet2.qty' => $request->qtycso,
+                'dbtcsodet2.history' => $request->qtycso,
+                'dbtcsodet2.inputs' => $request->qtycso,
             ];
-
+            // return 'a';
             $simpanItem = DB::table('dbtcsodet')
                 ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
                 ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
@@ -516,6 +518,9 @@ class ProcessController extends Controller
                 'dbtcsodet.color' => $color,
                 'dbtcsodet.remark' => $request->remark,
                 'dbtcsodet2.qty' => $request->qtycso,
+                'dbtcsodet2.history' => $request->qtycso,
+                'dbtcsodet2.inputs' => $request->qtycso,
+
             ];
             DB::table('dbtcsodet')
                 ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')

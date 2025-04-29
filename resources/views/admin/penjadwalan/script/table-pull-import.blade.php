@@ -1,4 +1,52 @@
 <script>
+        function sortItem(order, columnIndex, iconSort, allIconSort) {
+        const table = document.getElementById('tableImport');
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+        const isNumeric = !isNaN(rows[0].cells[columnIndex].textContent.trim());
+        const allIconSortItem = document.getElementsByClassName(allIconSort);
+        const iconSortItem = document.getElementById(iconSort);
+
+        for (let i = 0; i < allIconSortItem.length; i++) {
+            allIconSortItem[i].innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                    <path
+                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+            `;
+        }
+
+        rows.sort((a, b) => {
+            const cellA = a.cells[columnIndex].textContent.trim();
+            const cellB = b.cells[columnIndex].textContent.trim();
+
+            if (isNumeric) {
+                return order == 0 ?
+                    Number(cellA) - Number(cellB) :
+                    Number(cellB) - Number(cellA);
+            }
+            return order == 0 ?
+                cellA.localeCompare(cellB) :
+                cellB.localeCompare(cellA);
+        });
+
+        iconSortItem.innerHTML = order == 0 ? '<i class="bi bi-arrow-up"></i>' : '<i class="bi bi-arrow-down"></i>';
+
+        // Reorder rows in the table
+        rows.forEach(row => table.tBodies[0].appendChild(row));
+
+        // resetRowNumbers();
+    }
+
+    // function resetRowNumbers() {
+    //     const table = document.getElementById('tableImport');
+    //     const rows = table.tBodies[0].rows;
+
+    //     for (let i = 0; i < rows.length; i++) {
+    //         rows[i].cells[1].textContent = i + 1;
+    //     }
+    // }
+
      $(document).ready(function() {
         $("#ceksemuaitem").click(function() {
             if ($(".checkboxsemuaitem").prop("checked")) {
@@ -76,44 +124,5 @@
             }
 
         });
-    }
-
-    function sortItem(order, columnIndex, iconSort, allIconSort) {
-        const table = document.getElementById('tableImport');
-        const rows = Array.from(table.rows).slice(1); // Exclude the header row
-        const isNumeric = !isNaN(rows[0].cells[columnIndex].textContent.trim());
-        const allIconSortItem = document.getElementsByClassName(allIconSort);
-        const iconSortItem = document.getElementById(iconSort);
-
-        for (let i = 0; i < allIconSortItem.length; i++) {
-            allIconSortItem[i].innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                    fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                    <path
-                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
-                </svg>
-            `;
-        }
-
-        rows.sort((a, b) => {
-            const cellA = a.cells[columnIndex].textContent.trim();
-            const cellB = b.cells[columnIndex].textContent.trim();
-
-            if (isNumeric) {
-                return order == 0 ?
-                    Number(cellA) - Number(cellB) :
-                    Number(cellB) - Number(cellA);
-            }
-            return order == 0 ?
-                cellA.localeCompare(cellB) :
-                cellB.localeCompare(cellA);
-        });
-
-        iconSortItem.innerHTML = order == 0 ? '<i class="bi bi-arrow-up"></i>' : '<i class="bi bi-arrow-down"></i>';
-
-        // Reorder rows in the table
-        rows.forEach(row => table.tBodies[0].appendChild(row));
-
-        // resetRowNumbers();
     }
 </script>

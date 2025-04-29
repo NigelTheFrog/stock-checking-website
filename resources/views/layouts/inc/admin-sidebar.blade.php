@@ -35,11 +35,34 @@
                             </a></li>
                         </ul>
                     </div>
-                    <a class="nav-link" href="{{ route('avalan.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseBatch" 
+                    role="button" aria-expanded="false" aria-controls="collapseBatch">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
                         </div>
                         Dashboard Batch
                     </a>
+                    <div class="collapse" id="collapseBatch">
+                        <ul style="list-style-type:none;padding-left:15px;margin-bottom:0px;">
+                            <li> 
+                                <a class="nav-link" href="{{ route('avalan.index',['val'=>'CSO']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSO
+                            </a></li>
+                            <li > 
+                                <a class="nav-link" href="{{ route('avalan.index',['val'=>'CSS']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSS
+                            </a></li>
+                        </ul>
+                    </div>
+                    {{-- <a class="nav-link" href="{{ route('avalan.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="font-size: 20px"></i>
+                        </div>
+                        Dashboard Batch
+                    </a> --}}
                     <div class="sb-sidenav-menu-heading">Master</div>
                     <a class="nav-link" href="{{ route('user.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-user-cog" style="font-size: 20px"></i>
@@ -125,12 +148,36 @@
                             </a></li>
                         </ul>
                     </div>
-                    <a class="nav-link" href="{{ route('import-avalan.index') }}">
+                    {{-- <a class="nav-link" href="{{ route('import-avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-import"
                                 style="font-size: 20px"v></i></div>
                         Impor Batch
+                    </a> --}}
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseImporAvalan" 
+                    role="button" aria-expanded="false" aria-controls="collapseImporAvalan">
+                        <div class="sb-nav-link-icon">
+                            <i class="nav-icon fas fa-file-import"
+                                style="font-size: 20px"></i>
+                        </div>
+                        Impor Batch
                     </a>
-
+                    <div class="collapse" id="collapseImporAvalan">
+                        <ul style="list-style-type:none;padding-left:15px;margin-bottom:0px;">
+                            <li> 
+                                <a class="nav-link" href="{{ route('import-avalan.index',['val'=>'CSO']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSO
+                            </a></li>
+                            <li> 
+                                {{-- <a class="nav-link" href="{{ route('import-avalan.index',['val'=>'CSS']) }}" style=" pointer-events: none;"> --}}
+                                <a class="nav-link" href="{{ route('import-avalan.index',['val'=>'CSS']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSS
+                            </a></li>
+                        </ul>
+                    </div>
                     
                     <a class="nav-link" data-bs-toggle="collapse" href="#collapsePengaturan" 
                     role="button" aria-expanded="false" aria-controls="collapsePengaturan">
@@ -142,16 +189,28 @@
                     <div class="collapse" id="collapsePengaturan">
                         <ul style="list-style-type:none;padding-left:15px;margin-bottom:0px;">
                             <li> 
-                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSO']) }}">
+                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSOR']) }}">
                                 <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
                                 </div>
                                 CSO
                             </a></li>
                             <li > 
-                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSS']) }}">
+                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSSR']) }}">
                                 <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
                                 </div>
                                 CSS
+                            </a></li>
+                            <li > 
+                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSOA']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSO
+                            </a></li>
+                            <li > 
+                                <a class="nav-link" href="{{ route('pengaturan.index',['val'=>'CSSA']) }}">
+                                <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                </div>
+                                Batch CSS
                             </a></li>
                         </ul>
                     </div>
@@ -198,16 +257,43 @@
                         </ul>
                     </div>
 
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseResumeBatch" 
+                    role="button" aria-expanded="false" aria-controls="collapseResumeBatch">
+                        <div class="sb-nav-link-icon">
+                            <i class="fa-solid fa-clipboard-list"
+                                style="font-size: 20px"></i>
+                        </div>
+                        Resume Batch
+                    </a>
+                    <div class="collapse" id="collapseResumeBatch">
+                        <ul style="list-style-type:none;padding-left:15px;margin-bottom:0px;">
+                            <li> 
+                                <a class="nav-link" href="{{ route('susunan-tim-cso-avalan.index',['val'=>'CSO']) }}">
+                                    <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                    </div>
+                                    CSO Batch
+                                </a>
+                            </li>
+                            <li > 
+                                <a class="nav-link" href="{{ route('susunan-tim-cso-avalan.index',['val'=>'CSS']) }}">
+                                    <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                    </div>
+                                    CSS Batch
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     {{-- <a class="nav-link" href="{{ route('susunan-tim-cso.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard-list" style="font-size: 20px"></i>
                         </div>
                         Resume CSO Item
                     </a> --}}
-                    <a class="nav-link" href="{{ route('susunan-tim-cso-avalan.index') }}">
+                    {{-- <a class="nav-link" href="{{ route('susunan-tim-cso-avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard-list" style="font-size: 20px"></i>
                         </div>
                         Resume CSO Batch
-                    </a>
+                    </a> --}}
                     <div class="sb-sidenav-menu-heading">Report</div>
                     {{-- <a class="nav-link" href="{{ route('cek-stok.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt"
@@ -229,7 +315,7 @@
                                 <a class="nav-link" href="{{ route('cek-stok.index',['val'=>'CSO']) }}">
                                     <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
                                     </div>
-                                    CSO item
+                                    CSO Item
                                 </a>
                             </li>
                             <li > 
@@ -242,12 +328,38 @@
                         </ul>
                     </div>
 
-                    <a class="nav-link" href="{{ route('cek-stok-avalan.index') }}">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#collapseReportBatch" 
+                    role="button" aria-expanded="false" aria-controls="collapseReportBatch">
+                        <div class="sb-nav-link-icon">
+                            <i class="nav-icon fas fa-file-alt"
+                                style="font-size: 20px"></i>
+                        </div>
+                        Report Stok Batch
+                    </a>
+                    <div class="collapse" id="collapseReportBatch">
+                        <ul style="list-style-type:none;padding-left:15px;margin-bottom:0px;">
+                            <li> 
+                                <a class="nav-link" href="{{ route('cek-stok-avalan.index',['val'=>'CSO']) }}">
+                                    <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                    </div>
+                                    CSO Batch
+                                </a>
+                            </li>
+                            <li > 
+                                <a class="nav-link" href="{{ route('cek-stok-avalan.index',['val'=>'CSS']) }}">
+                                    <div class="sb-nav-link-icon"><i class="bi bi-arrow-right-circle" style="font-size: 20px"></i>
+                                    </div>
+                                    CSS Batch
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {{-- <a class="nav-link" href="{{ route('cek-stok-avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt"
                                 style="font-size: 20px"></i>
                         </div>
                         Report Cek Stok Batch
-                    </a>
+                    </a> --}}
                     <div class="sb-sidenav-menu-heading">Approval</div>
                     <a class="nav-link" href="{{ route('approval-stok.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt"
@@ -255,12 +367,12 @@
                         </div>
                         Approval Cek Stok Item
                     </a>
-                    <a class="nav-link" href="{{ route('cek-stok-avalan.index') }}">
+                    {{-- <a class="nav-link" href="{{ route('approval-avalan.index') }}">
                         <div class="sb-nav-link-icon"><i class="nav-icon fas fa-file-alt"
                                 style="font-size: 20px"></i>
                         </div>
                         Approval Cek Stok Batch
-                    </a>
+                    </a> --}}
                 @elseif(Auth::user()->level == 2)
                     <div class="sb-sidenav-menu-heading">Core</div>
 

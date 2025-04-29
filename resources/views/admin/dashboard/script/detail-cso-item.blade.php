@@ -27,7 +27,6 @@ function openModalDetailCSO(itemName, dataItem) {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    console.log(data)
                     $('#detailCso').html(data);
                     $('#formSubmitCso').attr('action', `{{ route('item.update-cso') }}`);
                     $("#buttonSubmit").attr('type', 'submit');

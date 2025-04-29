@@ -47,7 +47,7 @@ class ItemController extends Controller
         if (count($getCsoDate) > 0) {
             $csoDate = Carbon::parse($getCsoDate[0]->startcsodate)->format('d M Y');
         } else {
-            $csoDate = "Belum ada tanggal ".$param->val;
+            $csoDate = "Belum ada tanggal " . $param->val;
         }
 
         $checkAnalisator = $item->where('analisatorid','<>',null);
@@ -57,7 +57,7 @@ class ItemController extends Controller
         $itemSelisihPlus = $item->where('status', '=', '2')->where('typecekstok',$param->val);
         $itemSelisihMinus = $item->where('status', '=', '1')->where('typecekstok',$param->val);
 
-        $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->where('typecekstok',$param->val)->get();
+        $dbxjob = DB::table('dbxjob')->where('jobtypeid', '=', 2)->where('typecekstok', $param->val)->where('statuscekstok','R')->get();
         $group = Group::all();
         $keterangan = KeteranganCSOUlang::all();
         $coycode = Company::select('coycode')->first();
@@ -126,14 +126,13 @@ class ItemController extends Controller
     public function showBanner(Request $request) //done
     {
 
-        $items = collect(DB::select('CALL Dashboard()'))->where('typecekstok',$request->typecekstok);
-        $itemBlmProses = $items->where('status', '=', '0')->where('typecekstok',$request->typecekstok);
-        $itemOk = $items->where('status', '=', '3')->where('typecekstok',$request->typecekstok);
-        $itemSelisihPlus = $items->where('status', '=', '2')->where('typecekstok',$request->typecekstok);
-        $itemSelisihMinus = $items->where('status', '=', '1')->where('typecekstok',$request->typecekstok);
+        $items = collect(DB::select('CALL Dashboard()'))->where('typecekstok', $request->typecekstok);
+        $itemBlmProses = $items->where('status', '=', '0')->where('typecekstok', $request->typecekstok);
+        $itemOk = $items->where('status', '=', '3')->where('typecekstok', $request->typecekstok);
+        $itemSelisihPlus = $items->where('status', '=', '2')->where('typecekstok', $request->typecekstok);
+        $itemSelisihMinus = $items->where('status', '=', '1')->where('typecekstok', $request->typecekstok);
 
         return view("admin.dashboard.banner.banner-item", [
-
             "countItemBlmProses" => count($itemBlmProses),
             "countItemOk" => count($itemOk),
             "countItemSelisih" => count($itemSelisihPlus) + count($itemSelisihMinus)
@@ -143,7 +142,7 @@ class ItemController extends Controller
     public function updateGroupingAndAnalisatorItem(Request $request)
     {
         if ($request->isSelisih == 0) {
-            $idx=0;
+            $idx = 0;
             if ($request->group) {
                 foreach ($request->group as $group) {
                     if ($group != null) {
@@ -220,14 +219,14 @@ class ItemController extends Controller
                 }
             }
         }
-        return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status', "Berhasil memperbarui data pada banner");
+        return redirect()->route("item.index", ['val' => $request->typecekstok])->with('status', "Berhasil memperbarui data pada banner");
     }
 
     public function print(Request $request) //done
     {
 
         $pdf = App::make('dompdf.wrapper');
-        $item = collect(DB::select('CALL Dashboard()'))->where('typecekstok',$request->typecekstok);
+        $item = collect(DB::select('CALL Dashboard()'))->where('typecekstok', $request->typecekstok);
 
         if ($request->status == "1") {
             
@@ -344,16 +343,6 @@ class ItemController extends Controller
             default:
                 $data = collect($filteredItems)->sortBy('itemname');
         }
-        // $itemName = array();
-        // foreach ($filteredItems as $key => $row) {
-        //     $itemName[$key] = $row->itemname;
-        // }
-        // $testtt = 0;
-        // if ($request->filter == 1) {
-        //     array_multisort($itemName, SORT_ASC, $filteredItems);
-        // } else if ($request->filter == 2) {
-        //     array_multisort($itemName, SORT_DESC, $filteredItems);
-        // }
 
         $object = view("admin.dashboard.table.item.main-table-item", 
         ["item" => $data, 
@@ -429,237 +418,251 @@ class ItemController extends Controller
         {
             $checkDbxImport = ImportItem::all();
 
-        if (count($checkDbxImport) > 0) {
-            $checkCsoMaterial = DB::table('dbxmaterial')->where('typecekstok',$request->typecekstok)->limit(1)->get();
-            $checkCsoType = DB::table('dbxcsotype')->where('csotype',$request->typecekstok)->limit(1)->get();
-            $getCoy = Company::select('coycode')->first();
-            $coy = strtoupper(substr($getCoy->coycode, 0, 3));
+            if (count($checkDbxImport) > 0) {
+                $checkCsoMaterial = DB::table('dbxmaterial')
+                                    ->where('typecekstok', $request->typecekstok)
+                                    ->where('statuscekstok','R')
+                                    ->limit(1)
+                                    ->get();
+                $checkCsoType = DB::table('dbxcsotype')
+                                ->where('csotype', $request->typecekstok)
+                                ->where('statuscekstok','R')
+                                ->limit(1)
+                                ->get();
+                                
+                $getCoy = Company::select('coycode')->first();
+                $coy = strtoupper(substr($getCoy->coycode, 0, 3));
 
-            if (count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
-                $checkMonth = DB::table('dbttrshed')
-                    ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"), 'idxno')->where('typecekstok',$request->typecekstok)
-                    ->orderByDesc('trsid')
-                    ->limit(1)
-                    ->get();
-                $idxno = 0;
+                if (count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
+                    $checkMonth = DB::table('dbttrshed')
+                        ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"), 'idxno')->where('typecekstok', $request->typecekstok)
+                        ->orderByDesc('trsid')
+                        ->limit(1)
+                        ->get();
+                    $idxno = 0;
 
-                if (count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
-                    $idxno = $checkMonth[0]->idxno + 1;
-                } else {
-                    $idxno = 1;
-                }
-                $today = Carbon::now()->format('Y-m-d');
+                    if (count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
+                        $idxno = $checkMonth[0]->idxno + 1;
+                    } else {
+                        $idxno = 1;
+                    }
+                    $today = Carbon::now()->format('Y-m-d');
 
-                $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy->coycode}{$today}-{$idxno}";
+                    $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy->coycode}{$today}-{$idxno}";
 
-                $insertDbttrshed = DB::table('dbttrshed')->insert([
-                    'doccsoid' => $doccsoid,
-                    'startcsodate' => $today,
-                    'idxno' => $idxno,
-                    'typecekstok' => $checkCsoType[0]->csotype,
-                    'csomaterial' => $checkCsoMaterial[0]->csomaterial,
-                    'statusdoc' => 'A'
-                ]);
+                    $insertDbttrshed = DB::table('dbttrshed')->insert([
+                        'doccsoid' => $doccsoid,
+                        'typecekstok' => $checkCsoType[0]->csotype,
+                        'startcsodate' => $today,
+                        'idxno' => $idxno,
+                        'csomaterial' => $checkCsoMaterial[0]->csomaterial,
+                        'statusdoc' => 'A'
+                    ]);
 
-                if ($insertDbttrshed == true) {
-                    $getTrsHedId = DB::table('dbttrshed')->select('trsid')->where('statusdoc', '=', 'A')
-                    ->where('typecekstok',$request->typecekstok)->first();
-                    $selectDbxImporDet = DB::table('dbximpordet')->select('itemid', DB::raw('sum(qty)as qty'))->groupBy('itemid');
+                    if ($insertDbttrshed == true) {
+                        $getTrsHedId = DB::table('dbttrshed')->select('trsid')->where('statusdoc', '=', 'A')
+                                ->where('typecekstok', $request->typecekstok)->first();
+                        $selectDbxImporDet = DB::table('dbximpordet')->select('itemid', DB::raw('sum(qty)as qty'))->groupBy('itemid');
 
-                    $selectDbxImpor = DB::table('dbximpor')
-                        ->leftJoinSub($selectDbxImporDet, 'dbximpordet', function (JoinClause $join) {
-                            $join->on('dbximpor.itemid', '=', 'dbximpordet.itemid');
-                        })
-                        ->select([
-                            DB::raw($getTrsHedId->trsid),
-                            "dbximpor.itemid",
-                            "dbximpor.itembatchid",
-                            "itemcode",
-                            "itemname",
-                            "heatno",
-                            "dimension",
-                            "tolerance",
-                            "kondisi",
-                            "qty",
-                            "uom",
-                            "cogs",
-                            "statusitem",
-                            "isbatch",
-                            DB::raw(1)
-                        ]);
+                        $selectDbxImpor = DB::table('dbximpor')
+                            ->leftJoinSub($selectDbxImporDet, 'dbximpordet', function (JoinClause $join) {
+                                $join->on('dbximpor.itemid', '=', 'dbximpordet.itemid');
+                            })
+                            ->select([
+                                DB::raw($getTrsHedId->trsid),
+                                "dbximpor.itemid",
+                                "dbximpor.itembatchid",
+                                "itemcode",
+                                "itemname",
+                                "heatno",
+                                "dimension",
+                                "tolerance",
+                                "kondisi",
+                                "qty",
+                                "uom",
+                                "cogs",
+                                "statusitem",
+                                "isbatch",
+                                DB::raw(1)
+                            ]);
 
-                    $insertDbttrsdet = DB::table('dbttrsdet')->insertUsing(["trsid", "itemid", "itembatchid", "itemcode", "itemname", "heatno", "dimension", "tolerance", "kondisi", "onhand", "uom", "cogs", "statusitem", "isbatch", "statuscso"], $selectDbxImpor);
+                        $insertDbttrsdet = DB::table('dbttrsdet')->insertUsing(["trsid", "itemid", "itembatchid", "itemcode", "itemname", "heatno", "dimension", "tolerance", "kondisi", "onhand", "uom", "cogs", "statusitem", "isbatch", "statuscso"], $selectDbxImpor);
 
-                    if ($insertDbttrsdet == true) {
-                        $getTrsDet2 = DB::table('dbttrsdet')
-                            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
-                            ->select('trsdetid', 'itemid', 'itembatchid')
-                            ->where('dbttrshed.statusdoc', '=', 'A')->where('dbttrshed.typecekstok',$request->typecekstok)
-                            ->get();
-                            
+                        if ($insertDbttrsdet == true) {
+                            $getTrsDet2 = DB::table('dbttrsdet')
+                                ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                                ->select('trsdetid', 'itemid', 'itembatchid')
+                                ->where('dbttrshed.statusdoc', '=', 'A')->where('dbttrshed.typecekstok',$request->typecekstok)
+                                ->get();
+                                
 
-                        foreach ($getTrsDet2 as $trsDet2) {
-                            $selectDbxImporDet2 = DB::table('dbximpordet')
-                                ->select(DB::raw($trsDet2->trsdetid), "itemid", "itembatchid", "wrh", "qty")
-                                ->where('itemid', '=', $trsDet2->itemid);
-                            // dd($selectDbxImporDet2->get());
+                            foreach ($getTrsDet2 as $trsDet2) {
+                                $selectDbxImporDet2 = DB::table('dbximpordet')
+                                    ->select(DB::raw($trsDet2->trsdetid), "itemid", "itembatchid", "wrh", "qty")
+                                    ->where('itemid', '=', $trsDet2->itemid);
+                                // dd($selectDbxImporDet2->get());
 
-                            // $insertDbtTrsdet2 = 
-                            DB::table('dbttrsdet2')->insertUsing(["trsdetid", "itemid", "itembatchid", "wrh", "qty"], $selectDbxImporDet2);
+                                // $insertDbtTrsdet2 = 
+                                DB::table('dbttrsdet2')->insertUsing(["trsdetid", "itemid", "itembatchid", "wrh", "qty"], $selectDbxImporDet2);
 
-                            // if ($insertDbtTrsdet2 == false) {
-                            //     DB::rollBack();
-                            //     return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
-                            // }
-                        }
+                                // if ($insertDbtTrsdet2 == false) {
+                                //     DB::rollBack();
+                                //     return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                                // }
+                            }
 
-                        DB::table('dbtcsoprsn')
-                            ->where('trsid', '=', $getTrsHedId->trsid)
-                            ->update(["status" => "P"]);
+                            DB::table('dbtcsoprsn')
+                                ->where('trsid', '=', $getTrsHedId->trsid)
+                                ->update(["status" => "P"]);
 
-                        $finalise = DB::table("dbxsetdate")->insert(["date" => Carbon::now(), "tipe" => "I",'typecekstok'=>$request->typecekstok]);
-                        if ($finalise == true) {
-                            DB::commit();
-                                return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status', "Berhasil memulai CSO");
+                            $finalise = DB::table("dbxsetdate")->insert(["date" => Carbon::now(), "tipe" => "I", 'typecekstok' => $request->typecekstok,'statuscekstok' => 'R']);
+                            if ($finalise == true) {
+                                DB::commit();
+                                    return redirect()->route("item.index", ['val' => $request->typecekstok])->with('status', "Berhasil memulai CSO");
+                            } else {
+                                DB::rollBack();
+                                    return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                            }
                         } else {
                             DB::rollBack();
-                                return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                                return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
                         }
                     } else {
                         DB::rollBack();
-                            return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                            return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
                     }
                 } else {
                     DB::rollBack();
-                        return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                        return redirect()->route("pengaturan.index", ['val' => $request->typecekstok])->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");
                 }
             } else {
                 DB::rollBack();
-                    return redirect()->route("pengaturan.index",['val'=>$request->typecekstok])->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");
+                    return redirect()->route("import-stok.index", ['val' => $request->typecekstok])->with('error', "Harap lakukan import item terlebih dahulu");
             }
-        } else {
-            DB::rollBack();
-                return redirect()->route("import-stok.index",['val'=>$request->typecekstok])->with('error', "Harap lakukan import item terlebih dahulu");
         }
-
-        }
-        else if($request->typecekstok=='CSS')
+        else if($request->typecekstok == 'CSS')
         {
             $checkDbxImport = DB::table('dbximporcss')->get();
-        if (count($checkDbxImport) > 0) {
-            $checkCsoMaterial = DB::table('dbxmaterial')->where('typecekstok',$request->typecekstok)->limit(1)->get();
-            $checkCsoType = DB::table('dbxcsotype')->where('csotype',$request->typecekstok)->limit(1)->get();
-            $getCoy = Company::select('coycode')->first();
-            $coy = strtoupper(substr($getCoy->coycode, 0, 3));
+            if (count($checkDbxImport) > 0) {
+                $checkCsoMaterial = DB::table('dbxmaterial')
+                                    ->where('typecekstok', $request->typecekstok)
+                                    ->where('statuscekstok','R')
+                                    ->limit(1)
+                                    ->get();
+                $checkCsoType = DB::table('dbxcsotype')
+                                ->where('csotype', $request->typecekstok)
+                                ->where('statuscekstok','R')
+                                ->limit(1)
+                                ->get();
+                $getCoy = Company::select('coycode')->first();
+                $coy = strtoupper(substr($getCoy->coycode, 0, 3));
 
-            if (count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
-                $checkMonth = DB::table('dbttrshed')
-                    ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"), 'idxno')->where('typecekstok',$request->typecekstok)
-                    ->orderByDesc('trsid')
-                    ->limit(1)
-                    ->get();
-                $idxno = 0;
+                if (count($checkCsoMaterial) > 0 && count($checkCsoType) > 0) {
+                    $checkMonth = DB::table('dbttrshed')
+                        ->select(DB::raw("DATE_FORMAT(startcsodate, '%m') as monthbefore"), 'idxno')->where('typecekstok', $request->typecekstok)
+                        ->orderByDesc('trsid')
+                        ->limit(1)
+                        ->get();
+                    $idxno = 0;
 
-                if (count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
-                    $idxno = $checkMonth[0]->idxno + 1;
-                } else {
-                    $idxno = 1;
-                }
-                $today = Carbon::now()->format('Y-m-d');
+                    if (count($checkMonth) > 0 && $checkMonth[0]->monthbefore == Carbon::now()->month) {
+                        $idxno = $checkMonth[0]->idxno + 1;
+                    } else {
+                        $idxno = 1;
+                    }
+                    $today = Carbon::now()->format('Y-m-d');
 
-                $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy->coycode}{$today}-{$idxno}";
+                    $doccsoid = "{$checkCsoType[0]->csotype}{$getCoy->coycode}{$today}-{$idxno}";
 
-                $insertDbttrshed = DB::table('dbttrshed')->insert([
-                    'doccsoid' => $doccsoid,
-                    'startcsodate' => $today,
-                    'idxno' => $idxno,
-                    'typecekstok' => $checkCsoType[0]->csotype,
-                    'csomaterial' => $checkCsoMaterial[0]->csomaterial,
-                    'statusdoc' => 'A'
-                ]);
+                    $insertDbttrshed = DB::table('dbttrshed')->insert([
+                        'doccsoid' => $doccsoid,
+                        'typecekstok' => $checkCsoType[0]->csotype,
+                        'startcsodate' => $today,
+                        'idxno' => $idxno,
+                        'csomaterial' => $checkCsoMaterial[0]->csomaterial,
+                        'statusdoc' => 'A'
+                    ]);
 
-                if ($insertDbttrshed == true) {
-                    $getTrsHedId = DB::table('dbttrshed')->select('trsid')->where('statusdoc', '=', 'A')
-                    ->where('typecekstok',$request->typecekstok)->first();
-                    $selectDbxImporDet = DB::table('dbximpordetcss')->select('itemid', DB::raw('sum(qty)as qty'))->groupBy('itemid');
+                    if ($insertDbttrshed == true) {
+                        $getTrsHedId = DB::table('dbttrshed')->select('trsid')->where('statusdoc', '=', 'A')
+                        ->where('typecekstok', $request->typecekstok)->first();
+                        $selectDbxImporDet = DB::table('dbximpordetcss')->select('itemid', DB::raw('sum(qty)as qty'))->groupBy('itemid');
 
-                    $selectDbxImpor = DB::table('dbximporcss')
-                        ->leftJoinSub($selectDbxImporDet, 'dbximpordetcss', function (JoinClause $join) {
-                            $join->on('dbximporcss.itemid', '=', 'dbximpordetcss.itemid');
-                        })
-                        ->select([
-                            DB::raw($getTrsHedId->trsid),
-                            "dbximporcss.itemid",
-                            "dbximporcss.itembatchid",
-                            "itemcode",
-                            "itemname",
-                            "heatno",
-                            "dimension",
-                            "tolerance",
-                            "kondisi",
-                            "qty",
-                            "uom",
-                            "cogs",
-                            "statusitem",
-                            "isbatch",
-                            DB::raw(1)
-                        ]);
+                        $selectDbxImpor = DB::table('dbximporcss')
+                            ->leftJoinSub($selectDbxImporDet, 'dbximpordetcss', function (JoinClause $join) {
+                                $join->on('dbximporcss.itemid', '=', 'dbximpordetcss.itemid');
+                            })
+                            ->select([
+                                DB::raw($getTrsHedId->trsid),
+                                "dbximporcss.itemid",
+                                "dbximporcss.itembatchid",
+                                "itemcode",
+                                "itemname",
+                                "heatno",
+                                "dimension",
+                                "tolerance",
+                                "kondisi",
+                                "qty",
+                                "uom",
+                                "cogs",
+                                "statusitem",
+                                "isbatch",
+                                DB::raw(1)
+                            ]);
 
-                    $insertDbttrsdet = DB::table('dbttrsdet')->insertUsing(["trsid", "itemid", "itembatchid", "itemcode", "itemname", "heatno", "dimension", "tolerance", "kondisi", "onhand", "uom", "cogs", "statusitem", "isbatch", "statuscso"], $selectDbxImpor);
+                        $insertDbttrsdet = DB::table('dbttrsdet')->insertUsing(["trsid", "itemid", "itembatchid", "itemcode", "itemname", "heatno", "dimension", "tolerance", "kondisi", "onhand", "uom", "cogs", "statusitem", "isbatch", "statuscso"], $selectDbxImpor);
 
-                    if ($insertDbttrsdet == true) {
-                        $getTrsDet2 = DB::table('dbttrsdet')
-                            ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
-                            ->select('trsdetid', 'itemid', 'itembatchid')
-                            ->where('dbttrshed.statusdoc', '=', 'A')->where('dbttrshed.typecekstok',$request->typecekstok)
-                            ->get();
+                        if ($insertDbttrsdet == true) {
+                            $getTrsDet2 = DB::table('dbttrsdet')
+                                ->join('dbttrshed', 'dbttrshed.trsid', '=', 'dbttrsdet.trsid')
+                                ->select('trsdetid', 'itemid', 'itembatchid')
+                                ->where('dbttrshed.statusdoc', '=', 'A')->where('dbttrshed.typecekstok', $request->typecekstok)
+                                ->get();
 
-                        foreach ($getTrsDet2 as $trsDet2) {
-                            $selectDbxImporDet2 = DB::table('dbximpordetcss')
-                                ->select(DB::raw($trsDet2->trsdetid), "itemid", "itembatchid", "wrh", "qty")
-                                ->where('itemid', '=', $trsDet2->itemid);
-                            // dd($selectDbxImporDet2->get());
+                            foreach ($getTrsDet2 as $trsDet2) {
+                                $selectDbxImporDet2 = DB::table('dbximpordetcss')
+                                    ->select(DB::raw($trsDet2->trsdetid), "itemid", "itembatchid", "wrh", "qty")
+                                    ->where('itemid', '=', $trsDet2->itemid);
+                                // dd($selectDbxImporDet2->get());
 
-                            // $insertDbtTrsdet2 = 
-                            DB::table('dbttrsdet2')->insertUsing(["trsdetid", "itemid", "itembatchid", "wrh", "qty"], $selectDbxImporDet2);
+                                // $insertDbtTrsdet2 = 
+                                DB::table('dbttrsdet2')->insertUsing(["trsdetid", "itemid", "itembatchid", "wrh", "qty"], $selectDbxImporDet2);
 
-                            // if ($insertDbtTrsdet2 == false) {
-                            //     DB::rollBack();
-                            //     return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
-                            // }
-                        }
+                                // if ($insertDbtTrsdet2 == false) {
+                                //     DB::rollBack();
+                                //     return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                                // }
+                            }
 
-                        DB::table('dbtcsoprsn')
-                            ->where('trsid', '=', $getTrsHedId->trsid)
-                            ->update(["status" => "P"]);
+                            DB::table('dbtcsoprsn')
+                                ->where('trsid', '=', $getTrsHedId->trsid)
+                                ->update(["status" => "P"]);
 
-                        $finalise = DB::table("dbxsetdate")->insert(["date" => Carbon::now(), "tipe" => "I",'typecekstok'=>$request->typecekstok]);
-                        if ($finalise == true) {
-                            DB::commit();
-                                return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status', "Berhasil memulai CSO");
+                                $finalise = DB::table("dbxsetdate")->insert(["date" => Carbon::now(), "tipe" => "I", 'typecekstok' => $request->typecekstok,'statuscekstok' => 'R']);
+                            if ($finalise == true) {
+                                DB::commit();
+                                    return redirect()->route("item.index", ['val' => $request->typecekstok])->with('status', "Berhasil memulai CSO");
+                            } else {
+                                DB::rollBack();
+                                    return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                            }
                         } else {
                             DB::rollBack();
-                                return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                                return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
                         }
                     } else {
                         DB::rollBack();
-                            return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                            return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
                     }
                 } else {
                     DB::rollBack();
-                        return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', "Gagal memulai CSO, silahkan ulangi");
+                        return redirect()->route("pengaturan.index", ['val' => $request->typecekstok])->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");
                 }
             } else {
                 DB::rollBack();
-                    return redirect()->route("pengaturan.index",['val'=>$request->typecekstok])->with('error', "Harap lakukan input tipe CSO dan Materialnya terlebih dahulu");
+                    return redirect()->route("import-stok.index", ['val' => $request->typecekstok])->with('error', "Harap lakukan import item terlebih dahulu");
             }
-        } else {
-            DB::rollBack();
-                return redirect()->route("import-stok.index",['val'=>$request->typecekstok])->with('error', "Harap lakukan import item terlebih dahulu");
         }
-
-        }
-        
     }
 
     /**
@@ -685,8 +688,9 @@ class ItemController extends Controller
             ->where('dbtcsodet.trsdetid', '=', $request->trsdetid)
             ->where('dbtcsodet.statussubmit', '=', 'P')
             ->whereRaw("(dbtcsodet.statushslcso = 'T' OR dbtcsodet.statushslcso = 'D')")
-            ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')")
-            ->where('dbtcsohed.status', '=', 'A');
+            ->where('dbtcsohed.status', '=', 'A')
+            ->where('dbtcsohed.tipecso','R')
+            ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')");
 
         $insertDbtCsoDet = DB::table('dbtcsodet')->insertUsing(['csoid', 'trsdetid', 'itemid', 'itembatchid', 'color', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $getDataDbtCsoDet);
 
@@ -696,6 +700,7 @@ class ItemController extends Controller
                 ->leftJoin('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
                 ->where('dbtcsodet.trsdetid', $request->trsdetid)
                 ->where('dbtcsohed.status', 'A')
+                ->where('dbtcsohed.tipecso', 'R')
                 ->where('dbtcsodet.statussubmit', '=', 'P')
                 ->whereRaw("(dbtcsodet.statushslcso = 'T' OR dbtcsodet.statushslcso = 'D')")
                 ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')")
@@ -716,8 +721,9 @@ class ItemController extends Controller
                         ->select(['dbtcsodet.csodetid', 'dbtcsodet.csoid', DB::raw("'$getDbtTrsDet->statuscso' AS csocount")])
                         ->where('dbtcsodet.trsdetid', '=', $request->trsdetid)
                         ->where('dbtcsodet.statushslcso', '=', 'T')
-                        ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')")
-                        ->where('dbtcsohed.status', '=', 'A');
+                        ->where('dbtcsohed.status', '=', 'A')
+                        ->where('dbtcsohed.tipecso', '=', 'R')
+                        ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')");
 
                     $insertDbtCsoDet2 = DB::table('dbtcsodet2')->insertUsing(['csodetid', 'csoid', 'csocount'], $getDbtCsoDetOnDbtCsoHed);
                     if ($insertDbtCsoDet2 == true) {
@@ -749,6 +755,61 @@ class ItemController extends Controller
         }
     }
 
+    public function updateCsoItem(Request $request)
+    {
+        DB::beginTransaction();
+        if (!empty($request->check_kesalahan_admin)) {
+            $kesalahan = 1;
+        } else {
+            $kesalahan = 0;
+        }
+
+        if (!empty($request->check_batch_tertukar)) {
+            $batch_tertukar = 1;
+        } else {
+            $batch_tertukar = 0;
+        }
+
+        if (!empty($request->check_pemeriksaan_analisator)) {
+            $checked = 1;
+        } else {
+            $checked = 0;
+        }
+        if (!empty($request->check_tidak_hitung)) {
+            $hitung = 1;
+        } else {
+            $hitung = 0;
+        }
+        if ($request->groupValue != '') {
+            $groupValue = $request->groupValue;
+        } else {
+            $groupValue = null;
+        }
+        // if ($request->batchno == null) {
+        $updateDetailItem = DB::table('dbttrsdet')
+            ->where('itemid', $request->itemid)
+            ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
+            ->update([
+                'koreksi' => $request->koreksi,
+                'deviasi' => $request->deviasi,
+                'analisatorid' => $request->analisator,
+                'keterangan' => $request->keterangan,
+                'groupid' => $request->grouping,
+                'kesalahan_admin' => $kesalahan,
+                "batch_tertukar" => $batch_tertukar,
+                "analisator_checked" => $checked,
+                "tidak_hitung" => $hitung,
+                "group_value" => $groupValue
+            ]);
+
+        if ($updateDetailItem == true) {
+            DB::commit();
+            return redirect()->route("item.index", ['val' => $request->typecekstok,'search'=>$request->searchCSO])->with('status', "Berhasil mengubah data CSO item");
+        } else {
+            DB::rollBack();
+            return redirect()->route("item.index", ['val' => $request->typecekstok,'search'=>$request->searchCSO])->with('error', "Gagal mengubah data CSO item");
+        }
+    }
     
     public function setAnalisatorItem(Request $request)
     {
@@ -770,6 +831,7 @@ class ItemController extends Controller
         $dbxjob = DB::table('dbxjob')
             ->where('jobtypeid', '=', 2)
             ->where('typecekstok', $request->typecekstok)
+            ->where('statuscekstok','R')
             ->get();
         $group = Group::all();
         $collectedItem = collect(DB::select('CALL Dashboard()'))->where('typecekstok', $request->typecekstok);
@@ -808,78 +870,6 @@ class ItemController extends Controller
             'view' => (string) $view,
             'countAnalisator' => count($countAnalisator)
         ];
-    }
-
-    public function updateCsoItem(Request $request)
-    {
-        DB::beginTransaction();
-        if (!empty($request->check_kesalahan_admin)) {
-            $kesalahan = 1;
-        } else {
-            $kesalahan = 0;
-        }
-
-        if (!empty($request->check_batch_tertukar)) {
-            $batch_tertukar = 1;
-        } else {
-            $batch_tertukar = 0;
-        }
-
-        if (!empty($request->check_pemeriksaan_analisator)) {
-            $checked = 1;
-        } else {
-            $checked = 0;
-        }
-        if (!empty($request->check_tidak_hitung)) {
-            $hitung = 1;
-        } else {
-            $hitung = 0;
-        }
-        if($request->groupValue !='')
-        {
-            $groupValue = $request->groupValue;
-        }else{
-            $groupValue = null;
-        }
-        // if ($request->batchno == null) {
-        $updateDetailItem = DB::table('dbttrsdet')
-            ->where('itemid', $request->itemid)
-            ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
-            ->update([
-                'koreksi' => $request->koreksi,
-                'deviasi' => $request->deviasi,
-                'analisatorid' => $request->analisator,
-                'keterangan' => $request->keterangan,
-                'groupid' => $request->grouping,
-                'kesalahan_admin' => $kesalahan,
-                "batch_tertukar" => $batch_tertukar,
-                "analisator_checked" => $checked,
-                "tidak_hitung"=>$hitung,
-                "group_value"=>$groupValue
-            ]);
-        // } else {
-        //     $updateAvalan = DB::table('dbttrsdet')
-        //         ->where('itemid', $request->itemid)
-        //         ->where('batchno', $request->batchno)
-        //         ->where('dbttrsdet.trsdetid', '=', $request->trsdetid)
-        //         ->update([
-        //             'koreksi' => $request->koreksi,
-        //             'deviasi' => $request->deviasi,
-        //             'analisatorid' => $request->analisator,
-        //             'keterangan' => $request->keterangan,
-        //             'groupid' => $request->grouping,
-        //             'kesalahan_admin' => $kesalahan,
-        //             "batch_tertukar" => $batch_tertukar
-        //         ]);
-        // }
-
-        if ($updateDetailItem == true) {
-            DB::commit();
-            return redirect()->route("item.index", ['val' => $request->typecekstok,'search'=>$request->searchCSO])->with('status', "Berhasil mengubah data CSO item");
-        } else {
-            DB::rollBack();
-            return redirect()->route("item.index", ['val' => $request->typecekstok,'search'=>$request->searchCSO])->with('error', "Gagal mengubah data CSO item");
-        }
     }
 
     public function showDetailCso(Request $request)
@@ -923,6 +913,8 @@ class ItemController extends Controller
             ->whereColumn('dbtcsodet2.csocount', 'dbttrsdet.statuscso')
             ->where('statussubmit', 'P')
             ->where('dbtcsohed.status', 'A')
+            ->where('dbtcsohed.tipecso', 'R')
+            ->whereRaw("(dbtcsodet.statusitem = 'R' OR dbtcsodet.statusitem = 'TR')")
             ->get();
 
         $cekItem = DB::table('dbttrsdet')
@@ -933,27 +925,20 @@ class ItemController extends Controller
             ->whereNot('dbttrshed.statusdoc', '=', 'P')
             ->first();
 
+        $dataDetailDashboard = collect(DB::select('CALL DashboardDetail(?)', [$param['trsdetid']]))->where('typecekstok',$request->typecekstok);
+
         $wrhItem = DB::table('dbttrsdet2')->select('wrh','qty')->where('trsdetid', $param['trsdetid'])->get();
+
         $warehouse = [];
     
         foreach($wrhItem as $idx => $wh)
         {
-            // $ini = strpos($wh->wrh,"-");                                                
-            // if ($ini == 0) return '';                                                
-            // $ini += strlen(1);                                                
-            // $len = strpos($wh->wrh,"-", $ini) - $ini;
             $len = strlen($wh->wrh)-2;
-            // return $wh->wrh;
-            // $wrhname = substr($wh->wrh, $ini, $ini-$len);
             $wrhname = substr($wh->wrh, 0, strlen($wh->wrh)-2);
-
-            // return strval(strlen($wh->wrh)-2)." ".strval($len);
             $warehouse["$wrhname-".substr($wh->wrh,-1)]=['wrhFullName' =>$wh->wrh ,'wrh' => $wrhname, 'qty' => $wh->qty,'check' => 0];
             // array_push($warehouse,['wrhFullName' =>$wh->wrh ,'wrh' => $wh->wrh , 'qty' => $wh->qty,'check' => 0]);
         }
         
-        $dataDetailDashboard = collect(DB::select('CALL DashboardDetail(?)', [$param['trsdetid']]))->where('typecekstok',$request->typecekstok);
-
         $dataPicPerCSO =  $dataDetailDashboard->unique('username');
         $dataCso = [];
 
@@ -975,28 +960,19 @@ class ItemController extends Controller
             foreach($tempCSO as $tempCSO1)
             {
                 $check = $tempCSO1->locationname."-".$tempCSO1->grade;
-                if( array_key_exists($check,$warehouse))
+                if(array_key_exists($check,$warehouse))
                 {   
                     $warehouse[$check]['check']+=$tempCSO1->qty;
                 }
             }
 
-            // $check = $picCso->locationname."-".$picCso->grade;
-            // // return $check;
-            // if( array_key_exists($check,$warehouse) )
-            // {   
-            //     // return $warehouse[$check]['wrhFullName'];
-            //     $warehouse[$check]['check']+=$tempData["cso$cso"];
-            //     // return $warehouse[$check]['check'];
-            //     $c .= $check."; ";
-            // }
             array_push($dataCso, $tempData);
         }
         
         $dataGroup = Group::all();
 
         $dataDbxJob = DB::table('analisator')
-            ->select(['userid', 'name'])->where('typecekstok',$request->typecekstok)
+            ->select(['userid', 'name'])->where('typecekstok', $request->typecekstok)->where('statuscekstok','R')
             ->distinct()
             ->get();
 
@@ -1004,61 +980,6 @@ class ItemController extends Controller
 
         $coycode = Company::select('coycode')->first();
 
-        // $itemsDet = collect(DB:: select('Call DashboardDetail()'));
-        // $dataDetailDashboard = $itemsDet->where('itemid','=',$request->id);
-        // // $dataDetailDashboard = DB::table('viewdetaildashb')->distinct()->where('itemid', '=', $request->id)->get();
-        // $dataTotalCso = DB::table('dbttrsdet')
-        //     ->leftJoin('totalcso1', 'totalcso1.itemid', '=', 'dbttrsdet.itemid')
-        //     ->leftJoin('totalcso2', 'totalcso2.itemid', '=', 'dbttrsdet.itemid')
-        //     ->leftJoin('totalcso3', 'totalcso3.itemid', '=', 'dbttrsdet.itemid')
-        //     ->leftJoin('totalcso4', 'totalcso4.itemid', '=', 'dbttrsdet.itemid')
-        //     ->select('dbttrsdet.itemid')
-        //     ->selectRaw('ifnull(totalcso1.qtytot,0) as totalcso1')
-        //     ->selectRaw('ifnull(totalcso2.qtytot,0) as totalcso2')
-        //     ->selectRaw('ifnull(totalcso3.qtytot,0) as totalcso3')
-        //     ->selectRaw('ifnull(totalcso4.qtytot,0) as totalcso4')
-        //     ->where('dbttrsdet.itemid', '=', $request->id)
-        //     ->distinct()
-        //     ->get();
-
-        // $dataCsoCount = DB::table('viewdetaildashb')
-        //     ->select(['name'])
-        //     ->selectRaw('SUM(cso1) over (partition by name) as cso1')
-        //     ->selectRaw('SUM(cso2) over (partition by name) as cso2')
-        //     ->selectRaw('SUM(cso3) over (partition by name) as cso3')
-        //     ->selectRaw('SUM(cso4) over (partition by name) as cso4')
-        //     ->where('itemid', '=', $request->id)
-        //     ->distinct()
-        //     ->get();
-
-        // $dataGroup = Group::all();
-
-        // $dataDbxJob = DB::table('analisator')
-        //     ->select(['userid', 'name'])
-        //     ->distinct()
-        //     ->get();
-
-        // $dataBatchItem = DB::table('dbttrsdetbatch')->where('trsdetid', '=', $request->trsdet)->get();
-        // return [
-        // "itemid" => $data->itemid,
-        // "trsdetid" => $data->trsdetid,
-        // 'batchItem' => $dataBatchItem,
-        // "onhand" => $data->onhand,
-        // "totalcso" => $data->totalcso,
-        // "selisih" => $data->selisih,
-        // "koreksi" => $data->koreksi,
-        // "deviasi" => $data->deviasi,
-        // "keterangan" => $data->keterangan,
-        // "dataAdminBatch" => $dataAdminBatch[0],
-        // "tableDetailDashboard" => $dataDetailDashboard,
-        // "dataCso" => $dataCsoCount,
-        // "totalCso" => $dataTotalCso,
-        // "analisator" => $dataAnalisator,
-        // "group" => $dataGroup,
-        // "dbxJob" => $dataDbxJob,
-        // "checkCso" => count($cekCso),
-        // "checkItemType" => $cekItem[0]
-        // ];
         return view('admin.dashboard.table.item.detail-cso-item', [
             "itemid" => $param['itemid'],
             "trsdetid" => $param['trsdetid'],
@@ -1074,8 +995,8 @@ class ItemController extends Controller
             // "dataCso" => $dataCsoCount,
             "dataCso" => $dataCso,
             "analisator" => $dataAnalisator,
-            "group" => $dataGroup,
             "tertukar" => $dataTertukar,
+            "group" => $dataGroup,
             "dbxJob" => $dataDbxJob,
             "checkCso" => count($cekCso),
             "checkItemType" => $cekItem,
@@ -1138,7 +1059,7 @@ class ItemController extends Controller
             } 
             
             if ($deleteDataFromDbxImpor == true) {
-                $getCSODetData = DB::table('dbtcsodet')->where('dbtcsodet.trsdetid', '=', $request->trsdetid);
+                $getCSODetData = DB::table('dbtcsodet')->where('dbtcsodet.trsdetid', '=', $request->trsdetid)->where('statusitem','TR');
                 $csodetid = $getCSODetData->get();
 
                 foreach ($csodetid as $csodet) {
@@ -1173,25 +1094,25 @@ class ItemController extends Controller
         DB::beginTransaction();
 
         DB::table('dbttrshed')
-            ->where('statusdoc', '=', 'A')->where('typecekstok',$request->typecekstok)
+            ->where('statusdoc', '=', 'A')->where('typecekstok', $request->typecekstok)
             ->update(['endcsodate' => Carbon::now(), 'statusdoc' => 'E']);
 
         $insertDbtCsoPrsn = DB::insert("INSERT INTO dbtcsoprsn (trsid,userid,username,name,coyid,jobtypeid,status,tipecso)
         SELECT DISTINCT ch.trsid,userid,username,name,j.coyid,jobtypeid,'D','R' as status FROM dbxjob j 
         INNER JOIN dbtcsohed ch ON j.userid = ch.pelakuid 
-        WHERE ch.trsid = (SELECT trsid FROM dbttrshed WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso  = 'R' AND j.typecekstok = '".$request->typecekstok."'
+        WHERE ch.trsid = (SELECT trsid FROM dbttrshed WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1) AND ch.tipecso  = 'R' AND j.typecekstok = '" . $request->typecekstok . "' AND j.statuscekstok = 'R'
         UNION 
         SELECT DISTINCT td.trsid,userid,username,name,j.coyid,jobtypeid,'D','R' as status FROM dbxjob j 
         INNER JOIN dbttrsdet td ON td.analisatorid =j.userid
-        WHERE j.typecekstok = '".$request->typecekstok."' AND
+        WHERE j.typecekstok = '" . $request->typecekstok . "' AND j.statuscekstok = 'R' AND 
         td.trsid = (SELECT trsid FROM dbttrshed WHERE statusdoc='E' ORDER BY trsid DESC LIMIT 1)");
 
         if ($insertDbtCsoPrsn == true) {
             DB::commit();
-            return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status',$request->typecekstok.' Item berhasil diberhentikan');
+            return redirect()->route("item.index", ['val' => $request->typecekstok])->with('status', $request->typecekstok . ' Item berhasil diberhentikan');
         } else {
             DB::rollBack();
-            return redirect()->route("item.index",['val'=>$request->typecekstok])->with('error', 'Gagal memberhentikan'.$request->typecekstok.'Item');
+            return redirect()->route("item.index", ['val' => $request->typecekstok])->with('error', 'Gagal memberhentikan' . $request->typecekstok . 'Item');
         }
     }
 

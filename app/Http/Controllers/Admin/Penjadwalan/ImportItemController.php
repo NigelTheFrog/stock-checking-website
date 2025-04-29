@@ -24,6 +24,15 @@ class ImportItemController extends Controller
     {
         Carbon::setLocale('id');
         $location = DB::table('dbmlocation')->get();
+
+        $companyID = config('values.companyId');
+
+        $token = Http::get('http://allapi.local.sutindo.net/getToken');
+        $getWarehouse = Http::post('http://allapi.local.sutindo.net/sos/getWarehouse', [
+            "token" => $token['token'],
+            "companyId" => $companyID,
+        ]);
+
         if ($param->val == 'CSO') {
             $impordet = DB::table("dbximpordet")
                 ->select("itemid as itemid", DB::raw('SUM(qty) as qty'))
@@ -35,31 +44,6 @@ class ImportItemController extends Controller
                 })
                 ->orderBy('itemname')
                 ->get();
-
-            $csoActive = DB::table('dbttrshed')->where('statusdoc', '<>', 'P')->where('typecekstok', $param->val)->orderByDesc('trsid')->first();
-            $coycode = Company::select('coycode')->first();
-
-
-            $companyID = config('values.companyId');
-
-            $token = Http::get('http://allapi.local.sutindo.net/getToken');
-            $getWarehouse = Http::post('http://allapi.local.sutindo.net/sos/getWarehouse', [
-                "token" => $token['token'],
-                "companyId" => $companyID,
-            ]);
-
-            return view("admin.penjadwalan.import-stok", [
-                "importedBatch" => 0,
-                "importedItem" => 0,
-                "stok" => $stok,
-                "warehouse" => $getWarehouse['data'],
-                "csoActive" => $csoActive,
-                "coy" => strtoupper(substr($coycode->coycode, 0, 3)),
-                // "csoEnd" => $csoEnd,
-                'csoType' => $param->val,
-                // 'location'=> $location
-                'location'=> $getWarehouse['data']
-            ]);
         } else if ($param->val == "CSS") {
             $impordet = DB::table("dbximpordetcss")
                 ->select("itemid as itemid", DB::raw('SUM(qty) as qty'))
@@ -70,32 +54,23 @@ class ImportItemController extends Controller
                     $join->on('dbximporcss.itemid', '=', 'impordetcss.itemid');
                 })->orderBy('itemname')
                 ->get();
-
-            $csoActive = DB::table('dbttrshed')->where('statusdoc', '<>', 'P')->where('typecekstok', $param->val)->orderByDesc('trsid')->first();
-            $coycode = Company::select('coycode')->first();
-
-            $companyID = config('values.companyId');
-
-            $token = Http::get('http://allapi.local.sutindo.net/getToken');
-            $getWarehouse = Http::post('http://allapi.local.sutindo.net/sos/getWarehouse', [
-                "token" => $token['token'],
-                "companyId" => $companyID,
-            ]);
-
-            $dbxCsoType = DB::table('dbxcsotype')->where('csotype', '=', $param->val)->first();
-
-            return view("admin.penjadwalan.import-stok", [
-                "importedBatch" => 0,
-                "importedItem" => 0,
-                "stok" => $stok,
-                "warehouse" => $getWarehouse['data'],
-                "csoActive" => $csoActive,
-                "coy" => strtoupper(substr($coycode->coycode, 0, 3)),
-                // "csoEnd" => $csoEnd,
-                'csoType' => $param->val,
-                'location'=> $getWarehouse['data']
-            ]);
         }
+
+        $csoActive = DB::table('dbttrshed')->where('statusdoc', '<>', 'P')->where('typecekstok', $param->val)->orderByDesc('trsid')->first();
+        $coycode = Company::select('coycode')->first();
+
+        return view("admin.penjadwalan.import-stok", [
+            "importedBatch" => 0,
+            "importedItem" => 0,
+            "stok" => $stok,
+            "warehouse" => $getWarehouse['data'],
+            "csoActive" => $csoActive,
+            "coy" => strtoupper(substr($coycode->coycode, 0, 3)),
+            // "csoEnd" => $csoEnd,
+            'csoType' => $param->val,
+            // 'location'=> $location
+            'location'=> $getWarehouse['data']
+        ]);
     }
 
     /**
@@ -192,8 +167,9 @@ class ImportItemController extends Controller
                     }
                 } else if ($request->csotype == "CSS") {
                     foreach ($param as $dataItem) {
-
-                        $idItem = DB::table('dbximporcss')->select('itemid')->where('itemid', '=', $dataItem['ITEMID'])->get();
+                        $idItem = DB::table('dbximporcss')->select('itemid')
+                            ->where('itemid', '=', $dataItem['ITEMID'])
+                            ->get();
                         if (count($idItem) == 0) {
                             $insertDbxImpor = DB::table('dbximporcss')->insert([
                                 'itemid' => $dataItem['ITEMID'],
@@ -501,10 +477,12 @@ class ImportItemController extends Controller
     public function destroy(Request $request)
     {
         DB::beginTransaction();
-        if ($request->key == "CSS") {
             $successDelete = 0;
             $idItem = "";
-            if ($request->checkboxDelete != null) {
+        if ($request->checkboxDelete != null)
+        {
+            if ($request->key == "CSS")
+            {
                 foreach ($request->checkboxDelete as $itemId) {
                     $deleteDbxImport = DB::table('dbximporcss')->where('itemid', '=', $itemId)->delete();
                     if ($deleteDbxImport == true) {
@@ -515,22 +493,9 @@ class ImportItemController extends Controller
                         break;
                     }
                 }
-
-                if ($successDelete > 0) {
-                    DB::commit();
-                    return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('status', 'Berhasil menghapus data item');
-                } else {
-                    DB::rollBack();
-                    return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
-                }
-            } else {
-                DB::rollBack();
-                return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
             }
-        } else if ($request->key == "CSO") {
-            $successDelete = 0;
-            $idItem = "";
-            if ($request->checkboxDelete != null) {
+            else if($request->key == "CSO")
+            {
                 foreach ($request->checkboxDelete as $itemId) {
                     $deleteDbxImport = DB::table('dbximpor')->where('itemid', '=', $itemId)->delete();
                     if ($deleteDbxImport == true) {
@@ -542,28 +507,21 @@ class ImportItemController extends Controller
                         break;
                     }
                 }
-                // foreach ($request->checkboxDelete as $itemBatchId) {
-                //     $deleteDbxImport = DB::table('dbximpor')->where('itembatchid', '=', $itemBatchId)->delete();
-                //     if ($deleteDbxImport == true) {
-                //         DB::table('dbximpordet')->where('itembatchid', '=', $itemBatchId)->delete();
-                //         $successDelete++;
-                //     } else {
-                //         $idItem = $itemBatchId;
-                //         break;
-                //     }
-                // }
+            }
 
                 if ($successDelete > 0) {
                     DB::commit();
-                    return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('status', 'Berhasil menghapus data item');
-                } else {
-                    DB::rollBack();
-                    return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
-                }
+                return redirect()->route("import-stok.index", ['val' => $request->key])->with('status', 'Berhasil menghapus data item');
             } else {
                 DB::rollBack();
-                return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
+                return redirect()->route("import-stok.index", ['val' => $request->key])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
             }
+
+        }
+        else
+        {
+            DB::rollBack();
+            return redirect()->route("import-stok.index", ['val' => $request->key])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
         }
     }
 }
