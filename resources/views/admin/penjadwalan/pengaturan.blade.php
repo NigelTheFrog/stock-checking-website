@@ -22,11 +22,14 @@
             <div class="col-7">
                 <div class="card mt-2">
                     <div class="card-header bg-secondary text-white">
-                        <h4 class="card-title pt-2">Pengaturan {{$csotype}}</h4>
+                        <h4 class="card-title pt-2">Pengaturan {{$csotype}} 
+                            @if($statuscekstok == 'A') BATCH @endif
+                        </h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <p>Tipe Cek Stok :<strong>
                                 {{ $csotype }}
+                                @if($statuscekstok == 'A') BATCH @endif
                             </strong></p>
                         <p>Item yang di {{ $csotype }} :<strong>
                                 {{ $csoitem }}
@@ -42,7 +45,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($jobtype as   $jobtype)
+                                @foreach ($jobtype as  $jobtype)
                                     <tr class="text-center">
                                         <td class="align-middle">{{ $loop->iteration }}</td>
                                         <td class="align-middle">{{ $jobtype->name }}</td>
@@ -78,7 +81,7 @@
                                 <div style="width:100%" class="form-group">
                                     <select id="multipleSelect" name="typestock" placeholder="Tipe Cek Stok {{$csotype}}"
                                         data-search="true" data-silent-initial-value-set="true">
-                                        <option selected value="{{$csotype}}">{{$csotype}}</option>
+                                        <option selected value="{{$csotype.$statuscekstok}}">{{$csotype}}</option>
                                         {{-- <option value="{{$csotype}}" disabled></option> --}}
                                     </select>
                                 </div>
@@ -177,7 +180,7 @@
                             @method('DELETE')
                             <p id="warning"></p>
                             
-                            <input type="text" name="typecekstok" value="{{ $csotype }}" hidden>
+                            <input type="text" name="typecekstok" value="{{ $csotype.$statuscekstok }}" hidden>
                             <button type="submit" class="btn btn-danger" name="simpan"><i
                                     class="bx bxs-save"></i>Iya</button>
                             <button type="button" data-bs-dismiss="modal" class="btn btn-primary" name="simpan"><i

@@ -98,6 +98,9 @@ class ProcessController extends Controller
                 'dbtcsodet.color' => $color,
                 'dbtcsodet.remark' => $request->remark,
                 'dbtcsodet2.qty' => $request->qtycso,
+                'dbtcsodet2.history' => $request->qtycso,
+                'dbtcsodet2.inputs' => $request->qtycso,
+
             ];
 
             $simpanItem = DB::table('dbtcsodet')
@@ -384,9 +387,19 @@ class ProcessController extends Controller
                 'statusitem' => 'TR'
             ]);
 
+            $getLoc = DB::table('dbmlocation')->get();
+            $loc = 0;
+            foreach ($getLoc as $key)
+            {
+                if($key->locationid == $request->lokasi)
+                {
+                    $loc = $key->locationname;
+                }
+            }
             DB::table($impordet)->insert([
                 'itemid' => $itemId,
-                'wrh' => $request->lokasi,
+                'wrh' => ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc,
+                // 'wrh' => $request->lokasi,
                 // 'qty' => $request->qtycso ?? 0
                 'qty' => 0
 
@@ -414,7 +427,8 @@ class ProcessController extends Controller
                 $insertDbtTrsDet2 = DB::table('dbttrsdet2')->insert([
                     'trsdetid' => $getTrsDet->trsdetid,
                     'itemid' => $itemId,
-                    'wrh' => $request->lokasi,
+                    'wrh' => ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc,
+                    // 'wrh' => $request->lokasi,
                     // 'qty' => $request->qtycso ?? 0
                     'qty' => 0
 
@@ -429,9 +443,9 @@ class ProcessController extends Controller
                 $getDbtTrsDet = DB::table('dbttrsdet')->select('trsdetid', 'statusitem')->latest('trsdetid')->first();
                 $trsdetid = $getDbtTrsDet->trsdetid;
 
-
+                $gradeCsodet = ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc;
                 $selectdbtcsohed = DB::table('dbtcsohed')
-                    ->select(DB::raw("csoid,'$trsdetid','$itemId','$request->lokasi','$request->grade','$color','$request->remark','TR','D','D'"))
+                    ->select(DB::raw("csoid,'$trsdetid','$itemId','$request->lokasi','$gradeCsodet','$color','$request->remark','TR','D','D'"))
                     ->where('pelakuuname', '=', $request->username)
                     ->where('csoid', '=', $request->csoid)
                     ->where('status', '=', 'A');
@@ -516,6 +530,8 @@ class ProcessController extends Controller
                 'dbtcsodet.color' => $color,
                 'dbtcsodet.remark' => $request->remark,
                 'dbtcsodet2.qty' => $request->qtycso,
+                'dbtcsodet2.history' => $request->qtycso,
+                'dbtcsodet2.inputs' => $request->qtycso,
             ];
             DB::table('dbtcsodet')
                 ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')

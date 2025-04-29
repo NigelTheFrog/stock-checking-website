@@ -223,7 +223,7 @@ $itemWrh = $wrhItem;
                     <td class="align-middle border-dark" style='white-space:nowrap;'>
                         {{$wrhItem['check']}}
                     </td>
-                    <td class="align-middle border-dark" style='white-space:nowrap;'>{{ $wrhItem['qty'] - $wrhItem['check'] }}</td>
+                    <td class="align-middle border-dark" style='white-space:nowrap;'>{{ $wrhItem['check'] - $wrhItem['qty'] }}</td>
                     {{-- <td class="align-middle" style='white-space:nowrap;'>{{ $wrhItem->statuscso }}</td> --}}
                 </tr>
             @endforeach

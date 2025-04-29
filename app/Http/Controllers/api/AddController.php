@@ -40,24 +40,33 @@ class AddController extends Controller
     }
 
     public function grade(Request $request) {
-        if($request->statusitem == 'TR' || $request->statusitem == 'TA') $grade = Grade::all()->sortBy('gradecode');
-        // else $grade = DB::table('dbmgrade')
-        //     ->join('dbttrsdet2','dbmgrade.gradecode','=','dbttrsdet2.wrh')
-        //     ->where('dbttrsdet2.trsdetid','=',$request->trsdetid)
-        //     ->orderBy('gradecode')
-        //     ->get();
-        // else $grade = DB::table('dbttrsdet2')->select(DB::raw('wrh as gradecode'),DB::raw('coalesce(db)'))
-        //         ->join('dbmgrade','dbmgrade.gradecode','=','dbttrsdet2.wrh')
-        //         ->where('trsdetid','=',$request->trsdetid)->get();
-
-        //<gradecode> <description>
+        $grade = [];
+        if($request->statusitem == 'TR' || $request->statusitem == 'TA') 
+        {
+            $tableGrade = Grade::all()->sortBy('gradecode');
+            // $grade = [];
+            $check = [];
+            foreach ($tableGrade as $gdg) 
+            {
+                if($gdg->group!=NULL || $gdg->group!='')
+                {
+                    if(in_array($gdg->group,$check)) continue;
+                        array_push($grade,['description' => $gdg->group, 'gradecode' => $gdg->group]);
+                        array_push($check,$gdg->group);
+                }
+                else
+                {
+                    array_push($grade,['description' => $gdg->description, 'gradecode' => $gdg->gradecode]);
+                }
+            }
+        }        
         else
         {
-            $dbttrsdet2 = db::table('dbttrsdet2')->select('wrh')
+            $dbttrsdet2 = db::table($request->statusitem == 'R' ? 'dbttrsdet2' : 'dbttrsdet2a')->select('wrh')
             ->where('trsdetid','=',$request->trsdetid)
             ->get();
             $tableGrade = DB::table('dbmgrade')->get();
-            $grade = [];
+            // $grade = [];
             $check = [];
             
             foreach($dbttrsdet2 as $wrh)
@@ -76,12 +85,8 @@ class AddController extends Controller
                     }
                 }
             }
-            
-            
             // array_push($grade,['description' => 'test1', 'gradecode' => 'test1']);
-        }
-        // return response()->json(((object)$grade)); 
-        // return response()->json(['data'=>$dbttrsdet2]); 
+        } 
         return response()->json(['data'=>$grade]); 
     }
 }

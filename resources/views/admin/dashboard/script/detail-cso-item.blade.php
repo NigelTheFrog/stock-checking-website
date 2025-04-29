@@ -32,14 +32,16 @@
         //     search: false
         // });
 
-        function openModalDetailCSO(button, trsdetid, itemId, itemName,groupValue) {
+        // function openModalDetailCSO(button, trsdetid, itemId, itemName,groupValue) {
+        function openModalDetailCSO(itemName, dataItem) {
             document.getElementById("detailCsoHeader").innerText = `DETAIL ${itemName}`;
             $.ajax({
                 url: "{{ route('item.detail-cso') }}",
                 type: 'POST',
                 data: {
-                    id: itemId,
-                    trsdetid: trsdetid,
+                    // id: itemId,
+                    // trsdetid: trsdetid,
+                    param: JSON.stringify(dataItem),
                     typecekstok: typecekstok
                 },
                 headers: {
@@ -59,7 +61,8 @@
                     }
                     else
                     {
-                        $('#groupValue').prop('disabled', false).val(groupValue);
+                        // $('#groupValue').prop('disabled', false).val(groupValue);
+                        $('#groupValue').prop('disabled', false).val(dataItem.groupValue);
                     }
                 },
                 error: function() {

@@ -9,6 +9,9 @@ use App\Models\Admin\Master\Level;
 use App\Models\Admin\Resume\SusunanCso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+// use App\Models\Admin\Master\Company;
+use Illuminate\Support\Facades\Log;
+
 
 class SusunanTimCsoController extends Controller
 {
@@ -45,9 +48,7 @@ class SusunanTimCsoController extends Controller
 
         if(!empty($checkCsoActive))
         {
-            
             $analisator= DB::table($analisator1)->select('*')->where('jobtypeid', '=', '2')->get();
-            // dd($analisator1);
         }
         else $analisator=[];
 
@@ -158,18 +159,18 @@ class SusunanTimCsoController extends Controller
                 // DB::table('dbximpordetbatchcss')->truncate();
             }
           
-            DB::table('dbxsetdate')->where('tipe', '=', 'I')
+            DB::table('dbxsetdate')->where('tipe', '=', 'I')->where('statuscekstok','R')
             ->where('typecekstok','=',$request->typecekstok)->delete();
 
-            DB::table('dbxmaterial')->where('typecekstok','=',$request->typecekstok)->delete();
+            DB::table('dbxmaterial')->where('typecekstok','=',$request->typecekstok)->where('statuscekstok','R')->delete();
 
-            DB::table('dbtcsohed')->where('trsid',$request->trsid)
+            DB::table('dbtcsohed')->where('trsid',$request->trsid)->where('tipecso','R')
                 ->update(['status' => 'P']);
 
-            DB::table('dbtcsoprsn')->where('trsid',$request->trsid)
+            DB::table('dbtcsoprsn')->where('trsid',$request->trsid)->where('tipecso','R')
                 ->update(['status' => 'P']);
 
-            DB::table('dbxjob')->where('typecekstok','=',$request->typecekstok)->delete();
+            DB::table('dbxjob')->where('typecekstok','=',$request->typecekstok)->where('statuscekstok','R')->delete();
             // DB::table('dbxcsotype')->where('typecekstok',$request->typcekstok)->delete();;
 
             return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status', $request->typcekstok.' berhasil diakhiri');

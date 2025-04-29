@@ -303,18 +303,38 @@
                 <td class="align-middle">
                     <div class="d-flex my-0 align-items-center">
                         <div class="mr-3">
-                            <button type="button" class="btn btn-sm" id="detailcsoitem"
+                            {{-- <button type="button" class="btn btn-sm" id="detailcsoitem"
                                 onclick="openModalDetailCSO(this,
                                 '{{ $barang->trsdetid }}',
                                 '{{ $barang->itemid }}',
                                 '{{ addslashes($barang->itemname) }}',
                                 '{{$barang->group_value}}')"
-                                {{-- style="color: rgb(81, 81, 81)" id="viewlistcso"> --}}
                                 @if ($barang->analisator_checked) style="color: #007cf7" 
                                 @else
                                 style="color: rgb(81, 81, 81)" @endif
                                 id="viewlistcso">
-                                <i class="fas fa-eye"></i></button>
+                                <i class="fas fa-eye"></i>
+                            </button> --}}
+                            <button type="button" class="btn btn-sm" id="detailcsoitem"
+                                onclick="openModalDetailCSO(`{{ addslashes($barang->itemname) }}`, {
+                                itemid: `{{ $barang->itemid }}`,
+                                trsdetid: `{{ $barang->trsdetid }}`,
+                                onhand: `{{ $barang->onhand }}`,
+                                totalcso: `{{ $barang->totalcso }}`,
+                                selisih: `{{ $barang->selisih }}`,
+                                koreksi: `{{ $barang->koreksi }}`,
+                                deviasi: `{{ $barang->deviasi }}`,
+                                keterangan: `{{ $barang->keterangan }}`,
+                                groupValue:`{{ $barang->group_value }}`                                
+                                })" 
+                                {{-- style="color: rgb(81, 81, 81)" id="viewlistcso"> --}}
+                                @if ($barang->analisator_checked) style="color: #007cf7"
+                                @else
+                                    style="color: rgb(81, 81, 81)" @endif
+                                id="viewlistcso">
+                                <i class="fas fa-eye"></i>
+                            </button>
+
                         </div>
                         <div>
                             {{-- @if ($barang->batchno != null)

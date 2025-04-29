@@ -54,20 +54,21 @@ Route::middleware('checkurl')->group(function () {
             Route::post('item/cso-ulang', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'csoUlang'])->name('item.cso-ulang');
             Route::post('item/hapus-temuan-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'hapusTemuanItem'])->name('item.hapus-temuan-item');
             Route::post('item/update-grouping-analisator-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateGroupingAndAnalisatorItem'])->name('item.update-grouping-analisator-item');
+            Route::post("main-table-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
+            Route::get("banner-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBanner']);
+            // Route::get("banner-item-search", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerSearch']);
+            Route::get("check-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'checkItemBlmProses']);
+            Route::get('print-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'print'])->name('item.print');
+            
             Route::post('avalan/detail-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showDetailCsoAvalan'])->name('avalan.detail-cso');
             Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.update-cso');
             Route::post('avalan/hapus-temuan-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'hapusTemuanAvalan'])->name('avalan.hapus-temuan-avalan');
             Route::post('avalan/update-grouping-analisator-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateGroupingAndAnalisatorAvalan'])->name('avalan.update-grouping-analisator-avalan');
             Route::post('avalan/cso-ulang', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'csoUlang']);
             Route::post("main-table-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
-            Route::post("main-table-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
             Route::get("banner-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
-            Route::get("check-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'checkAvalanBlmProses']);
             Route::get('banner-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBannerTable'])->name('request');
-            Route::get("banner-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBanner']);
-            // Route::get("banner-item-search", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerSearch']);
-            Route::get("check-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'checkItemBlmProses']);
-            Route::get('print-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'print'])->name('item.print');
+            Route::get("check-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'checkAvalanBlmProses']);
             Route::get('print-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'print'])->name('request');
             Route::get('banner-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerTable'])->name('request');
         });

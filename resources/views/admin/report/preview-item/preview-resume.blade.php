@@ -264,6 +264,7 @@
                                             <td class="td-content" style="padding: 8px">&nbsp</td>
                                             <td class="td-content" style="padding: 8px">&nbsp</td>
                                             <td class="td-content" style="padding: 8px">&nbsp</td>
+                                            <td class="td-content" style="padding: 8px">&nbsp</td>
                                         </tr>
                                     @endif
                                 </tbody>

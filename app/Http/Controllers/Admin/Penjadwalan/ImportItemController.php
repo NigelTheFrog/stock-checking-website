@@ -149,13 +149,6 @@ class ImportItemController extends Controller
                                             'qty' => $gdg['qty']
                                         ]);
 
-                                        // if(!DB::table('dbmgudang')->where('gudangname','=',$gdg['namaGudang'])->exists())
-                                        // {
-                                        //     db::table('dbmgudang')->insert([
-                                        //         'gudangname' => $gdg['namaGudang']
-                                        //     ]);
-
-                                        // }
                                         if(!DB::table('dbmgrade')->where('gradecode','=',$gdg['namaGudang'])->exists())
                                         {
                                             db::table('dbmgrade')->insert([
@@ -190,8 +183,9 @@ class ImportItemController extends Controller
                     }
                 } else if ($request->csotype == "CSS") {
                     foreach ($param as $dataItem) {
-
-                        $idItem = DB::table('dbximporcss')->select('itemid')->where('itemid', '=', $dataItem['ITEMID'])->get();
+                        $idItem = DB::table('dbximporcss')->select('itemid')
+                            ->where('itemid', '=', $dataItem['ITEMID'])
+                            ->get();
                         if (count($idItem) == 0) {
                             // return ['task' => "0", "message" => "Item dengan id {$dataItem['ITEMID']} sudah pernah diinput"];
                             // return redirect()->route("import-stok.index")->with('error', "Item dengan id {$dataItem['ITEMID']} sudah pernah diinput");
@@ -225,14 +219,6 @@ class ImportItemController extends Controller
                                             'wrh' => $gdg['namaGudang'],
                                             'qty' => $gdg['qty']
                                         ]);
-
-                                        // if(!DB::table('dbmgudang')->where('gudangname','=',$gdg['namaGudang'])->exists())
-                                        // {
-                                        //     db::table('dbmgudang')->insert([
-                                        //         'gudangname' => $gdg['namaGudang']
-                                        //     ]);
-
-                                        // }
 
                                         if(!DB::table('dbmgrade')->where('gradecode','=',$gdg['namaGudang'])->exists())
                                         {
@@ -288,7 +274,8 @@ class ImportItemController extends Controller
                                                         'trsdetid' => $getTrsDet->trsdetid,
                                                         'itemid' => $dataItem['ITEMID'],
                                                         'itembatchid' =>'',
-                                                        'wrh' => $tableGudang->group??$gdg['namaGudang'],
+                                                        // 'wrh' => $tableGudang->group??$gdg['namaGudang'],
+                                                        'wrh' => ($tableGudang->group=='' || $tableGudang->group==NULL) ? $gdg['namaGudang'] : $tableGudang->group,
                                                         'qty' => $gdg['qty']   
                                                     ];
                                                 }
@@ -307,12 +294,6 @@ class ImportItemController extends Controller
                                                 //         'wrh' => $key,
                                                 //         'qty' => $dataItem[$key]
                                                 //     ]);
-
-                                                // if ($insertDbtTrsDet2 == false) {
-                                                //     DB::rollBack();
-                                                //     return ['task' => "0", "message" => "Penambahan data detail impor item gagal"];
-                                                //     // return redirect()->route("import-stok.index")->with('error', "Penambahan data detail impor item gagal");
-                                                // }
                                             }
                                         }
 
@@ -552,10 +533,12 @@ class ImportItemController extends Controller
     public function destroy(Request $request)
     {
         DB::beginTransaction();
-        if ($request->key == "CSS") {
-            $successDelete = 0;
-            $idItem = "";
-            if ($request->checkboxDelete != null) {
+        $successDelete = 0;
+        $idItem = "";
+        if ($request->checkboxDelete != null)
+        {
+            if ($request->key == "CSS")
+            {
                 foreach ($request->checkboxDelete as $itemId) {
                     $deleteDbxImport = DB::table('dbximporcss')->where('itemid', '=', $itemId)->delete();
                     if ($deleteDbxImport == true) {
@@ -566,22 +549,9 @@ class ImportItemController extends Controller
                         break;
                     }
                 }
-
-                if ($successDelete > 0) {
-                    DB::commit();
-                    return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('status', 'Berhasil menghapus data item');
-                } else {
-                    DB::rollBack();
-                    return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
-                }
-            } else {
-                DB::rollBack();
-                return redirect()->route("import-stok.index", ['val' => 'CSS'])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
             }
-        } else if ($request->key == "CSO") {
-            $successDelete = 0;
-            $idItem = "";
-            if ($request->checkboxDelete != null) {
+            else if($request->key == "CSO")
+            {
                 foreach ($request->checkboxDelete as $itemId) {
                     $deleteDbxImport = DB::table('dbximpor')->where('itemid', '=', $itemId)->delete();
                     if ($deleteDbxImport == true) {
@@ -592,18 +562,21 @@ class ImportItemController extends Controller
                         break;
                     }
                 }
+            }
 
                 if ($successDelete > 0) {
                     DB::commit();
-                    return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('status', 'Berhasil menghapus data item');
-                } else {
-                    DB::rollBack();
-                    return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
-                }
+                return redirect()->route("import-stok.index", ['val' => $request->key])->with('status', 'Berhasil menghapus data item');
             } else {
                 DB::rollBack();
-                return redirect()->route("import-stok.index", ['val' => 'CSO'])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
+                return redirect()->route("import-stok.index", ['val' => $request->key])->with('error', "Terdapat kegagalan dalam menghapus data dengan itembatchid $idItem");
             }
+
+        }
+        else
+        {
+            DB::rollBack();
+            return redirect()->route("import-stok.index", ['val' => $request->key])->with('error', "Harap pilih item yang hendak dihapus terlebih dahulu");
         }
     }
 }

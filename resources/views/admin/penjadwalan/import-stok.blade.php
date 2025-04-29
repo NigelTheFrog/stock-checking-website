@@ -55,7 +55,6 @@
                                             <button type="submit" class="btn btn-danger" name="simpan">Iya</button>
                                             <button type="button" onclick="closeModalDelete()" data-bs-dismiss="modal"
                                                 class="btn btn-primary">Batal</button>
-
                                         </div>
                                     </div>
                                 </div>
@@ -92,10 +91,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($stok as   $stok)
-                                        <tr class="text-center {{ $stok->statusitem == 'T' ? 'table-info' : '' }}">
+                                    @foreach ($stok as $stok)
+                                        <tr class="text-center {{ $stok->statusitem == 'TR' ? 'table-info' : '' }}">
                                             <td class="align-middle">
-                                                <div class="form-check">
+                                                <div class="form-check" style="z-index:0">
                                                     <input type="checkbox" name="checkboxDelete[]"
                                                         class="form-check-input cekboxdelete" value={{ $stok->itemid }}
                                                         @if ($csoActive) disabled @endif>
@@ -230,7 +229,7 @@
         </div>
     </div>
 
-    <div class="modal fade text-left" id="modalImportItem" tabindex="-1" >
+    <div class="modal fade text-left" id="modalImportItem" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -269,7 +268,7 @@
                                         aria-label="Search">
                                 </form>
                                 <button type="button" id="tarikitem" class="btn btn-primary float-end"
-                                    onclick="tarikItem(this)" data-bs-toggle="tooltip" title="Submit">
+                                    onclick="tarikItem(this)">
                                     Tarik Data
                                 </button>
                             </div>
