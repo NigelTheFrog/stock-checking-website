@@ -2,7 +2,7 @@
     <!-- Navbar Brand-->
     
     <a class="navbar-brand ps-3" 
-    @if(Auth::user()->level==1 || Auth::user()->level==2 || Auth::user()->level==3)
+    @if(Auth::user()->level == 1 || Auth::user()->level==2 || Auth::user()->level==3)
     href="{{ route('item.index',['val'=>'CSO']) }}"
     @elseif(Auth::user()->level==5 || Auth::user()->level == 6)
     href="{{ route('konfirmasi-wrh.index') }}"

@@ -72,6 +72,25 @@
                         <form id="forminput" action="{{ route('area-lokasi.store') }}" method="POST"
                             class="needs-validation mx-3" novalidate>
                             @csrf
+                        {{-- <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend" style="width:15%">
+                                        <span class="input-group-text w-100 d-flex justify-content-center">
+                                            <i class="fas fa-key"></i></span>
+                                    </div>
+
+                                    <select id="lokasi-select" class="form-select text-secondary" name="locationcode"
+                                        aria-label="pilih level" required>
+                                        <option selected value="" disabled>Pilih Gudang</option>
+                                        @foreach ($gudang as $gdg)
+                                            <option value="{{ $gdg->gudangid }}">{{ $gdg->gudangname }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        gudang harus dipilih
+                                    </div>
+                                </div>
+                            </div> --}}
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -119,6 +138,25 @@
                     <form id="editform" action="" method="POST" class="needs-validation mx-3" novalidate>
                         @csrf
                         @method('PUT')
+                        {{-- <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend" style="width:15%">
+                                    <span class="input-group-text w-100 d-flex justify-content-center">
+                                        <i class="fas fa-key"></i></span>
+                                </div>
+
+                                <select id="lokasi-select" class="form-select text-secondary" name="level"
+                                    aria-label="pilih level" required>
+                                    <option selected value="" disabled>Pilih Lokasi</option>
+                                    @foreach ($gudang as $gdg)
+                                        <option value="{{ $gdg->gudangid }}">{{ $gdg->gudangname }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback">
+                                    gudang harus dipilih
+                                </div>
+                            </div>
+                        </div> --}}
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">

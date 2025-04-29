@@ -45,7 +45,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($tertukar as  $tertukar)
+                                    @foreach ($tertukar as   $tertukar)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $tertukar->trsdetid }}"></td>
@@ -160,7 +160,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($selisih as  $selisih)
+                                    @foreach ($selisih as   $selisih)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $selisih->trsdetid }}"></td>
@@ -290,7 +290,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($kesalahan_admin as  $admin)
+                                    @foreach ($kesalahan_admin as   $admin)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $admin->trsdetid }}"></td>

@@ -84,7 +84,7 @@
     //         data: {
     //             search: searchValue,
     //             filter: filterItems,
-    //             typecekstok: typecekstok,
+    //             typecekstok: typecekstok
     //         },
     //         headers: {
     //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -116,22 +116,22 @@
 
         var searchValue = $("#searchModItem").val();
         filterItems = value;
-        $.ajax({
-            url: "{{ url('admin/dashboard/main-table-item') }}",
-            type: 'POST',
-            data: {
-                search: searchValue,
-                filter: value,
-                typecekstok: typecekstok
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {                
-                countAnalisator = data.countAnalisator;
-                $('#main-table-item').html(data.view);
-                $(".sticky-header").floatThead({ scrollingTop: 0 })
-            }
-        });
-    }
+            $.ajax({
+                url: "{{ url('admin/dashboard/main-table-item') }}",
+                type: 'POST',
+                data: {
+                    search: searchValue,
+                    filter: value,
+                    typecekstok: typecekstok
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    countAnalisator = data.countAnalisator;
+                    $('#main-table-item').html(data.view);
+                    $(".sticky-header").floatThead({ scrollingTop: 0 })
+                }
+            });
+        }
 </script>

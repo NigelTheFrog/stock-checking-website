@@ -72,7 +72,7 @@
                                 @foreach ($analisator as $analisator)
                                     <td hidden><input type="text" name="jobidAnalisator[]"
                                             value="{{ $analisator->jobid }}"></td>
-                                    <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                     <td>{{ $analisator->name }}</td>
 
                                     <td><select name="deptAnalisator[]" id="" class="deptAnalisator">
@@ -113,7 +113,7 @@
                 {{-- <input type="text" name="type" value="2" hidden> --}}
                 <div class="card card-secondary mb-3">
                     <div class="card-header bg-secondary text-white ">
-                        <h3 class="card-title ">Pelaku {{$typecekstok}}</h3>
+                        <h3 class="card-title ">Pencatat {{$typecekstok}}</h3>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped table-hover mb-3">
@@ -121,9 +121,9 @@
                                 <tr>
                                     <th hidden></th>
                                     <th scope="col">No</th>
-                                    <th>Nama Pelaku</th>
+                                    <th>Nama Pencatat</th>
                                     <th>Departemen</th>
-                                    <th>Catatan tentang Pelaku</th>
+                                    <th>Catatan tentang Pencatat</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -298,175 +298,6 @@
                                     class="fas fa-save pe-2"></i>save</button> --}}
                     </div>
                     {{-- </form> --}}
-                </div>
-
-                @php
-                    $show = true;
-                    $name = "";
-                @endphp
-                <div class="card card-secondary mt-3" @if (count($gudang_tertukar)==0) hidden @endif>
-                    <div class="card-header bg-secondary text-white">
-                        <h3 class="card-title">Grade Tertukar</h3>
-                    </div>
-                    {{-- <form action="{{ route('barang-selisih.update', 'barang_selisih') }}" method="POST">
-                        @csrf
-                        @method('PUT') --}}
-                    {{-- <input type="text" name="type" value="3" hidden> --}}
-                    <div class="card-body small">
-                        <div style="overflow-x: scroll; overflow-y: hidden; max-width: 82vw; ">
-                            <table class="table table-striped table-hover text-center" style="min-width:150%;">
-                                <thead>
-                                    <tr>
-                                        <th class="d-none"></th>
-                                        <th style="width: 2%">No</th>
-                                        <th style="width: 10%">Nama Item</th>
-                                        <th style="width: 5%">Keputusan</th>
-                                        <th style="width: 2%">SLS LBR</th>
-                                        <th style="width: 3%">Realita LBR</th>
-                                        <th style="width: 5%">Selisih<br>Plus (qty)</th>
-                                        <th style="width: 6%">Selisih<br>Minus (qty)</th>
-                                        <th style="width: 3%">Gudang</th>
-                                        <th style="width: 9%">HPP</th>
-                                        <th style="width: 9%">HPP Manual</th>
-                                        <th style="width: 9%">Selisih Plus<br>(nominal)</th>
-                                        <th style="width: 9%">Selisih Minus<br>(nominal)</th>
-                                        <th style="width: 9%">Pembebanan<br>(nominal)</th>
-                                        <th style="width: 5%">Group</th>
-                                        <th style="width: 6%">No Adjust<br>(GI/SJ & GR)</th>
-                                        <th>Keterangan</th>
-    
-                                    </tr>
-                                </thead>
-                                
-                                <tbody>
-                                    @foreach ($gudang_tertukar as  $gdg_tertukar)
-                                        <tr>
-                                            @if($name == "" || $name != $gdg_tertukar->trsdetid) 
-                                                @php 
-                                                    $name = $gdg_tertukar->trsdetid;
-                                                    $show = true;
-                                                @endphp
-                                            @elseif($name == $gdg_tertukar->trsdetid)
-                                                @php 
-                                                    $show = false;
-                                                @endphp
-                                            @endif
-
-                                            @if($show)
-                                                <td hidden><input type="text" name="trsdetidGudangTertukar[]"
-                                                value="{{ $gdg_tertukar->trsdetid }}"></td>
-                                            @endif
-                                            <td class="align-middle text-center">{{ $loop->iteration }}</th>
-                                            <td class="align-middle text-center">{{ $gdg_tertukar->itemname }}</td>
-                                            @if($show)
-                                                <td class="align-middle text-center"><select class="form-select form-select-sm"
-                                                    name="keputusanGudangTertukar[]">
-                                                    @if ($gdg_tertukar->keputusan != null)
-                                                        <option value="{{ $gdg_tertukar->keputusan }}" selected>
-                                                            @foreach ($keputusan as $kep)
-                                                                @if ($kep->keputusanid == $gdg_tertukar->keputusan)
-                                                                    {{ $kep->keputusandesc }}
-                                                                @endif
-                                                            @endforeach
-                                                        </option>
-                                                        @foreach ($keputusan as $kep)
-                                                            <option value="{{ $kep->keputusanid }}">
-                                                                {{ $kep->keputusandesc }}</option>
-                                                        @endforeach
-                                                    @else
-                                                        <option selected value="">Pilih Keputusan</option>
-                                                        @foreach ($keputusan as $kep)
-                                                            <option value="{{ $kep->keputusanid }}">
-                                                                {{ $kep->keputusandesc }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select> </td>
-                                            @else
-                                                <td class="align-middle text-center"> </td>
-                                            @endif
-                                            <td class="align-middle text-center">{{ $gdg_tertukar->qty }}</td>
-                                            <td class="align-middle text-center">{{ $gdg_tertukar->totalcso }}</td>
-                                            <td class="align-middle text-center">{{ number_format($gdg_tertukar->selisihplus, 2, '.', ',') }}</td>
-                                            <td class="align-middle text-center">{{ number_format($gdg_tertukar->selisihminus, 2, '.', ',') }}</td>
-                                            <td class="align-middle text-center">
-                                                @if($gdg_tertukar->wrh !='' && $gdg_tertukar->wrh != NULL)
-                                                    {{ $gdg_tertukar->wrh }}    
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->cogs != 0)
-                                                    Rp.{{ number_format($gdg_tertukar->cogs, 2, '.', ',') }}
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->cogs_manual != null && $show)
-                                                    <input type="number" class="form-control form-control-sm" step="0.01"
-                                                        name="hppGudangTertukar[]" value="{{ $gdg_tertukar->cogs_manual }}">
-                                                @elseif($show)
-                                                    <input type="number" class="form-control form-control-sm" step="0.01"
-                                                        name="hppGudangTertukar[]">
-                                                @else
-                                                    <input type="number" class="form-control form-control-sm" step="0.01" disabled>
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->cogs_manual != 0)
-                                                    Rp.{{ number_format(($gdg_tertukar->cogs_manual * $gdg_tertukar->selisihplus), 2, '.', ',') }}
-                                                @else
-                                                    Rp.{{ number_format($gdg_tertukar->cogs * $gdg_tertukar->selisihplus, 2, '.', ',') }}
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->cogs_manual != 0)
-                                                    Rp.{{ number_format(($gdg_tertukar->cogs_manual * $gdg_tertukar->selisihminus), 2, '.', ',') }}
-                                                @else
-                                                    Rp.{{ number_format($gdg_tertukar->cogs * $gdg_tertukar->selisihminus, 2, '.', ',') }}
-                                                @endif
-                                            </td>                                           
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->pembebanan != null && $show)
-                                                    <input type="number" class="form-control form-control-sm" step="0.01"
-                                                        name="pembebananGudangTertukar[]"
-                                                        value="{{ $gdg_tertukar->pembebanan }}">
-                                                @elseif($show)
-                                                    <input type="number" class="form-control form-control-sm" step="0.01"
-                                                        name="pembebananGudangTertukar[]">
-                                                @else
-                                                    <input type="number" class="form-control form-control-sm" step="0.01" disabled>
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">{{ $gdg_tertukar->groupid }}</td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->nodoc != null && $show)
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        name="nodokGudangTertukar[]" value="{{ $gdg_tertukar->nodoc }}">
-                                                @elseif($show)
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        name="nodokGudangTertukar[]">
-                                                @else
-                                                    <input type="text" class="form-control form-control-sm" disabled>
-                                                @endif
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                @if ($gdg_tertukar->keterangan != null && $show)
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        name="keteranganGudangTertukar[]"
-                                                        value="{{ $gdg_tertukar->keterangan }}">
-                                                @elseif($show)
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        name="keteranganGudangTertukar[]">
-                                                @else
-                                                    <input type="text" class="form-control form-control-sm" disabled>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="card card-secondary">
@@ -708,7 +539,7 @@
                                                 @else
                                                     Rp.{{ number_format($admin->nominalmin, 2, '.', ',') }}
                                                 @endif
-                                            </td>                                           
+                                            </td>
                                             <td class="align-middle text-center">
                                                 @if ($admin->pembebanan != null)
                                                     <input type="number" class="form-control form-control-sm" step="0.01"

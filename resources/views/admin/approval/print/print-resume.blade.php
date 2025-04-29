@@ -332,7 +332,7 @@
                         style="font-weight: bold">Selisih
                         Karena Admin</td>
                     @if (substr($dataCso->doccsoid, 0, 3) == 'CSS')
-                        <td class="td-content" rowspan="2">
+                        <td class="td-content" rowspan="1">
                             {{ $totalItemOk }}</td>
                     @else
                         <td class="td-content">
@@ -557,7 +557,7 @@
                             </td>
                             <td class="td-content" style="color: red">Rp.
                                 {{ number_format($totalNominalSelisihMinusKesalahanAdmin, 2, ',', '.') }}
-                                                </td>
+                            </td>
                         @endif
                         <td class="td-content" style="color: red">Rp.
                             {{ number_format($totalNominalPembebananKesalahanAdmin, 2, ',', '.') }}
@@ -830,49 +830,49 @@
                                 $getHppSelisih = $itemSelisih->hpp_manual;
                             }
 
-                                    if($itemSelisih->group_value == 0)
-                                    {
-                            $barangSelisih =
-                                $itemSelisih->hasilcso -
-                                ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi);
-                            $nominalSelisih =
-                                ($itemSelisih->hasilcso -
-                                        ($itemSelisih->onhand -
-                                            $itemSelisih->koreksi -
-                                            $itemSelisih->deviasi)) *
+                            if($itemSelisih->group_value == 0)
+                            {
+                                $barangSelisih =
+                                    $itemSelisih->hasilcso -
+                                    ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi);
+                                $nominalSelisih =
+                                    ($itemSelisih->hasilcso -
+                                                ($itemSelisih->onhand -
+                                                    $itemSelisih->koreksi -
+                                                    $itemSelisih->deviasi)) *
                                     $getHppSelisih;
+                            }
+                            else {
+                                if($itemSelisih->hasilcso -
+                                ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi)>0)
+                                {
+                                    $barangSelisih =
+                                        ($itemSelisih->hasilcso -
+                                        ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi))-abs($itemSelisih->group_value);
+                                    $nominalSelisih =
+                                        ($itemSelisih->hasilcso -
+                                            ($itemSelisih->onhand -
+                                                $itemSelisih->koreksi -
+                                                $itemSelisih->deviasi)-abs($itemSelisih->group_value)) *
+                                        $getHppSelisih;
                                 }
                                 else {
-                                    if($itemSelisih->hasilcso -
-                                    ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi)>0)
-                                    {
-                                        $barangSelisih =
-                                            ($itemSelisih->hasilcso -
-                                            ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi))-abs($itemSelisih->group_value);
-                                        $nominalSelisih =
-                                            ($itemSelisih->hasilcso -
-                                                ($itemSelisih->onhand -
-                                                    $itemSelisih->koreksi -
-                                                    $itemSelisih->deviasi)-abs($itemSelisih->group_value)) *
-                                            $getHppSelisih;
-                                    }
-                                    else {
-                                        $barangSelisih =
-                                            ($itemSelisih->hasilcso -
-                                            ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi))+$itemSelisih->group_value;
-                                        $nominalSelisih =
-                                            ($itemSelisih->hasilcso -
-                                                ($itemSelisih->onhand -
-                                                    $itemSelisih->koreksi -
-                                                    $itemSelisih->deviasi)+$itemSelisih->group_value) *
-                                            $getHppSelisih;
-                                    }
-                                    
-                                    
+                                    $barangSelisih =
+                                        ($itemSelisih->hasilcso -
+                                        ($itemSelisih->onhand - $itemSelisih->koreksi - $itemSelisih->deviasi))+$itemSelisih->group_value;
+                                    $nominalSelisih =
+                                        ($itemSelisih->hasilcso -
+                                            ($itemSelisih->onhand -
+                                                $itemSelisih->koreksi -
+                                                $itemSelisih->deviasi)+$itemSelisih->group_value) *
+                                        $getHppSelisih;
                                 }
-                                if (
-                                    $itemSelisih->onhand <
-                                    $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi
+                                
+                                
+                            }
+                            if (
+                                $itemSelisih->onhand <
+                                $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi
                             ) {
                                 $barangSelisihPlusSelisih = number_format($barangSelisih, 2, ',', '.');
                                 $nominalSelisihPlusSelisih = 'Rp. ' . number_format($nominalSelisih, 2, ',', '.');
@@ -885,9 +885,9 @@
                                 $totalNominalSelisihMinusSelisih += $nominalSelisih;
                             }
 
-                            $slsLbrSelisih =
-                                    $itemSelisih->onhand;
-                                $realitaLbrSelisih = $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi;
+                                $slsLbrSelisih =
+                                        $itemSelisih->onhand;
+                                    $realitaLbrSelisih = $itemSelisih->hasilcso + $itemSelisih->koreksi + $itemSelisih->deviasi;
 
                             $totalSlsLbrSelisih += $slsLbrSelisih;
                             $totalRealitaLbrSelisih += $realitaLbrSelisih;
@@ -939,6 +939,7 @@
                             <td class="td-content" style="text-align: center">
                                 {{ $itemSelisih->keterangan }}</td>
                         </tr>
+                    @endif
                 @endforeach
                 @if (count($dataItemSelisih) > 0)
                     <tr class="tr-body-calculator" style="font-size: 9pt">
@@ -1210,7 +1211,7 @@
                                 @break
 
                                 @case(8)
-                                    Agustus
+                                    Agustus 
                                 @break
 
                                 @case(9)

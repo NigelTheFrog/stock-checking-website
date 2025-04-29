@@ -1,5 +1,6 @@
 <script>
-    VirtualSelect.init({
+ 
+ VirtualSelect.init({
         ele: '#itemSelect',
         maxWidth: '100%'
     });
@@ -12,6 +13,11 @@
     VirtualSelect.init({
         ele: '#groupingSelect',
         maxWidth: '100%'
+    });
+
+    VirtualSelect.init({
+        ele: '#productSelect',
+        maxWidth: '50%'
     });
 
     function searchItem(input) {
@@ -42,16 +48,16 @@
         const selectedGudang = document.getElementById('itemSelect').value; // Get the selected gudang values
         const search = document.getElementById('searchItem').value;
         const selectGrouping = document.getElementById('groupingSelect').value;
-
-
+        const product = document.getElementById("productSelect").value;
         // Make an AJAX request to fetch data from the server
         $.ajax({
             url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
             method: "POST",
             data: {
                 gudang: selectedGudang,
-                grouping: selectGrouping,
                 search: search,
+                grouping: selectGrouping,
+                product: product,
                 type: 1,
                 typestok: `{{ $csoType }}`
             },

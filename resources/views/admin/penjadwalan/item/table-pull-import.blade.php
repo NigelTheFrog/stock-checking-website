@@ -1,6 +1,6 @@
 <form method="post" action="{{ route('import-stok.store') }}">
     @csrf
-    <div class="container-lg" style="height: 60vh">
+    <div class="container-lg" style="height: 60vh;">
         @if ($importedItem > 0)
             <div class="ms-4 mb-2">
                 <input class="form-check-input" type="checkbox" id="checkAll" onclick="checkAllItem(this)">
@@ -140,11 +140,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th class="align-middle" scope="col" style="position: sticky; top: 0; z-index: 1;">Qty Selected<br>WRH</th>
+                            <th class="align-middle" scope="col" style="position: sticky; top: 0; z-index: 1;">Onhand<br>All WRH</th>
                             <th class="align-middle" scope="col" style="position: sticky; top: 0; z-index: 1;">UOM</th>
-                            @if ($coy == 'KKS')
-                                <th class="align-middle" scope="col" style="position: sticky; top: 0; z-index: 1;">Tonase</th>
-                            @endif
                             @foreach ($gudang as $gdg)
                                 <th class="align-middle" scope="col" style="position: sticky; top: 0; z-index: 1;">{{ $gdg }}</th>
                             @endforeach
@@ -161,7 +158,7 @@
                                 </td>
                                 <td>{{ $idx+1 }}</td>
                                 <td>{{ $item['itemcode'] }}</td>
-                                <td class="text-start">{{ $item['NamaItem'] }}</td>
+                                <td>{{ $item['NamaItem'] }}</td>
                                 <td>{{ $item['NamaGrouping'] }}</td>
                                 <td hidden>{{ $item['ProductID'] }}</td>
                                 <td>{{ $item['Product'] }}</td>
@@ -170,9 +167,6 @@
                                 <td>{{ number_format($item['Onhand'],2,'.',',') }}</td>
                                 <td>{{ $item['UOM'] }}</td>
                                 <td hidden>{{ $item['itemcost'] }}</td>
-                                @if ($coy == 'KKS')
-                                    <td>{{ (float)$item['tonase'] }}</td>
-                                @endif
                                 @foreach ($gudang as $gdg)
                                     @if (isset($item[$gdg]))
                                         <td gudang="{{ $gdg }}">{{ (float) $item[$gdg] }}</td>
@@ -191,7 +185,7 @@
     @if ($importedItem > 0)
         <div class="float-end d-flex">
             <button type="button" class="btn btn-primary float-end" id="buttonImpor"
-                onclick="submitImpor(this,'{{$coy}}')">Impor</button>
+                onclick="submitImpor(this)">Impor</button>
             <button type="button" class="ms-2 btn btn-primary float-end" data-bs-dismiss="modal" aria-label="Close"
                 id="buttonKeluar">Keluar</button>
         </div>

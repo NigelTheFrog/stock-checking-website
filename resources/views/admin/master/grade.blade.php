@@ -19,9 +19,7 @@
                                 <th class="align-middle" style="width: 2%">No</th>
                                 <th class="align-middle" style="width: 2%">Gudang</th>
                                 <th class="align-middle" style="width: 20%">Deskripsi</th>
-                                @if($useWrhGrp != 0)
-                                    <th class="align-middle" style="width: 10%">Group</th>
-                                @endif
+                                <th class="align-middle" style="width: 10%">Group</th>
                                 <th class="align-middle" style="width: 8%">Action</th>
                                 <th hidden></th>
                             </tr>
@@ -32,9 +30,7 @@
                                 <td class="align-middle">{{ $loop->iteration }}</td>
                                 <td class="align-middle">{{ $g->gradecode }}</td>
                                 <td class="align-middle">{{ $g->description }}</td>
-                                @if($useWrhGrp != 0)
-                                    <td class="align-middle">{{ $g->group }}</td>
-                                @endif
+                                <td class="align-middle">{{ $g->group }}</td>
                                 <td class="align-middle"> 
                                     <button type="button" onclick="openModalEdit(this,'{{ $g->gradecode }}','{{ $g->description }}','{{$g->group}}')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=""><i class="bi bi-pencil-square"></i></button>
                                     <button type="button" onclick="openModalDelete(this,'{{ $g->gradecode }}','{{ $g->description }}')" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
@@ -59,7 +55,6 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                                 </div>
-                                {{-- <input type="text" name="code" class="form-control" id="code" placeholder="Kode Grade" maxlength="1" required> --}}
                                 <input type="text" name="code" class="form-control" id="code" placeholder="Kode Gudang" required>
                                 <div class="invalid-feedback">
                                     Kode Gudang harus diisi
@@ -77,7 +72,7 @@
                                 </div>
                             </div>                           
                         </div>
-                        <div class="form-group" @if($useWrhGrp == 0) hidden @endif>
+                        <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="bi bi-box"></i></span>
@@ -119,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" @if($useWrhGrp == 0) hidden @endif>
+                    <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="bi bi-box"></i></span>
@@ -128,7 +123,7 @@
                             <div class="invalid-feedback">
                                 group gudang
                             </div>
-                        </div>
+                        </div>                           
                     </div>                                                
                     <button type="reset" class="btn btn-danger" name="reset"><i class="bx bx-reset"></i> Reset</button>
                     <button type="submit" class="btn btn-primary" name="simpan"><i class="bx bxs-save"></i> Simpan</button>

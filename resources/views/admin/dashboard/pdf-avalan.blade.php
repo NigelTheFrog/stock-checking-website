@@ -1,12 +1,12 @@
 <title>
     @if ($type == 1)
-        Batch Belum Proses
+        Avalan Belum Proses
     @elseif ($type == 2)
-        Batch Sedang Proses
+        Avalan Sedang Proses
     @elseif ($type == 3)
-        Batch Selesai
+        Avalan Selesai
     @else
-        Batch Selisih
+        Avalan Selisih
     @endif
 </title>
 <style>
@@ -63,11 +63,11 @@
 @if ($type != 4)
     <h2>
         @if ($type == 1)
-            Batch Yang Belum Dicek
+            Avalan Yang Belum Dicek
         @elseif ($type == 2)
-            Batch Yang Sedang Dicek
+            Avalan Yang Sedang Dicek
         @else
-            Batch Yang Sudah Dicek
+            Avalan Yang Sudah Dicek
         @endif
     </h2>
     <table>
@@ -77,38 +77,38 @@
                 <th style="width: 10%">Heat No</th>
                 <th style="width: 10%">Dimension</th>
                 <th style="width: 10%">Tolerance</th>
-                {{-- <th style="width: 15%">Condition</th> --}}
+                <th style="width: 15%">Condition</th>
             </tr>
         </thead>
         <tbody>
             @if ($type == 1)
-                @foreach ($batchBlmProses as $barang)
+                @foreach ($avalanBlmProses as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
                         <td class="td-non-itemname">{{ $barang->heatno }}</td>
                         <td class="td-non-itemname">{{ $barang->dimension }}</td>
                         <td class="td-non-itemname">{{ $barang->tolerance }}</td>
-                        {{-- <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td>
                     </tr>
                 @endforeach
             @elseif ($type == 2)
-                @foreach ($batchSdgProses as $barang)
+                @foreach ($avalanSdgProses as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
                         <td class="td-non-itemname">{{ $barang->heatno }}</td>
                         <td class="td-non-itemname">{{ $barang->dimension }}</td>
                         <td class="td-non-itemname">{{ $barang->tolerance }}</td>
-                        {{-- <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td>
                     </tr>
                 @endforeach
             @else
-                @foreach ($batchSelesai as $barang)
+                @foreach ($avalanSelesai as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
                         <td class="td-non-itemname">{{ $barang->heatno }}</td>
                         <td class="td-non-itemname">{{ $barang->dimension }}</td>
                         <td class="td-non-itemname">{{ $barang->tolerance }}</td>
-                        {{-- <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td>
                     </tr>
                 @endforeach
             @endif
@@ -117,7 +117,7 @@
 @else
     <h2>
 
-            Batch Selisih Plus
+            Avalan Selisih Plus
         
     </h2>
     <table>
@@ -127,24 +127,24 @@
                 <th style="width: 10%">Heat No</th>
                 <th style="width: 10%">Dimension</th>
                 <th style="width: 10%">Tolerance</th>
-                {{-- <th style="width: 15%">Condition</th> --}}
+                <th style="width: 15%">Condition</th>
             </tr>
         </thead>
         <tbody>
-                @foreach ($batchSelisihPlus as $barang)
+                @foreach ($avalanSelisihPlus as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
                         <td class="td-non-itemname">{{ $barang->heatno }}</td>
                         <td class="td-non-itemname">{{ $barang->dimension }}</td>
                         <td class="td-non-itemname">{{ $barang->tolerance }}</td>
-                        {{-- <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td>
                     </tr>
                 @endforeach
         </tbody>
     </table>
     <h2>
 
-            Batch Selisih Minus
+            Avalan Selisih Minus
     </h2>
     <table>
         <thead>
@@ -153,18 +153,18 @@
                 <th style="width: 10%">Heat No</th>
                 <th style="width: 10%">Dimension</th>
                 <th style="width: 10%">Tolerance</th>
-                {{-- <th style="width: 15%">Condition</th> --}}
+                <th style="width: 15%">Condition</th>
             </tr>
         </thead>
         <tbody>
 
-                @foreach ($batchSelisihMinus as $barang)
+                @foreach ($avalanSelisihMinus as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
                         <td class="td-non-itemname">{{ $barang->heatno }}</td>
                         <td class="td-non-itemname">{{ $barang->dimension }}</td>
                         <td class="td-non-itemname">{{ $barang->tolerance }}</td>
-                        {{-- <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td>
                     </tr>
                 @endforeach
         </tbody>

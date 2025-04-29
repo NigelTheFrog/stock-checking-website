@@ -73,8 +73,11 @@
     <table>
         <thead>
             <tr class="tr-head">
-                <th>Nama Item</th>
-                <th>Nama Analisator</th>
+                <th style="width: 25%">Nama Item</th>
+                {{-- <th style="width: 10%">Heat No</th>
+                <th style="width: 10%">Dimension</th>
+                <th style="width: 10%">Tolerance</th>
+                <th style="width: 15%">Condition</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -82,21 +85,30 @@
                 @foreach ($itemBlmProses as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
-                        <td>{{ $barang->analisator }}</td>
+                        {{-- <td class="td-non-itemname">{{ $barang->heatno }}</td>
+                        <td class="td-non-itemname">{{ $barang->dimension }}</td>
+                        <td class="td-non-itemname">{{ $barang->tolerance }}</td>
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
                     </tr>
                 @endforeach
             @elseif ($type == 2)
                 @foreach ($itemSdgProses as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
-                        <td>{{ $barang->analisator }}</td>
+                        {{-- <td class="td-non-itemname">{{ $barang->heatno }}</td>
+                        <td class="td-non-itemname">{{ $barang->dimension }}</td>
+                        <td class="td-non-itemname">{{ $barang->tolerance }}</td>
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
                     </tr>
                 @endforeach
             @else
                 @foreach ($itemSelesai as $barang)
                     <tr class="tr-body">
                         <td>{{ $barang->itemname }}</td>
-                        <td>{{ $barang->analisator }}</td>
+                        {{-- <td class="td-non-itemname">{{ $barang->heatno }}</td>
+                        <td class="td-non-itemname">{{ $barang->dimension }}</td>
+                        <td class="td-non-itemname">{{ $barang->tolerance }}</td>
+                        <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
                     </tr>
                 @endforeach
             @endif
@@ -105,19 +117,26 @@
 @else
     <h2>
         Item Selisih Plus
+
     </h2>
     <table>
         <thead>
             <tr class="tr-head">
-                <th>Nama Item</th>
-                <th>Nama Analisator</th>
+                <th style="width: 25%">Nama Item</th>
+                {{-- <th style="width: 10%">Heat No</th>
+                <th style="width: 10%">Dimension</th>
+                <th style="width: 10%">Tolerance</th>
+                <th style="width: 15%">Condition</th> --}}
             </tr>
         </thead>
         <tbody>
             @foreach ($itemSelisihPlus as $barang)
                 <tr class="tr-body">
                     <td>{{ $barang->itemname }}</td>
-                    <td>{{ $barang->analisator }}</td>
+                    {{-- <td class="td-non-itemname">{{ $barang->heatno }}</td>
+                    <td class="td-non-itemname">{{ $barang->dimension }}</td>
+                    <td class="td-non-itemname">{{ $barang->tolerance }}</td>
+                    <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
                 </tr>
             @endforeach
 
@@ -130,8 +149,11 @@
     <table>
         <thead>
             <tr class="tr-head">
-                <th>Nama Item</th>
-                <th>Nama Analisator</th>
+                <th style="width: 25%">Nama Item</th>
+                {{-- <th style="width: 10%">Heat No</th>
+                <th style="width: 10%">Dimension</th>
+                <th style="width: 10%">Tolerance</th>
+                <th style="width: 15%">Condition</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -139,7 +161,10 @@
             @foreach ($itemSelisihMinus as $barang)
                 <tr class="tr-body">
                     <td>{{ $barang->itemname }}</td>
-                    <td>{{ $barang->analisator }}</td>
+                    {{-- <td class="td-non-itemname">{{ $barang->heatno }}</td>
+                    <td class="td-non-itemname">{{ $barang->dimension }}</td>
+                    <td class="td-non-itemname">{{ $barang->tolerance }}</td>
+                    <td class="td-non-itemname">{{ $barang->kondisi }}</td> --}}
                 </tr>
             @endforeach
 

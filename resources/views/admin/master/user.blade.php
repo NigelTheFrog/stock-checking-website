@@ -17,16 +17,15 @@
                     <div class="card-header bg-secondary text-white">
                         <h4 class="card-title pt-2">Daftar Pengguna</h4>
                     </div>
-                    
+
                     <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)">
+                        {{-- <div class="d-flex ">
+                            <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
+                                data-bs-target="#modalImportUser">
+                                <i class="nav-icon fas fa-file-import"></i> Import User
+                            </button>
+                        </div> --}}
                         <div class='row'>
-                            <div class="d-flex col-sm-6">
-                                <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
-                                    data-bs-target="#modalImportUser">
-                                    <i class="nav-icon fas fa-file-import"></i> Import User
-                                </button>
-                            </div>
-                            
                             <div class="col-sm-6  d-inline-flex">
                                 <input class="form-control" id="searchUser" type="search" placeholder="Search"
                                 aria-label="Search">
@@ -46,7 +45,7 @@
                                     <th class="align-middle" style="width: 0%" hidden></th>
                                 </tr>
                             </thead>
-                            <tbody id="userDatabase">
+                            <tbody>
                                 @foreach ($userDatabase as $user)
                                     <tr class="text-center">
                                         <td class="align-middle">{{ $loop->iteration }}</td>
@@ -268,7 +267,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade text-left" id="modalImportUser" tabindex="-1">
+        {{-- <div class="modal fade text-left" id="modalImportUser" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -283,7 +282,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <script>
             function openModalEdit(button) {

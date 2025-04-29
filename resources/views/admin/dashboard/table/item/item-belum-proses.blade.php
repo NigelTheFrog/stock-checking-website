@@ -1,4 +1,4 @@
-<table class="table table-sm table-bordered table-hover table-responsive small table-striped" id="tableBlmProses">
+<table class="table table-sm table-bordered table-hover table-responsive small table-striped" id='tableBlmProses'>
     <thead class="table-dark">
         <tr class="text-center ">
             <th class="align-middle text-center" style="width: 2%"></th>
@@ -240,7 +240,7 @@
                             </li>
                         </ul> --}}
                     </div>
-                </div>
+                </div>                
             </th>
             <th class="align-middle" style="width: 14%">
                 <div class="dropdown">
@@ -332,8 +332,6 @@
                     value='{{$barang->group_value}}'
                     @endif
                     ></td>
-                {{-- <td class="align-middle text-center"><button type="button" onclick="groupValueBanner()"
-                    class="btn btn-primary">TEST</button></td> --}}
                 <td class="align-middle text-center">
                     <select class="form-select" name="group[]" id="groupingIdBanner" onchange="groupValueBanner(this,{{$barang->trsdetid}})">
                         <option value="" selected>--Pilih Group --</option>
