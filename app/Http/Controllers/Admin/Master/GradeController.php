@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Master\Grade;
 use Illuminate\Http\Request;
-use App\Models\Admin\Master\Company;
-
 
 class GradeController extends Controller
 {
@@ -16,8 +14,7 @@ class GradeController extends Controller
     public function index()
     {
         $gradeData = Grade::all();
-        $company = Company::all();
-        return view("admin.master.grade",["grade"=> $gradeData,"useWrhGrp" => $company[0]->usewrhgrp]);
+        return view("admin.master.grade",["grade"=> $gradeData]);
     }
 
     /**

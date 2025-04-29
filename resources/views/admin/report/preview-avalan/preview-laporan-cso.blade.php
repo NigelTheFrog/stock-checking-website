@@ -117,62 +117,41 @@
                                     <div class="col-md-8">
                                         <h3 class="card-title">{{ $title }}</h3>
                                     </div>
-                                    @if ($dataCso->statusdoc == 'P')
-                                        <div class="col-md-2 text-end">
-                                            {{-- <form method="POST" action="{{ route('exportExcel') }}">
-                                                @csrf --}}
-                                            <input type="text" name="trsidlaporan" value="{{ $trsidlaporan }}" hidden>
+                                    @if ($dataCso->statusdoc == "P")
+                                    <div class="col-md-4 text-end">
+                                        <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
+                                            @csrf
+                                            <input type="text" name="trsidlaporan" value="{{$trsidlaporan}}" hidden>
                                             <input type="text" name="type" value="3" hidden>
-                                            <button type="submit" class="btn btn-success text-white" id="button_export"><i
-                                                    class="fas fa-print pe-2"></i>Export Excel</button>
-                                            {{-- </form> --}}
-                                        </div>
-                                        <div class="col-md-2 text-end">
-                                            <form method="POST" action="{{ route('cek-stok-avalan.store') }}">
-                                                @csrf
-                                                <input type="text" name="trsidlaporan" value="{{ $trsidlaporan }}"
-                                                    hidden>
-                                                <input type="text" name="pdf" value="1" hidden>
-                                                <input type="text" name="type" value="3" hidden>
-                                                <button type="submit" class="btn btn-primary text-white"><i
-                                                        class="fas fa-print pe-2"></i>Print Keseluruhan</button>
-                                            </form>
-                                        </div>
-                                    @endif
+                                            <button type="submit" class="btn btn-primary text-white"><i
+                                                    class="fas fa-print pe-2"></i>Print Keseluruhan</button>
+                                        </form>
+                                    </div> 
+                                    @endif                             
                                 </div>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
                                 <h2>
-                                    {{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }} TANGGAL:
+                                    {{substr($dataCso->doccsoid,0,3)}} SRM TANGGAL:
                                     {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}
                                 </h2>
                                 <h2>
                                     MATERIAL: {{ Str::upper($dataCso->csomaterial) }}
                                 </h2>
                                 <h2>
-                                    LOKASI: {{ $dataCoy->description }}
+                                    LOKASI: {{ $dataCoy }}
                                 </h2>
 
-                                <div class="page-break"
-                                    style="margin-top: 20px; max-width: 80vw; overflow-x: auto; overflow-y: auto">
-                                    <table class="sticky-header" style="border-collapse: collapse;min-width: 200%;" id="tableid">
+                                <div class="page-break" style="margin-top: 20px; max-width: 80vw; overflow-x: auto; overflow-y: auto" >
+                                    <table style="border-collapse: collapse;min-width: 200%;">
                                         <thead>
                                             <tr class="tr-head">
-                                                @if (substr($dataCso->doccsoid, 0, 3) == 'CSS')
-                                                    <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">
-                                                        Tanggal<br>Import</th>
-                                                @endif
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">No</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 1.25cm">Nama Item
-                                                </th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.25cm">Grade
                                                 </th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">UOM</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.75cm">
                                                     Analisator</th>
-                                                @php
-                                                    $count = count($dataWrh);
-                                                @endphp
                                                 @foreach ($dataWrh as $wrh)
                                                     <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">
                                                         {{ $wrh->wrh }}</th>
@@ -186,7 +165,7 @@
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Warna</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Keterangan
                                                 </th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 1cm">Pelaku</th>
+                                                <th class="th-content-noncso" rowspan="2" style="width: 1cm">Pencatat</th>
                                             </tr>
                                             <tr class="tr-head">
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
@@ -210,16 +189,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($dataLaporan as $laporan)
+                                            @foreach ($dataLaporan as  $laporan)
                                                 <tr class="tr-rekapitulasi-global">
-                                                    @if (substr($dataCso->doccsoid, 0, 3) == 'CSS')
-                                                        <td class="td-content">
-                                                            {{ \Carbon\Carbon::parse($laporan->createddate)->translatedFormat('d F Y') }}
-                                                        </td>
-                                                    @endif
                                                     <td class="td-content">{{ $loop->iteration }}</td>
                                                     <td class="td-content">{{ $laporan->itemname }}</td>
-                                                    <td class="td-content">{{ $laporan->grade }}</td>
                                                     <td class="td-content">{{ $laporan->uom }}</td>
                                                     <td class="td-content">{{ $laporan->name }}</td>
                                                     @foreach ($dataWrh as $wrh)
@@ -237,39 +210,30 @@
                                                     <td class="td-content">{{ $laporan->qtycso1 - $laporan->onhand }}</td>
                                                     <td class="td-content">{{ $laporan->loctcso1 }}</td>
                                                     @if ($laporan->qtycso1 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
                                                         </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
                                                     @endif
 
 
                                                     <td class="td-content">{{ $laporan->qtycso2 }}</td>
                                                     <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand && ($laporan->qtycso2!=NULL ||$laporan->qtycso2!=''))
+                                                        @if ($laporan->qtycso1 != $laporan->onhand)
                                                             {{ $laporan->qtycso2 - $laporan->onhand }}
                                                         @endif
                                                     </td>
                                                     <td class="td-content">{{ $laporan->loctcso2 }}</td>
                                                     @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
                                                         </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
                                                     @endif
 
                                                     <td class="td-content">{{ $laporan->qtycso3 }}</td>
                                                     <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand
-                                                        && ($laporan->qtycso3!=NULL ||$laporan->qtycso3!=''))
+                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
                                                             {{ $laporan->qtycso3 - $laporan->onhand }}
                                                         @endif
                                                     </td>
@@ -278,14 +242,10 @@
                                                         $laporan->qtycso1 != $laporan->onhand &&
                                                             $laporan->qtycso2 != $laporan->onhand &&
                                                             $laporan->qtycso3 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
                                                         </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
                                                     @endif
                                                     <td class="td-content">
                                                         {{ $laporan->trace }}
@@ -294,8 +254,7 @@
                                                         @if (
                                                             $laporan->qtycso1 != $laporan->onhand &&
                                                                 $laporan->qtycso2 != $laporan->onhand &&
-                                                                $laporan->qtycso3 != $laporan->onhand 
-                                                                && ($laporan->trace != NULL ||$laporan->trace !=''))
+                                                                $laporan->qtycso3 != $laporan->onhand)
                                                             {{ $laporan->trace - $laporan->onhand }}
                                                         @endif
                                                     </td>
@@ -305,14 +264,10 @@
                                                             $laporan->qtycso2 != $laporan->onhand &&
                                                             $laporan->qtycso3 != $laporan->onhand &&
                                                             $laporan->trace != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
+                                                        <td class="td-content" style="background-color: #FFC8AA">False
                                                         </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content" style="background-color: #D4EBBC">True</td>
                                                     @endif
                                                     <td class="td-content">{{ $laporan->color }}</td>
                                                     <td class="td-content">{{ $laporan->keterangan }}</td>
@@ -328,370 +283,5 @@
                 </div>
         </section>
     </div>
-    <script>
-        $(".sticky-header").floatThead({ scrollingTop: 0 })
-        // setInterval(function(event) {
-        //     $('.sticky-header').floatThead('reflow');
-        // }, 500);
-        function html_table_to_excel(type) {
 
-
-            // var data = document.getElementById('tableid');
-
-            // var file = XLSX.utils.table_to_sheet(data, {sheet: "sheet1"});
-
-            // XLSX.write(file, { bookType: type, bookSST: true, type: 'base64' });
-
-            // XLSX.writeFile(file, 'file.' + type);
-
-
-            const element = document.getElementById('tableid');
-
-            element.insertRow(0);
-            element.insertRow(0);
-            element.insertRow(0);
-            element.insertRow(0);
-
-            const ws = XLSX.utils.table_to_sheet(element,{raw: true});
-            // ws["A1"] = {
-            //     font: {
-            //         bold: true,
-            //     }
-            // };
-            const myNewData = [
-                [`{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }} TANGGAL:
-        {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}`],
-                [`MATERIAL: {{ Str::upper($dataCso->csomaterial) }}`],
-                [`LOKASI: {{ $dataCoy->description }}`]
-            ];
-
-            XLSX.utils.sheet_add_aoa(ws, myNewData);
-
-            var caunt = parseInt(`{{ $count }}`);
-            // console.log(caunt);
-
-            if (`{{ substr($dataCso->doccsoid, 0, 3) }}` == 'CSS') {
-                ws["!merges"] = [{
-                        s: {
-                            c: 0,
-                            r: 0
-                        },
-                        e: {
-                            c: 6,
-                            r: 0
-                        }
-                    }, // A1
-                    {
-                        s: {
-                            c: 0,
-                            r: 1
-                        },
-                        e: {
-                            c: 6,
-                            r: 1
-                        }
-                    }, // A1:B2
-                    {
-                        s: {
-                            c: 0,
-                            r: 2
-                        },
-                        e: {
-                            c: 6,
-                            r: 2
-                        }
-                    },
-
-                    {
-                        s: {
-                            c: 0,
-                            r: 4
-                        },
-                        e: {
-                            c: 0,
-                            r: 5
-                        }
-                    }, //a5:a6
-                    {
-                        s: {
-                            c: 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 1,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 2,
-                            r: 4
-                        },
-                        e: {
-                            c: 2,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 3,
-                            r: 4
-                        },
-                        e: {
-                            c: 3,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 4,
-                            r: 4
-                        },
-                        e: {
-                            c: 4,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 5,
-                            r: 4
-                        },
-                        e: {
-                            c: 5,
-                            r: 5
-                        }
-                    }
-                ];
-
-                for (let i = 0; i < caunt; i++) {
-                    ws["!merges"].push({
-                        s: {
-                            c: 6 + i,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + i,
-                            r: 5
-                        }
-                    })
-                }
-
-                ws["!merges"].push({
-                        s: {
-                            c: 6 + caunt,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt,
-                            r: 5
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 4,
-                            r: 4
-                        }
-                    }, //a5:l115
-                    {
-                        s: {
-                            c: 6 + caunt + 5,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 8,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 9,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 11,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 13,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 15,
-                            r: 4
-                        }
-                    }
-                );
-
-            } else {
-                ws["!merges"] = [{
-                        s: {
-                            c: 0,
-                            r: 0
-                        },
-                        e: {
-                            c: 6,
-                            r: 0
-                        }
-                    }, // A1
-                    {
-                        s: {
-                            c: 0,
-                            r: 1
-                        },
-                        e: {
-                            c: 6,
-                            r: 1
-                        }
-                    }, // A1:B2
-                    {
-                        s: {
-                            c: 0,
-                            r: 2
-                        },
-                        e: {
-                            c: 6,
-                            r: 2
-                        }
-                    },
-
-                    {
-                        s: {
-                            c: 0,
-                            r: 4
-                        },
-                        e: {
-                            c: 0,
-                            r: 5
-                        }
-                    }, //a5:a6
-                    {
-                        s: {
-                            c: 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 1,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 2,
-                            r: 4
-                        },
-                        e: {
-                            c: 2,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 3,
-                            r: 4
-                        },
-                        e: {
-                            c: 3,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 4,
-                            r: 4
-                        },
-                        e: {
-                            c: 4,
-                            r: 5
-                        }
-                    },
-                ];
-
-                for (let i = 0; i < caunt; i++) {
-                    ws["!merges"].push({
-                        s: {
-                            c: 5 + i,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + i,
-                            r: 5
-                        }
-                    })
-                }
-
-                ws["!merges"].push({
-                        s: {
-                            c: 5 + caunt,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt,
-                            r: 5
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 4,
-                            r: 4
-                        }
-                    }, //a5:l115
-                    {
-                        s: {
-                            c: 5 + caunt + 5,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 8,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 9,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 11,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 13,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 15,
-                            r: 4
-                        }
-                    }
-                );
-            }
-
-            const wb = XLSX.utils.book_new();
-
-            XLSX.utils.book_append_sheet(wb, ws, 'sheet1');
-
-            XLSX.write(wb, {
-                bookType: type,
-                bookSST: true,
-                type: 'base64'
-            })
-            XLSX.writeFile(wb,
-                `{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }}-{{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}` +
-                '.xlsx');
-
-        }
-
-        const export_button = document.getElementById('export_button');
-
-        button_export.addEventListener('click', () => {
-            html_table_to_excel('xlsx');
-        });
-    </script>
 @endsection

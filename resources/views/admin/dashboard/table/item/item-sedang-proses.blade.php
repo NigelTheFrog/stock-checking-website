@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-         
+        <?php $index=0; ?>
         
         @foreach ($itemSdgProses as $barang)
             <tr>

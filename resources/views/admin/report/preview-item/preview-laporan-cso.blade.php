@@ -101,6 +101,62 @@
             font-family: Arial, sans-serif;
             text-align: justify;
         }
+/* 
+        table {
+  table-layout: fixed;
+}
+
+thead,
+tr>th {
+  position: sticky;
+  background: #fff;
+}
+
+thead {
+  top: 0;
+  z-index: 2;
+}
+tr>th {
+  left: 0;
+  z-index: 1;
+}
+thead tr>th:first-child,tr>th:nth-child(2),tr>th:nth-child(3) {
+  z-index: 3;
+  position: relative;
+} */
+        thead th{
+            top:0;
+            position:sticky;
+            border: solid red;
+            
+        }
+        th.col-th2{
+            position: sticky;
+            top:32px;
+        }
+        th.col-th3{
+            top:113.5px;
+        }
+        .col-id-no{
+            left:0;
+            position: sticky;
+            z-index:2;
+        }
+        .col-first-name{
+            left:40px;
+            position: sticky;
+            z-index:2;
+        }
+        th.col-id-no{
+            left:0;
+            position: sticky;
+            z-index:20;
+        }
+        th.col-first-name{
+            left:40px;
+            position: sticky;
+            z-index:20;
+        }
     </style>
 @endsection
 
@@ -115,17 +171,17 @@
                             <div class="card-header bg-secondary text-white">
                                 <div class="row justify-content-between">
                                     <div class="col-md-8">
-                                        <h3 class="card-title">{{ $title }}</h3>
+                                        <h3 class="card-title">GUDANG</h3>
                                     </div>
-                                    @if ($dataCso->statusdoc == 'P')
+                                    {{-- @if ($dataCso->statusdoc == 'P') --}}
                                         <div class="col-md-2 text-end">
-                                            {{-- <form method="POST" action="{{ route('exportExcel') }}">
-                                                @csrf --}}
+                                            <form method="POST" action="{{ route('exportExcel') }}">
+                                                @csrf
                                             <input type="text" name="trsidlaporan" value="{{ $trsidlaporan }}" hidden>
                                             <input type="text" name="type" value="3" hidden>
                                             <button type="submit" class="btn btn-success text-white" id="button_export"><i
                                                     class="fas fa-print pe-2"></i>Export Excel</button>
-                                            {{-- </form> --}}
+                                            </form>
                                         </div>
                                         <div class="col-md-2 text-end">
                                             <form method="POST" action="{{ route('cek-stok.store') }}">
@@ -138,11 +194,11 @@
                                                         class="fas fa-print pe-2"></i>Print Keseluruhan</button>
                                             </form>
                                         </div>
-                                    @endif
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
-                                <h2>
+                                {{-- <h2>
                                     {{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }} TANGGAL:
                                     {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}
                                 </h2>
@@ -151,181 +207,165 @@
                                 </h2>
                                 <h2>
                                     LOKASI: {{ $dataCoy->description }}
-                                </h2>
+                                </h2> --}}
 
-                                <div class="page-break"
-                                    style="margin-top: 20px; max-width: 80vw; overflow-x: auto; overflow-y: auto">
-                                    <table class="sticky-header" style="border-collapse: collapse;min-width: 200%;" id="tableid">
+                                <div class='table-responsive-lg'
+                                    style="margin-top: 20px;overflow-x: auto; overflow-y: auto;max-height: 550px;">
+                                    <table class="table table-hover" style="border-collapse: collapse;min-width: 200%;" id='tableid'>
                                         <thead>
-                                            <tr class="tr-head">
-                                                @if (substr($dataCso->doccsoid, 0, 3) == 'CSS')
-                                                    <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">
-                                                        Tanggal<br>Import</th>
-                                                @endif
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">No</th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 1.25cm">Nama Item
-                                                </th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.25cm">Grade
-                                                </th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">UOM</th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.75cm">
-                                                    Analisator</th>
-                                                @php
-                                                    $count = count($dataWrh);
-                                                @endphp
-                                                @foreach ($dataWrh as $wrh)
-                                                    <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">
-                                                        {{ $wrh->wrh }}</th>
-                                                @endforeach
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.75cm">Total
-                                                </th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 1</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 2</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 3</th>
-                                                <th class="th-content-cso" colspan="3" style="width: 2cm">Trace</th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Warna</th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Keterangan
-                                                </th>
-                                                <th class="th-content-noncso" rowspan="2" style="width: 1cm">Pelaku</th>
+                                            <tr class="bg-gray-200 text-xs text-gray-700">
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-id-no" rowspan="3">NO</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-first-name" rowspan="3">ITEM Code</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">Nama Barang</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">ANALISATOR</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">AREA</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">STANDART BERAT KEMASAN</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" colspan="{{ 3 * $countLoc}}">MATERIAL TIDAK UTUH</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" colspan="{{ 2 * $countLoc}}">MATERIAL UTUH</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">KG/DRUM</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="2">TOTAL REALITA STOK</th>
+                                                {{-- QTY SAP == ONHAND --}}
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">QTY SAP</th> 
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" colspan="3" rowspan="2">SELISIH</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" colspan="2" rowspan="2">STANDART</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">TRUE OR FALSE</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle" rowspan="3">KESESUSAIAN DGN VS STANDAR</th>
                                             </tr>
-                                            <tr class="tr-head">
-                                                <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
-
-                                                <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
-
-                                                <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
-
-                                                <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.5cm">Kesimpulan</th>
+                                            <tr class="bg-gray-200 text-xs text-gray-700">
+                                                {{-- <th class="border border-gray-300 px-2 py-1" colspan="6"></th>?? --}}
+                                                @foreach($location as $loc)
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th2" colspan="3">{{$loc->locationname}}</th>
+                                                @endforeach
+                                                @foreach($location as $loc)
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th2" colspan="2">{{$loc->locationname}}</th>
+                                                @endforeach
+                                                {{-- <th class="border border-gray-300 px-2 py-1" colspan="3">AREA 1</th>
+                                                <th class="border border-gray-300 px-2 py-1" colspan="3">AREA 2</th>
+                                                <th class="border border-gray-300 px-2 py-1" colspan="3">AREA 3</th> --}}
+                                                {{-- <th class="border border-gray-300 px-2 py-1" colspan="2">AREA 1</th>
+                                                <th class="border border-gray-300 px-2 py-1" colspan="2">AREA 2</th>
+                                                <th class="border border-gray-300 px-2 py-1" colspan="2">AREA 3</th> --}}
+                                            </tr>
+                                            <tr class="bg-gray-200 text-xs text-gray-700">
+                                                {{-- <th class="border border-gray-300 px-2 py-1" colspan="6"></th> --}}
+                                                @for($i = 0; $i<$countLoc;$i++)
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th3">BERAT KOTOR (KG)</th>
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th3">BERAT KEMASAN (KG)</th>
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th3">BERAT KERAN (KG)</th>    
+                                                @endfor
+                                                @for($i = 0; $i<$countLoc;$i++)
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th3">QTY</th>
+                                                    <th class="border border-gray-300 px-2 py-1 align-middle col-th3">BERAT (KG)</th>    
+                                                @endfor
+                                                
+                                                {{-- <th class="border border-gray-300 px-2 py-1">BERAT KOTOR (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT KEMASAN (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT KERAN (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT KOTOR (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT KEMASAN (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT KERAN (KG)</th> --}}
+                                                {{-- <th class="border border-gray-300 px-2 py-1">QTY</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">QTY</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT (KG)</th>
+                                                <th class="border border-gray-300 px-2 py-1">QTY</th>
+                                                <th class="border border-gray-300 px-2 py-1">BERAT (KG)</th> --}}
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">TOTAL QTY (UTUH + TIDAK UTUH)</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">QTY</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">TOTAL PRODUKSI</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">% MATERIAL LOSS</th>
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">STD LOSS MINUS</th>    
+                                                <th class="border border-gray-300 px-2 py-1 align-middle col-th3">STD LOSS PLUS</th>    
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($dataLaporan as $laporan)
-                                                <tr class="tr-rekapitulasi-global">
-                                                    @if (substr($dataCso->doccsoid, 0, 3) == 'CSS')
-                                                        <td class="td-content">
-                                                            {{ \Carbon\Carbon::parse($laporan->createddate)->translatedFormat('d F Y') }}
-                                                        </td>
-                                                    @endif
-                                                    <td class="td-content">{{ $loop->iteration }}</td>
-                                                    <td class="td-content">{{ $laporan->itemname }}</td>
-                                                    <td class="td-content">{{ $laporan->grade }}</td>
-                                                    <td class="td-content">{{ $laporan->uom }}</td>
-                                                    <td class="td-content">{{ $laporan->name }}</td>
-                                                    @foreach ($dataWrh as $wrh)
-                                                        <td class="td-content">
-                                                            @foreach ($dataWrhQty as $qtyWrh)
-                                                                @if ($qtyWrh->wrh == $wrh->wrh && $qtyWrh->trsdetid == $laporan->trsdetid)
-                                                                    {{ $qtyWrh->qty }}
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                    @endforeach
-                                                    <td class="td-content">{{ $laporan->onhand }}</td>
-
-                                                    <td class="td-content">{{ $laporan->qtycso1 }}</td>
-                                                    <td class="td-content">{{ $laporan->qtycso1 - $laporan->onhand }}</td>
-                                                    <td class="td-content">{{ $laporan->locqty1 }}</td>
-                                                    <td class="td-content">{{ $laporan->loctcso1 }}</td>
-                                                    @if ($laporan->qtycso1 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
-                                                        </td>
+                                            @foreach($dataLaporan as $i => $data)
+                                                <tr>
+                                                    @php
+                                                        $qtySelisih = $data['totalRealita']-$data['onhand'];
+                                                        $materialLossSelisih = 0;
+                                                        if($data['totalProduksi']!=0)
+                                                        {
+                                                            $materialLossSelisih = $qtySelisih/$data['totalProduksi']*100;
+                                                        }
+                                                    @endphp
+                                                    {{-- no --}}
+                                                    <td class="td-content col-id-no">{{ $i+1 }}</td> 
+                                                    {{-- itemcode --}}
+                                                    <td class="td-content col-first-name"> {{$data['itemid']}} </td>
+                                                    {{-- nama barang --}}
+                                                    <td class="td-content"> {{$data['itemname']}} </td>
+                                                    {{-- analisator --}}
+                                                    <td class="td-content"> {{$data['analisatorName']}} </td>
+                                                    {{-- area --}}
+                                                    <td class="td-content"> {{$data['area']}} </td>
+                                                    {{-- STD Berat Kemasan --}}
+                                                    <td class="td-content"> {{$data['stdBeratKemasan']}} </td>
+                                                        @foreach($location as $loc)
+                                                            {{-- berat kotor --}}
+                                                            <td class="td-content"> {{$data['loc'][$loc->locationname]}} </td>
+                                                            {{-- berat kemasan --}}
+                                                            <td class="td-content"> - </td>
+                                                            {{-- berat keran --}}
+                                                            <td class="td-content"> - </td>
+                                                        @endforeach
+                                                        @foreach($location as $loc)
+                                                            {{-- qty --}}
+                                                            <td class="td-content"> - </td>
+                                                            {{-- Berat --}}
+                                                            <td class="td-content"> - </td>
+                                                        @endforeach
+                                                    {{-- konversi --}}
+                                                    <td class="td-content"> {{$data['konversi_1']}} </td>
+                                                    {{-- tidak utuh + utuh --}}
+                                                    <td class="td-content"> {{$data['totalRealita']}} </td>
+                                                    {{-- onhand --}}
+                                                    <td class="td-content"> {{$data['onhand']}} </td>
+                                                    {{-- selisih qty --}}
+                                                    <td class="td-content"> {{$qtySelisih}} </td>
+                                                    {{-- Total produksi --}}
+                                                    {{-- @if($data['totalProduksi']!=0) --}}
+                                                    <td class="td-content"> {{$data['totalProduksi']}} </td>
+                                                    {{-- @else --}}
+                                                        {{-- <td class="td-content"> 0.000 </td> --}}
+                                                    {{-- @endif --}}
+                                                    {{-- % material loss --}}
+                                                    @if($data['totalProduksi']!=0)
+                                                        <td class="td-content"> {{number_format($materialLossSelisih,3,'.',',')}} </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content"> - </td>
                                                     @endif
+                                                    {{-- material loss minus --}}
+                                                    <td class="td-content"> {{$data['materialLossM']}} </td>
+                                                    {{-- material loss plus --}}
+                                                    <td class="td-content"> {{$data['materialLossP']}} </td>
 
-
-                                                    <td class="td-content">{{ $laporan->qtycso2 }}</td>
-                                                    <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand && ($laporan->qtycso2!=NULL ||$laporan->qtycso2!=''))
-                                                            {{ $laporan->qtycso2 - $laporan->onhand }}
+                                                    {{-- @if($data['totalProduksi'] == 0 || $data['materialLoss'] == null) --}}
+                                                    @if($data['totalProduksi'] == 0)
+                                                        {{-- True or false pake if --}}
+                                                        @if($qtySelisih!=0)
+                                                            <td class="td-content bg-danger"> FALSE </td>
+                                                        @else
+                                                            <td class="td-content bg-info"> TRUE </td>
                                                         @endif
-                                                    </td>
-                                                    <td class="td-content">{{ $laporan->locqty2 }}</td>
-                                                    <td class="td-content">{{ $laporan->loctcso2 }}</td>
-                                                    @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
-                                                        </td>
                                                     @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
+                                                        <td class="td-content"> - </td>
                                                     @endif
-
-                                                    <td class="td-content">{{ $laporan->qtycso3 }}</td>
-                                                    <td class="td-content">
-                                                        @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand
-                                                        && ($laporan->qtycso3!=NULL ||$laporan->qtycso3!=''))
-                                                            {{ $laporan->qtycso3 - $laporan->onhand }}
+                                                    {{-- NOK or ok pake if --}}
+                                                    {{-- @if($data['totalProduksi'] == 0 || $data['materialLoss'] == null) --}}
+                                                    @if($data['totalProduksi'] == 0)
+                                                        <td class="td-content"> - </td>
+                                                    @else
+                                                        {{-- True or false pake if --}}
+                                                        @if($materialLossSelisih>$data['materialLossM'] && $materialLossSelisih<$data['materialLossP'] )
+                                                            <td class="td-content bg-info"> OK </td>
+                                                        @else
+                                                            <td class="td-content bg-dangers"> NOK </td>
                                                         @endif
-                                                    </td>
-                                                    <td class="td-content">{{ $laporan->locqty3 }}</td>
-                                                    <td class="td-content">{{ $laporan->loctcso3 }}</td>
-                                                    @if (
-                                                        $laporan->qtycso1 != $laporan->onhand &&
-                                                            $laporan->qtycso2 != $laporan->onhand &&
-                                                            $laporan->qtycso3 != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
-                                                        </td>
-                                                    @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
                                                     @endif
-                                                    <td class="td-content">
-                                                        {{ $laporan->trace }}
-                                                    </td>
-                                                    <td class="td-content">
-                                                        @if (
-                                                            $laporan->qtycso1 != $laporan->onhand &&
-                                                                $laporan->qtycso2 != $laporan->onhand &&
-                                                                $laporan->qtycso3 != $laporan->onhand 
-                                                                && ($laporan->trace != NULL ||$laporan->trace !=''))
-                                                            {{ $laporan->trace - $laporan->onhand }}
-                                                        @endif
-                                                    </td>
-
-                                                    @if (
-                                                        $laporan->qtycso1 != $laporan->onhand &&
-                                                            $laporan->qtycso2 != $laporan->onhand &&
-                                                            $laporan->qtycso3 != $laporan->onhand &&
-                                                            $laporan->trace != $laporan->onhand)
-                                                        <td class="td-content"
-                                                            style="background-color: #FE0000; color: white; font-weight: bolder;">
-                                                            False
-                                                        </td>
-                                                    @else
-                                                        <td class="td-content"
-                                                            style="background-color: #00AF50; color: white; font-weight: bolder;">
-                                                            True</td>
-                                                    @endif
-                                                    <td class="td-content">{{ $laporan->color }}</td>
-                                                    <td class="td-content">{{ $laporan->keterangan }}</td>
-                                                    <td class="td-content">{{ $laporan->pelaku }}</td>
                                                 </tr>
                                             @endforeach
-                                        </tbody>
+                                        </tbody> 
                                     </table>
                                 </div>
                             </div>
@@ -335,10 +375,6 @@
         </section>
     </div>
     <script>
-        $(".sticky-header").floatThead({ scrollingTop: 0 })
-        // setInterval(function(event) {
-        //     $('.sticky-header').floatThead('reflow');
-        // }, 500);
         function html_table_to_excel(type) {
 
 
@@ -353,10 +389,10 @@
 
             const element = document.getElementById('tableid');
 
-            element.insertRow(0);
-            element.insertRow(0);
-            element.insertRow(0);
-            element.insertRow(0);
+            // element.insertRow(0);
+            // element.insertRow(0);
+            // element.insertRow(0);
+            // element.insertRow(0);
 
             const ws = XLSX.utils.table_to_sheet(element,{raw: true});
             // ws["A1"] = {
@@ -364,320 +400,320 @@
             //         bold: true,
             //     }
             // };
-            const myNewData = [
-                [`{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }} TANGGAL:
-        {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}`],
-                [`MATERIAL: {{ Str::upper($dataCso->csomaterial) }}`],
-                [`LOKASI: {{ $dataCoy->description }}`]
-            ];
+        //     const myNewData = [
+        //         [`{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }} TANGGAL:
+        // {{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}`],
+        //         [`MATERIAL: {{ Str::upper($dataCso->csomaterial) }}`],
+        //         [`LOKASI: {{ $dataCoy->description }}`]
+        //     ];
 
-            XLSX.utils.sheet_add_aoa(ws, myNewData);
+        //     XLSX.utils.sheet_add_aoa(ws, myNewData);
 
-            var caunt = parseInt(`{{ $count }}`);
+            // caunt = parseInt( $count );
             // console.log(caunt);
 
-            if (`{{ substr($dataCso->doccsoid, 0, 3) }}` == 'CSS') {
-                ws["!merges"] = [{
-                        s: {
-                            c: 0,
-                            r: 0
-                        },
-                        e: {
-                            c: 6,
-                            r: 0
-                        }
-                    }, // A1
-                    {
-                        s: {
-                            c: 0,
-                            r: 1
-                        },
-                        e: {
-                            c: 6,
-                            r: 1
-                        }
-                    }, // A1:B2
-                    {
-                        s: {
-                            c: 0,
-                            r: 2
-                        },
-                        e: {
-                            c: 6,
-                            r: 2
-                        }
-                    },
+            // if (`{{ substr($dataCso->doccsoid, 0, 3) }}` == 'CSS') {
+            //     ws["!merges"] = [{
+            //             s: {
+            //                 c: 0,
+            //                 r: 0
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 0
+            //             }
+            //         }, // A1
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 1
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 1
+            //             }
+            //         }, // A1:B2
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 2
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 2
+            //             }
+            //         },
 
-                    {
-                        s: {
-                            c: 0,
-                            r: 4
-                        },
-                        e: {
-                            c: 0,
-                            r: 5
-                        }
-                    }, //a5:a6
-                    {
-                        s: {
-                            c: 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 1,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 2,
-                            r: 4
-                        },
-                        e: {
-                            c: 2,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 3,
-                            r: 4
-                        },
-                        e: {
-                            c: 3,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 4,
-                            r: 4
-                        },
-                        e: {
-                            c: 4,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 5,
-                            r: 4
-                        },
-                        e: {
-                            c: 5,
-                            r: 5
-                        }
-                    }
-                ];
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 0,
+            //                 r: 5
+            //             }
+            //         }, //a5:a6
+            //         {
+            //             s: {
+            //                 c: 1,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 1,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 2,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 2,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 3,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 3,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 4,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 4,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 5,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5,
+            //                 r: 5
+            //             }
+            //         }
+            //     ];
 
-                for (let i = 0; i < caunt; i++) {
-                    ws["!merges"].push({
-                        s: {
-                            c: 6 + i,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + i,
-                            r: 5
-                        }
-                    })
-                }
+            //     for (let i = 0; i < caunt; i++) {
+            //         ws["!merges"].push({
+            //             s: {
+            //                 c: 6 + i,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + i,
+            //                 r: 5
+            //             }
+            //         })
+            //     }
 
-                ws["!merges"].push({
-                        s: {
-                            c: 6 + caunt,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt,
-                            r: 5
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 5,
-                            r: 4
-                        }
-                    }, //a5:l115
-                    {
-                        s: {
-                            c: 6 + caunt + 6,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 10,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 11,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 15,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 16,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 18,
-                            r: 4
-                        }
-                    }
-                );
+            //     ws["!merges"].push({
+            //             s: {
+            //                 c: 6 + caunt,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + caunt,
+            //                 r: 5
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 6 + caunt + 1,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + caunt + 4,
+            //                 r: 4
+            //             }
+            //         }, //a5:l115
+            //         {
+            //             s: {
+            //                 c: 6 + caunt + 5,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + caunt + 8,
+            //                 r: 4
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 6 + caunt + 9,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + caunt + 11,
+            //                 r: 4
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 6 + caunt + 13,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 6 + caunt + 15,
+            //                 r: 4
+            //             }
+            //         }
+            //     );
 
-            } else {
-                ws["!merges"] = [{
-                        s: {
-                            c: 0,
-                            r: 0
-                        },
-                        e: {
-                            c: 6,
-                            r: 0
-                        }
-                    }, // A1
-                    {
-                        s: {
-                            c: 0,
-                            r: 1
-                        },
-                        e: {
-                            c: 6,
-                            r: 1
-                        }
-                    }, // A1:B2
-                    {
-                        s: {
-                            c: 0,
-                            r: 2
-                        },
-                        e: {
-                            c: 6,
-                            r: 2
-                        }
-                    },
+            // } else {
+            //     ws["!merges"] = [{
+            //             s: {
+            //                 c: 0,
+            //                 r: 0
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 0
+            //             }
+            //         }, // A1
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 1
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 1
+            //             }
+            //         }, // A1:B2
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 2
+            //             },
+            //             e: {
+            //                 c: 6,
+            //                 r: 2
+            //             }
+            //         },
 
-                    {
-                        s: {
-                            c: 0,
-                            r: 4
-                        },
-                        e: {
-                            c: 0,
-                            r: 5
-                        }
-                    }, //a5:a6
-                    {
-                        s: {
-                            c: 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 1,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 2,
-                            r: 4
-                        },
-                        e: {
-                            c: 2,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 3,
-                            r: 4
-                        },
-                        e: {
-                            c: 3,
-                            r: 5
-                        }
-                    },
-                    {
-                        s: {
-                            c: 4,
-                            r: 4
-                        },
-                        e: {
-                            c: 4,
-                            r: 5
-                        }
-                    },
-                ];
+            //         {
+            //             s: {
+            //                 c: 0,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 0,
+            //                 r: 5
+            //             }
+            //         }, //a5:a6
+            //         {
+            //             s: {
+            //                 c: 1,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 1,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 2,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 2,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 3,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 3,
+            //                 r: 5
+            //             }
+            //         },
+            //         {
+            //             s: {
+            //                 c: 4,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 4,
+            //                 r: 5
+            //             }
+            //         },
+            //     ];
 
-                for (let i = 0; i < caunt; i++) {
-                    ws["!merges"].push({
-                        s: {
-                            c: 5 + i,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + i,
-                            r: 5
-                        }
-                    })
-                }
+            //     for (let i = 0; i < caunt; i++) {
+            //         ws["!merges"].push({
+            //             s: {
+            //                 c: 5 + i,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + i,
+            //                 r: 5
+            //             }
+            //         })
+            //     }
 
-                ws["!merges"].push({
-                        s: {
-                            c: 5 + caunt,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt,
-                            r: 5
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 1,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 5,
-                            r: 4
-                        }
-                    }, //a5:l115
-                    {
-                        s: {
-                            c: 5 + caunt + 6,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 10,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 11,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 15,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 16,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 18,
-                            r: 4
-                        }
-                    }
-                );
-            }
+            //     ws["!merges"].push({
+            //             s: {
+            //                 c: 5 + caunt,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + caunt,
+            //                 r: 5
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 5 + caunt + 1,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + caunt + 4,
+            //                 r: 4
+            //             }
+            //         }, //a5:l115
+            //         {
+            //             s: {
+            //                 c: 5 + caunt + 5,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + caunt + 8,
+            //                 r: 4
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 5 + caunt + 9,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + caunt + 11,
+            //                 r: 4
+            //             }
+            //         }, {
+            //             s: {
+            //                 c: 5 + caunt + 13,
+            //                 r: 4
+            //             },
+            //             e: {
+            //                 c: 5 + caunt + 15,
+            //                 r: 4
+            //             }
+            //         }
+            //     );
+            // }
 
             const wb = XLSX.utils.book_new();
 
@@ -688,10 +724,12 @@
                 bookSST: true,
                 type: 'base64'
             })
+            // XLSX.writeFile(wb,
+            //     `{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }}-{{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}` +
+            //     '.xlsx');
             XLSX.writeFile(wb,
-                `{{ substr($dataCso->doccsoid, 0, 3) }} {{ $dataCoy->coycode }}-{{ Str::upper(\Carbon\Carbon::parse($dataCso->startcsodate)->translatedFormat('j F Y')) }}` +
+                'test'+
                 '.xlsx');
-
         }
 
         const export_button = document.getElementById('export_button');
@@ -701,3 +739,47 @@
         });
     </script>
 @endsection
+
+
+{{-- <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200 text-xs text-gray-700">
+                <th class="border border-gray-300 px-2 py-1">NO</th>
+                <th class="border border-gray-300 px-2 py-1">Nom Code</th>
+                <th class="border border-gray-300 px-2 py-1">Nama Barang</th>
+                <th class="border border-gray-300 px-2 py-1">ANALISA TDK</th>
+                <th class="border border-gray-300 px-2 py-1">AREA</th>
+                <th class="border border-gray-300 px-2 py-1">STANDART BERAT KEMASAN</th>
+                <th class="border border-gray-300 px-2 py-1" colspan="6">MATERIAL TIDAK UTUH</th>
+                <th class="border border-gray-300 px-2 py-1" colspan="6">MATERIAL UTUH</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">TOTAL REALITA STOK</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">QTY SAK</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">QTY</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">TOTAL PRODUKSI</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">MATERIAL LOSS</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">TRUE OR FALSE</th>
+                <th class="border border-gray-300 px-2 py-1" rowspan="2">SESUSAI DGN VS STANDAR</th>
+            </tr>
+            <tr class="bg-gray-200 text-xs text-gray-700">
+                <th class="border border-gray-300 px-2 py-1" colspan="6"></th>
+                <th class="border border-gray-300 px-2 py-1">AREA 1</th>
+                <th class="border border-gray-300 px-2 py-1">AREA 2</th>
+                <th class="border border-gray-300 px-2 py-1">AREA 3</th>
+                <th class="border border-gray-300 px-2 py-1">AREA 1</th>
+                <th class="border border-gray-300 px-2 py-1">AREA 2</th>
+                <th class="border border-gray-300 px-2 py-1">AREA 3</th>
+            </tr>
+            <tr class="bg-gray-200 text-xs text-gray-700">
+                <th class="border border-gray-300 px-2 py-1" colspan="6"></th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KOTOR (B)</th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KEMASAN (B)</th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KERING (B)</th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KOTOR (B)</th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KEMASAN (B)</th>
+                <th class="border border-gray-300 px-2 py-1">BERAT KERING (B)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Add table rows here -->
+        </tbody> --}}

@@ -176,43 +176,44 @@ class AccountController extends Controller
 
     public function mulaiCSOAvalan(Request $request) {
         DB::beginTransaction();
-
         $getUserData = DB::table('dbmuser')
         ->leftJoin('dbmcoy','dbmuser.coyid', '=', 'dbmcoy.coyid')
         ->select(["dbmcoy.coycode AS coycode","dbmuser.userid AS userid","dbmuser.coyid AS coyid"])
-        ->where('username','=',$request->username)
-        ->first();
+        ->where('username','=',$request->username)->get();
 
         $generateNewCSOID=DB::table('dbtcsohed')
-        ->selectRaw('csoID + 1 AS nextCsoId')
-        ->orderByDesc('csoid')
-        ->first();
+        ->select(DB::raw('csoID + 1 AS nextCsoId'))
+        ->orderBy('csoid', 'desc')
+        ->limit(1)
+        ->get();
 
-        $getNewCSOID = $generateNewCSOID ?  $generateNewCSOID->nextCsoId : 1;
+        $getNewCSOID=$generateNewCSOID??1;
+        $docRefId="CS{$getUserData[0]->coycode}-$request->username". '-' . Carbon::now()->format('Ym') . '-' . str_pad($getNewCSOID,2,'0', STR_PAD_LEFT);
+
         $getTrsID = DB::table('dbttrsheda')
-        ->select('trsid','typecekstok')
+        ->select('trsid')
         ->where('statusdoc','=','A')
-        ->where('typecekstok', $request->csotype)
         ->whereNull('endcsodate')
         ->orderByDesc('trsid')
-        ->first();
-        $docRefId="$getTrsID->typecekstok$getUserData->coycode-$request->username". '-' . Carbon::now()->format('Ym') . '-' . str_pad($getNewCSOID,2,'0', STR_PAD_LEFT);
+        ->limit(1)
+        ->get();
 
-        $insertHed = DB::table('dbtcsohed')->insert([
-            'csoid' => $getNewCSOID,
-            'trsid' => $getTrsID->trsid,
-            'typecekstok' => $getTrsID->typecekstok,
+        $insertValues = [
+            'csoid' => $getNewCSOID[0]->nextCsoId,
+            'trsid' => $getTrsID[0]->trsid,
             'docrefid' => $docRefId,
-            'pelakuid' => $getUserData->userid,
+            'pelakuid' => $getUserData[0]->userid,
             'pelakuuname' => $request->username,
-            'coyid' => $getUserData->coyid,
+            'coyid' => $getUserData[0]->coyid,
             'status' => 'A',
             'tipecso'=> 'A'
-        ]);
+        ];        
+
+        $insertHed = DB::table('dbtcsohed')->insert($insertValues);
 
         if($insertHed == true) {
             DB::commit();
-            return response()->json(['result' => 1, 'csoid' => $getNewCSOID, 'trsid' => $getTrsID->trsid]);
+            return response()->json(['result' => 1, 'csoid' => $getNewCSOID[0]->nextCsoId, 'trsid' => $getTrsID[0]->trsid]);
         } else {
             DB::rollBack();
             return response()->json(['result' => 0, 'message' => 'Start CSO Gagal']);

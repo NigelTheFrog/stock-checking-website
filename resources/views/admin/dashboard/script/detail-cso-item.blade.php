@@ -1,9 +1,7 @@
     <script>
-
         var groupingId=undefined;
         const typecekstok = `{{ $typecekstok }}`;
         const coyCode = `{{$coyCode}}`;
-        // console.log(coyCode);
 
         $(document).on('change','#groupingId',function(){
             
@@ -16,33 +14,32 @@
                 $('#groupValue').prop('disabled', true).val('');
             }
         });
+        // document.getElementById("warehouseCode").selectedIndex = -1;
+        // VirtualSelect.init({
+        //     ele: '#warehouseCode',
+        //     maxWidth: '100%',
+        //     multiple: true,
+        //     placeholder: "Kode Gudang",
+        //     search: true
+        // });
 
-        document.getElementById("warehouseCode").selectedIndex = -1;
-        VirtualSelect.init({
-            ele: '#warehouseCode',
-            maxWidth: '100%',
-            multiple: true,
-            placeholder: "Kode Gudang",
-            search: true
-        });
+        // document.getElementById("tipeSelect").selectedIndex = -1;
+        // VirtualSelect.init({
+        //     ele: '#tipeSelect',
+        //     maxWidth: '70%',
+        //     placeholder: "Tipe",
+        //     multiple: true,
+        //     search: false
+        // });
 
-        document.getElementById("tipeSelect").selectedIndex = -1;
-        VirtualSelect.init({
-            ele: '#tipeSelect',
-            maxWidth: '70%',
-            placeholder: "Tipe",
-            multiple: true,
-            search: false
-        });
-
-        function openModalDetailCSO(itemName, dataItem) {
+        function openModalDetailCSO(button, trsdetid, itemId, itemName,groupValue) {
             document.getElementById("detailCsoHeader").innerText = `DETAIL ${itemName}`;
-            // console.log(dataItem.groupValue);
             $.ajax({
                 url: "{{ route('item.detail-cso') }}",
                 type: 'POST',
                 data: {
-                    param: JSON.stringify(dataItem),
+                    id: itemId,
+                    trsdetid: trsdetid,
                     typecekstok: typecekstok
                 },
                 headers: {
@@ -53,8 +50,8 @@
                     $('#detailCso').html(data);
                     $('#formSubmitCso').attr('action', `{{ route('item.update-cso') }}`);
                     $("#buttonSubmit").attr('type', 'submit');
-                    $("#buttonCari").attr('onclick', `cariHistoryTransaksi(${dataItem.itemid})`);
-                    showHistoryTransaksi(dataItem.itemid, "", "", "");
+                    // $("#buttonCari").attr('onclick', `cariHistoryTransaksi(${itemId})`);
+                    // showHistoryTransaksi(itemId, "", "", "");
 
                     if($('#groupingId').find(":selected").val()==='' ||  $('#groupingId').find(":selected").val()==0)
                     {
@@ -62,7 +59,7 @@
                     }
                     else
                     {
-                        $('#groupValue').prop('disabled', false).val(dataItem.groupValue);
+                        $('#groupValue').prop('disabled', false).val(groupValue);
                     }
                 },
                 error: function() {
@@ -80,57 +77,67 @@
         }
 
         function csoUlang() {
-            const itemIdParam = document.getElementById("itemid").value; // Get the selected gudang values
-            const buttonCsoUlang = document.getElementById("csoulang");
-            const keteranganCSOUlang = document.getElementsByName('checkboxketerangan');
-            const trsdetIdParam = document.getElementById("trsdetidparam").value;
-            let keteranganId = [];
-            keteranganCSOUlang.forEach(element => {
-                if (element.checked) keteranganId.push(element.value);
-            });
+        const itemIdParam = document.getElementById("itemid").value; // Get the selected gudang values
+        const buttonCsoUlang = document.getElementById("csoulang");
+        const keteranganCSOUlang = document.getElementsByName('checkboxketerangan');
+        const trsdetIdParam = document.getElementById("trsdetidparam").value;
+        let keteranganId = [];
+        keteranganCSOUlang.forEach(element => {
+            if (element.checked) keteranganId.push(element.value);
+        });
 
-            $.ajax({
-                url: "{{ route('item.cso-ulang') }}",
-                method: "POST",
-                data: {
-                    itemid: itemIdParam,
-                    trsdetid: trsdetIdParam,
-                    keteranganCsoUlang: keteranganId,
-                    typecekstok: typecekstok
+        $.ajax({
+            url: "{{ route('item.cso-ulang') }}",
+            method: "POST",
+            data: {
+                itemid: itemIdParam,
+                trsdetid: trsdetIdParam,
+                keteranganCsoUlang: keteranganId,
+                typecekstok: typecekstok
 
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    // console.log(data);
-                    if (data['result'] == 1) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Berhasil",
-                            text: `Item dengan id ${itemIdParam}\nberhasil di CSO Ulang`,
-                        });
-                        buttonCsoUlang.disabled = true;
-                        filterItemDash(filterItems);
-                        closeModalCsoUlang();
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: data['message'],
-                        });
-                    }
-                },
-                error: function() {
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                // console.log(data);  
+                if (data['result'] == 1) {
+                    // if (batchNoParam == null || batchNoParam == "") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Berhasil",
+                        text: `Item dengan id ${itemIdParam}\nberhasil di CSO Ulang`,
+                    });
+
+                    // } else {
+                    //     Swal.fire({
+                    //         icon: "success",
+                    //         title: "Berhasil",
+                    //         text: `Item dengan id ${itemIdParam} dan batch number ${batchNoParam}\nberhasil di CSO Ulang`,
+                    //     });
+                    // }
+                    buttonCsoUlang.disabled = true;
+                    filterItemDash(filterItems);
+                    closeModalCsoUlang();
+                } else {
                     Swal.fire({
                         icon: "error",
                         title: "Oops...",
-                        text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                        text: data['message'],
                     });
                 }
-            });
-        }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan pada sistem, segera laporkan pada tim IT",
+                });
+            }
+        });
+    }
 
+        
         function openModalCsoUlang() {
             $('#ModalDetailCso').modal('hide');
             $('#ModalCsoUlang').modal('show');
@@ -141,84 +148,84 @@
             $('#ModalDetailCso').modal('show');
         }
 
-        flatpickr('#startdatepicker', {});
-        flatpickr('#enddatepicker', {});
+        // flatpickr('#startdatepicker', {});
+        // flatpickr('#enddatepicker', {});
 
-        function cariHistoryTransaksi(itemId) {
-            showHistoryTransaksi(
-                itemId,
-                document.getElementById('tipeSelect').value.toString(),
-                document.getElementById('warehouseCode').value.toString(),
-                `${document.getElementById('startdatepicker').value},${document.getElementById('enddatepicker').value}`
-            );
-        }
+        // function cariHistoryTransaksi(itemId) {
+        //     showHistoryTransaksi(
+        //         itemId,
+        //         document.getElementById('tipeSelect').value.toString(),
+        //         document.getElementById('warehouseCode').value.toString(),
+        //         `${document.getElementById('startdatepicker').value},${document.getElementById('enddatepicker').value}`
+        //     );
+        // }
 
-        function showHistoryTransaksi(itemId, tipe, warehouse, tanggal) {
-            const tabelTransaksi = $('#tabel-transaksi').DataTable({
-                ajax: {
-                    url: "{{ route('item.history-transaksi') }}",
-                    type: 'POST',
-                    data: {
-                        itemid: itemId,
-                        tipe: tipe,
-                        warehouse: warehouse,
-                        tanggal: tanggal
+        // function showHistoryTransaksi(itemId, tipe, warehouse, tanggal) {
+        //     const tabelTransaksi = $('#tabel-transaksi').DataTable({
+        //         ajax: {
+        //             url: "{{ route('item.history-transaksi') }}",
+        //             type: 'POST',
+        //             data: {
+        //                 itemid: itemId,
+        //                 tipe: tipe,
+        //                 warehouse: warehouse,
+        //                 tanggal: tanggal
 
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                },
-                columnDefs: [{
-                    searchable: false
-                }],
-                // fixedHeader: true,
-                searching: false,
-                paging: false,
-                bDestroy: true,
-                serverSide: true,
-                processing: true,
-                order: [],
-                pageLength: 20,
-                lengthMenu: [5, 10, 15, 20],
-                columns: [{
-                        data: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'docnum'
-                    },
-                    {
-                        data: 'PostingDate'
-                    },
-                    {
-                        data: 'WhseCode',
-                        render: function(data, type, row, meta) {
-                            return `
-                                <div class="font-weight-bolder">${ data }</div>
-                                <div class="text-muted">${ row.whsename }</div>
-                            `;
-                        }
-                    },
-                    {
-                        data: 'Quantity',
-                    },
-                    {
-                        data: 'uom'
-                    },
-                    {
-                        data: 'endbal'
-                    },
-                ],
-                fnDrawCallback: function() {
-                    document.getElementById("quantityData").innerText =
-                        `Total Qty: ${this.api().column( 4, {page:'current'} ).data().sum()}`;
-                    document.getElementById("openBalanceData").innerText =
-                        `Open Balance: ${this.api().row(0).data().openbal}`;
-                    document.getElementById("endBalanceData").innerText =
-                        `End Balance: ${this.api().row(':last-child').data().endbal}`;
-                }
-            });
-        }
+        //             },
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             },
+        //         },
+        //         columnDefs: [{
+        //             searchable: false
+        //         }],
+        //         // fixedHeader: true,
+        //         searching: false,
+        //         paging: false,
+        //         bDestroy: true,
+        //         serverSide: true,
+        //         processing: true,
+        //         order: [],
+        //         pageLength: 20,
+        //         lengthMenu: [5, 10, 15, 20],
+        //         columns: [{
+        //                 data: 'DT_RowIndex'
+        //             },
+        //             {
+        //                 data: 'docnum'
+        //             },
+        //             {
+        //                 data: 'PostingDate'
+        //             },
+        //             {
+        //                 data: 'WhseCode',
+        //                 render: function(data, type, row, meta) {
+        //                     return `
+        //                         <div class="font-weight-bolder">${ data }</div>
+        //                         <div class="text-muted">${ row.whsename }</div>
+        //                     `;
+        //                 }
+        //             },
+        //             {
+        //                 data: 'Quantity',
+        //             },
+        //             {
+        //                 data: 'uom'
+        //             },
+        //             {
+        //                 data: 'endbal'
+        //             },
+        //         ],
+        //         fnDrawCallback: function() {
+        //             document.getElementById("quantityData").innerText =
+        //                 `Total Qty: ${this.api().column( 4, {page:'current'} ).data().sum()}`;
+        //             document.getElementById("openBalanceData").innerText =
+        //                 `Open Balance: ${this.api().row(0).data().openbal}`;
+        //             document.getElementById("endBalanceData").innerText =
+        //                 `End Balance: ${this.api().row(':last-child').data().endbal}`;
+        //         }
+        //     });
+        // }
 
         function hapusItemTemuan(itemid, trsdetid) {
             $.ajax({

@@ -15,12 +15,25 @@
 <div class="col">
     <div class="card bg-success text-white mb-4">
         <div class="card-body">
-            <h3>{{ $countItemOk }}</h3>
-            <p>Item OK</p>
+            <h3>{{ $countItemTrue }}</h3>
+            <p>True</p>
         </div>
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#" id="btnItemOk" data-bs-toggle="modal"
-                onclick="openModalOk(this)">View Details</a>
+            <a class="small text-white stretched-link" href="#" id="btnItemTrue" 
+                data-bs-toggle="modal" onclick="openModalTrue(this)">View Details</a>
+            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+        </div>
+    </div>
+</div>
+<div class="col">
+    <div class="card bg-success text-white mb-4">
+        <div class="card-body">
+            <h3>{{ $countItemOk }}</h3>
+            <p>OK</p>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" id="btnItemOk"
+                data-bs-toggle="modal" onclick="openModalOk(this)">View Details</a>
             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
         </div>
     </div>
@@ -28,12 +41,25 @@
 <div class="col">
     <div class="card bg-danger text-white mb-4">
         <div class="card-body">
-            <h3>{{ $countItemSelisih }}</h3>
-            <p>Item Selisih</p>
+            <h3>{{ $countItemSelisihFalse }}</h3>
+            <p>False</p>
         </div>
         <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="#" id="btnItemBlmProses"
-                data-bs-toggle="modal" onclick="openModalSelisih(this)">View Details</a>
+            <a class="small text-white stretched-link" href="#" id="btnItemFalse"
+                data-bs-toggle="modal" onclick="openModalFalse(this)">View Details</a>
+            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+        </div>
+    </div>
+</div>
+<div class="col">
+    <div class="card bg-danger text-white mb-4">
+        <div class="card-body">
+            <h3>{{ $countItemSelisihNok }}</h3>
+            <p>NOK</p>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" id="btnItemNok"
+                data-bs-toggle="modal" onclick="openModalNok(this)">View Details</a>
             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
         </div>
     </div>

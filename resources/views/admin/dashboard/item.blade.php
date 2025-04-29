@@ -117,6 +117,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade text-left" id="ModalItemTrue" tabindex="-1">
+            <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item True</h1>
+                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
+                            onclick="closeModalTrue(this)" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('item.update-grouping-analisator-item', ['typecekstok' => $typecekstok]) }}"
+                            method="POST">
+                            @csrf
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i>
+                                            Simpan</button>
+                                    </div>
+                                    <div>
+                                        <a
+                                            href="{{ route('item.print', ['typecekstok' => $typecekstok, 'status' => 2]) }}"class="btn btn-primary bi bi-printer-fill float-end">
+                                            </i>
+                                            Cetak</button></a>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="me-2" style="width: 20vw">
+                                        <select class="form-select " id="analisatorItemTrue" name="analisator">
+                                            <option value="" selected>--Pilih Analisator--</option>
+                                            @foreach ($dbxjob as $user)
+                                                <option value="{{ $user->userid }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button type="button" onclick="setAnalisatorItem(this,'.checkboxItemTrue','analisatorItemTrue',1,'itemTrue','checkAllItemTrue')"
+                                            class="btn btn-primary">Set Analisator</button>
+                                    </div>
+                                </div>
+                                <div style="width: 20vw">
+                                    <input class="form-control" id="itemTrueSearch" type="search"
+                                        placeholder="Search" aria-label="Search">
+                                </div>
+                            </div>
+                            <div class="ms-4 mb-2">
+                                <input class="form-check-input" type="checkbox" id="checkAllItemTrue"
+                                    onclick="checkAllItem(this,'.checkboxItemTrue')">
+                                <label for="ceksemuaitem" class="form-check-label">
+                                    Centang Semua
+                                </label>
+                            </div>
+                            <input type="hidden" name="isSelisih" value="0">
+                            <div id="itemTrue" style="overflow: auto; max-height: 75vh;">
+                                @include('admin.dashboard.table.item.item-true')
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade text-left" id="ModalItemOk" tabindex="-1">
             <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -155,7 +220,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <button type="button" onclick="setAnalisatorItem(this,'.checkboxitemok','analisatorItemOk',1,'itemOk','checkAllItemOk')"
+                                        <button type="button" onclick="setAnalisatorItem(this,'.checkboxItemOk','analisatorItemOk',2,'itemOk','checkAllItemOk')"
                                             class="btn btn-primary">Set Analisator</button>
                                     </div>
                                 </div>
@@ -166,7 +231,7 @@
                             </div>
                             <div class="ms-4 mb-2">
                                 <input class="form-check-input" type="checkbox" id="checkAllItemOk"
-                                    onclick="checkAllItem(this,'.checkboxitemok')">
+                                    onclick="checkAllItem(this,'.checkboxItemOk')">
                                 <label for="ceksemuaitem" class="form-check-label">
                                     Centang Semua
                                 </label>
@@ -180,7 +245,132 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade text-left" id="ModalItemSelisih" tabindex="-1">
+
+        <div class="modal fade text-left" id="ModalItemSelisihNok" tabindex="-1">
+            <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selisih NOK</h1>
+                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
+                            onclick="closeModalNok(this)" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form
+                            action="{{ route('item.update-grouping-analisator-item', ['typecekstok' => $typecekstok]) }}"
+                            method="POST">
+                            @csrf
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i>
+                                            Simpan</button>
+                                    </div>
+                                    <div>
+                                        <a
+                                        href="{{ route('item.print', ['typecekstok' => $typecekstok, 'status' => 4]) }}"class="btn btn-primary bi bi-printer-fill">
+                                        </i>
+                                        Cetak</button></a>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="me-2" style="width: 20vw">
+                                        <select class="form-select " id="analisatorItemSelisihNok" name="analisator">
+                                            <option value="" selected>--Pilih Analisator--</option>
+                                            @foreach ($dbxjob as $user)
+                                                <option value="{{ $user->userid }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button type="button" onclick="setAnalisatorItem(this,'.checkboxItemSelisihNok','analisatorItemSelisihNok',3,'itemSelisihNok','checkAllItemSelisihNok')"
+                                            class="btn btn-primary">Set Analisator</button>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="ms-4 mb-2">
+                                <input class="form-check-input" type="checkbox" id="checkAllItemSelisihNok"
+                                    onclick="checkAllItem(this,'.checkboxItemSelisihNok')">
+                                <label for="ceksemuaitem" class="form-check-label">
+                                    Centang Semua
+                                </label>
+                            </div>
+                            
+                            <input type="hidden" name="isSelisih" value="1">
+                            <div id="itemSelisihNok" style="overflow: auto; max-height: 75vh;">
+                                @include('admin.dashboard.table.item.item-nok')
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade text-left" id="ModalItemSelisihFalse" tabindex="-1">
+            <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Item Selisih False</h1>
+                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
+                            onclick="closeModalFalse(this)" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form
+                            action="{{ route('item.update-grouping-analisator-item', ['typecekstok' => $typecekstok]) }}"
+                            method="POST">
+                            @csrf
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="d-flex">
+                                    <div class="me-2">
+                                        <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i>
+                                            Simpan</button>
+                                    </div>
+                                    <div>
+                                        <a
+                                        href="{{ route('item.print', ['typecekstok' => $typecekstok, 'status' => 5]) }}"class="btn btn-primary bi bi-printer-fill">
+                                        </i>
+                                        Cetak</button></a>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="me-2" style="width: 20vw">
+                                        <select class="form-select " id="analisatorItemSelisihFalse" name="analisator">
+                                            <option value="" selected>--Pilih Analisator--</option>
+                                            @foreach ($dbxjob as $user)
+                                                <option value="{{ $user->userid }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <button type="button" onclick="setAnalisatorItem(this,'.checkboxItemSelisihFalse','analisatorItemSelisihFalse',4,'itemSelisihFalse','checkAllItemSelisihFalse')"
+                                            class="btn btn-primary">Set Analisator</button>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="ms-4 mb-2">
+                                <input class="form-check-input" type="checkbox" id="checkAllItemSelisihFalse"
+                                    onclick="checkAllItem(this,'.checkboxItemSelisihFalse')">
+                                <label for="ceksemuaitem" class="form-check-label">
+                                    Centang Semua
+                                </label>
+                            </div>
+                            
+                            <input type="hidden" name="isSelisih" value="1">
+                            <div id="itemSelisihFalse" style="overflow: auto; max-height: 75vh;">
+                                @include('admin.dashboard.table.item.item-false')
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- <div class="modal fade text-left" id="ModalItemSelisih" tabindex="-1">
             <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -234,13 +424,14 @@
                             
                             <input type="hidden" name="isSelisih" value="1">
                             <div id="itemSelisih" style="overflow: auto; max-height: 75vh;">
-                                @include('admin.dashboard.table.item.item-selisih')
+                                @include('admin.dashboard.table.item.item-nok')
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
+
         <div class="card mt-2">
             <div class="card-header">
                 <div class="row justify-content-between mt-2 ms-4 me-3">
@@ -253,10 +444,9 @@
                                 aria-label="Search" value='{{ $search }}'>
                         </form>
                     </div>
-
                 </div>
             </div>
-            <div class="card-body" id="main-table-item" style="overflow: auto;">
+            <div class="card-body" id="main-table-item" style="overflow: auto">
                 @include('admin.dashboard.table.item.main-table-item')
             </div>
         </div>
@@ -364,20 +554,18 @@
                                         <label class="fw-bold" for="vdeviasi">Input Deviasi</label>
                                     </div>
                                 </div>
-                                <div id="tbldetail" style="overflow-x: auto;">
+                                <div id="tbldetail">
                                     <table
                                         class="table table-sm table-hover table-bordered table-responsive-md small shadow-sm">
                                         <thead class="table-secondary">
                                             <tr>
                                                 <th scope="col">No</th>
-                                                <th scope="col">Pelaku</th>
+                                                <th scope="col">Pencatat</th>
                                                 <th scope="col">Lokasi</th>
-                                                <th scope="col" style="text-align: center">Color</th>
+                                                <th scope="col">Color</th>
                                                 <th scope="col">Qty/lokasi</th>
                                                 <th scope="col">CSO ke-</th>
-                                                <th scope="col">Grade</th>
                                                 <th scope="col">Remark</th>
-                                                <th scope="col">History</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -391,7 +579,7 @@
                                             class="table table-sm table-responsive-md table-hover table-bordered shadow-sm small">
                                             <thead class="table-secondary">
                                                 <tr>
-                                                    <th scope="col">Pelaku</th>
+                                                    <th scope="col">Pencatat</th>
                                                     <th scope="col">CSO 1</th>
                                                     <th scope="col">CSO 2</th>
                                                     <th scope="col">CSO 3</th>
@@ -438,14 +626,85 @@
                                 </div>
                             </div>
                             <div style="border-left:1px solid #ccccccb6;display: block;overflow: auto;"></div>
-                            <div style="width: 40%; margin-left: 1%" id="historyTransaksi">
-                                @include('admin.dashboard.table.item.history-transaksi-item')
-                            </div>
+                            {{-- <div style="width: 40%; margin-left: 1%" id="historyTransaksi">
+                                <h5>History Transaksi</h5>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <label style="font-size: 10pt">Tgl dari:</label>
+                                        <input class="form-control ms-2" style="max-width: 70%; max-height: 70%;"
+                                            type="date" placeholder="Tanggal Mulai" id="startdatepicker">
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <label style="font-size: 10pt">sampai:</label>
+                                        <input class="form-control ms-2" style="max-width: 70%; max-height: 70%;"
+                                            type="date" placeholder="Tanggal Selesai" id="enddatepicker">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-start align-items-center" style="width: 65%;">
+                                        <label for="warehouseCode" style="font-size: 10pt">Wrh:</label>
+                                        <select name="warehouse" id="warehouseCode" class=" ms-2" style="width: 100%;">
+                                            @foreach ($warehouse as $wrh)
+                                                <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} -
+                                                    {{ $wrh['Name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-flex align-items-center" style="width: 30%;">
+                                        <label for="tipeSelect" style="font-size: 10pt">Tipe Doc:</label>
+                                        <select name="tipe" id="tipeSelect" class="ms-2" style="width: 40%">
+                                            <option value="SJ">SJ</option>
+                                            <option value="GRPO">GRPO</option>
+                                            <option value="TR">TR</option>
+                                            <option value="SR">SR</option>
+                                            <option value="GR">GR</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <label id="quantityData" style="font-size: 10pt">Total Qty: 0</label>
+                                    </div>
+                                    <div>
+                                        <label id="openBalanceData" style="font-size: 10pt">Open Balance: 0</label>
+                                    </div>
+                                    <div>
+                                        <label id="endBalanceData" style="font-size: 10pt">End Balance: 0</label>
+                                    </div>
+                                    <div class="mt-1">
+                                        <button type="button" id="buttonCari" class="btn btn-success text-light"
+                                            onclick=""
+                                            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"><i
+                                                class="bi bi-search"></i> Cari</button>
+                                    </div>
+                                </div>
+                                <div class="mt-1" style="overflow-y: auto; max-height: 49.5vh; overflow-x: hidden;">
+                                    <table style="max-width: 34vw;"
+                                        class="table table-sm table-hover table-striped table-bordered text-nowrap"
+                                        id="tabel-transaksi">
+                                        <thead class="table-dark"
+                                            style="position: -webkit-sticky;position: sticky;top: 0;">
+                                            <tr class="text-center" style="font-size: 9.5pt">
+                                                <th class="align-middle">No</th>
+                                                <th class="align-middle">Dokumen</th>
+                                                <th class="align-middle">Tgl</th>
+                                                <th class="align-middle">Whs</th>
+                                                <th class="align-middle">Qty</th>
+                                                <th class="align-middle">UOM</th>
+                                                <th class="align-middle">End<br>Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="small" style="font-size: 8.5pt">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> --}}
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <input type="text" name="typecekstok" value="{{ $typecekstok }}" hidden>
+                        <input type="text" name="typecekstok" value="{{ $typecekstok }}" hidden> 
                         <input type="text" name="searchCSO" value="" hidden>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button id="buttonSubmit" type="button" class="btn btn-primary">Simpan</button>
@@ -460,50 +719,134 @@
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
                 {{-- <form method="POST" action="{{ route('item.cso-ulang') }}"> --}}
-                {{-- @csrf --}}
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Keterangan CSO Ulang</h1>
-                    <button type="button" onclick="closeModalCsoUlang(this)" class="btn-close align-middle"
-                        data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @foreach ($keteranganCSOUlang as $keterangan)
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="checkboxketerangan"
-                                value="{{ $keterangan->keteranganid }}">
-                            {{-- <input class="form-check-input" type="radio" name="keteranganCsoUlang" value="{{$keterangan->keteranganid}}"> --}}
-                            <label class="form-check-label">
-                                {{ $keterangan->keterangan }}
-                            </label>
-                        </div>
-                        {{-- <input type="radio" name="keteranganCsoUlang" value="HTML"> --}}
-                        {{-- <p>{{$keterangan->keteranganid}}</p> --}}
-                    @endforeach
-                </div>
-                <div class="modal-footer">
-                    <div class="float-end d-flex">
-                        {{-- <button type="submit" class="btn btn-primary float-end">Submit</button> --}}
-                        <button type="button" class="btn btn-primary float-end" onclick="csoUlang()">Submit</button>
-                        <button type="button" class="ms-2 btn btn-danger float-end"
-                            onclick="closeModalCsoUlang(this)">Keluar</button>
+                    {{-- @csrf --}}
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Keterangan CSO Ulang</h1>
+                        <button type="button" onclick="closeModalCsoUlang(this)" class="btn-close align-middle"
+                            data-bs-dismiss="modal" aria-label="Close">
+                        </button>
                     </div>
-                </div>
+                    <div class="modal-body">
+                        @foreach ($keteranganCSOUlang as $keterangan)
+                            <div class="form-check">
+                                <input type="checkbox"
+                                    class="form-check-input" name="checkboxketerangan" value="{{ $keterangan->keteranganid }}">
+                                {{-- <input class="form-check-input" type="radio" name="keteranganCsoUlang" value="{{$keterangan->keteranganid}}"> --}}
+                                <label class="form-check-label">
+                                    {{ $keterangan->keterangan }}
+                                </label>
+                            </div>
+                            {{-- <input type="radio" name="keteranganCsoUlang" value="HTML"> --}}
+                            {{-- <p>{{$keterangan->keteranganid}}</p> --}}
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <div class="float-end d-flex">
+                            {{-- <button type="submit" class="btn btn-primary float-end">Submit</button> --}}
+                            <button type="button" class="btn btn-primary float-end" onclick="csoUlang()">Submit</button>
+                            <button type="button" class="ms-2 btn btn-danger float-end"
+                                onclick="closeModalCsoUlang(this)">Keluar</button>
+                        </div>
+                    </div>
                 {{-- </form> --}}
             </div>
         </div>
     </div>
+
     @include('admin.dashboard.script.detail-cso-item')
     @include('admin.dashboard.script.table-cso-item')
     @include('admin.dashboard.script.banner-cso-item')
     <script>
+        // var intervalItemBlmProses = undefined;
+        // var intervalItemOk = undefined;
+        // var intervalItemSelisih = undefined;
         var intervalCheckItemBlmProses = undefined;
         var buttonTutupCso = document.getElementById('buttonTutupCso');
+        
         var links = document.querySelectorAll('.filterItem');
 
         // $(document).scroll(function(){
         //     $(".sticky-header").floatThead({ scrollingTop: 0 })
         // });  
+
+        // flatpickr('#startdatepicker', {});
+        // flatpickr('#enddatepicker', {});
+
+        // function cariHistoryTransaksi(itemId) {
+        //     showHistoryTransaksi(
+        //         itemId,
+        //         document.getElementById('tipeSelect').value,
+        //         document.getElementById('warehouseCode').value.toString(),
+        //         `${document.getElementById('startdatepicker').value},${document.getElementById('enddatepicker').value}`
+        //     );
+        // }
+
+        // function showHistoryTransaksi(itemId, tipe, warehouse, tanggal) {
+        //     const tabelTransaksi = $('#tabel-transaksi').DataTable({
+        //         ajax: {
+        //             url: "{{ route('item.history-transaksi') }}",
+        //             type: 'POST',
+        //             data: {
+        //                 itemid: itemId,
+        //                 tipe: tipe,
+        //                 warehouse: warehouse,
+        //                 tanggal: tanggal
+
+        //             },
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             },
+        //         },
+        //         columnDefs: [{
+        //             searchable: false
+        //         }],
+        //         // fixedHeader: true,
+        //         searching: false,
+        //         paging: false,
+        //         bDestroy: true,
+        //         serverSide: true,
+        //         processing: true,
+        //         order: [],
+        //         pageLength: 20,
+        //         lengthMenu: [5, 10, 15, 20],
+        //         columns: [{
+        //                 data: 'DT_RowIndex'
+        //             },
+        //             {
+        //                 data: 'docnum'
+        //             },
+        //             {
+        //                 data: 'PostingDate'
+        //             },
+        //             {
+        //                 data: 'WhseCode',
+        //                 render: function(data, type, row, meta) {
+        //                     return `
+        //                         <div class="font-weight-bolder">${ data }</div>
+        //                         <div class="text-muted">${ row.whsename }</div>
+        //                     `;
+        //                 }
+        //             },
+        //             {
+        //                 data: 'Quantity',
+        //             },
+        //             {
+        //                 data: 'uom'
+        //             },
+        //             {
+        //                 data: 'endbal'
+        //             },
+        //         ],
+        //         fnDrawCallback: function() {
+        //             document.getElementById("quantityData").innerText =
+        //                 `Total Qty: ${this.api().column( 4, {page:'current'} ).data().sum()}`;
+        //             document.getElementById("openBalanceData").innerText =
+        //                 `Open Balance: ${this.api().row(0).data().openbal}`;
+        //             document.getElementById("endBalanceData").innerText =
+        //                 `End Balance: ${this.api().row(':last-child').data().endbal}`;
+        //         }
+        //     });
+        // }
 
         if ($('#countCsoActive').val() == 1) {
             setInterval(function(event) {
@@ -527,23 +870,21 @@
             if (typeof myTimeout != undefined) clearTimeout(intervalCheckItemBlmProses);
         }
 
-        function openModalCSO(button, type) {
-            console.log(`button analiator check: ${countAnalisator}`)
-            
+        function openModalCSO(button, type) {            
             if (type == 1) {
 
-                if( countAnalisator > 0 )
-                {
+                // if( countAnalisator > 0 )
+                // {
                     $('#ModalCSO').modal('show');
                     document.getElementById("modalHeader").innerText = `Menghentikan {{ $typecekstok }}`;
                     document.getElementById("warning").innerText =
                     `Apakah anda yakin akan menghentikan proses penghitungan cek stok item?`;
                     $('#modalActionCSO').attr('action', `{{ route('item.update', 'item') }}`);
-                }
-                else
-                {
-                    $('#ModalAlertAnalisator').modal('show');
-                }
+                // }
+                // else
+                // {
+                //     $('#ModalAlertAnalisator').modal('show');
+                // }
             } else {
                 $('#ModalCSO').modal('show');
                 document.getElementById("modalHeader").innerText = `Memulai {{ $typecekstok }}`;
@@ -555,5 +896,6 @@
         function closeModalCSO(button) {
             $('#'+button.getAttribute('value')).modal('hide');
         }
+
     </script>
 @endsection

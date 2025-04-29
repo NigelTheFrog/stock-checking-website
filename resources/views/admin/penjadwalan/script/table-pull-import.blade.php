@@ -47,7 +47,7 @@
         }
     }
 
-    function checkAllItem(button) {
+   function checkAllItem(button) {
         button.addEventListener('change', (event) => {
             const checkboxes = document.querySelectorAll('.checkboxsemuaitem');
             if (event.currentTarget.checked) {
@@ -63,27 +63,13 @@
 
     }
 
-    function getCheckedItem(coy) {
+    function getCheckedItem() {
         let selectedItem = [];
         const checkboxes = document.querySelectorAll('.checkboxsemuaitem');
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 const row = $(checkbox).closest('tr');
-                console.log(row.find('td:nth-child(9)').text())
-                const tempData = coy == 'KKS' ? {
-                    ITEMID: checkbox.value,
-                    itemcode: row.find('td:nth-child(3)').text(),
-                    NamaItem: row.find('td:nth-child(4)').text(),
-                    ProductID: row.find('td:nth-child(6)').text(),
-                    Product: row.find('td:nth-child(7)').text(),
-                    subproductid: row.find('td:nth-child(8)').text(),
-                    SubProduct: row.find('td:nth-child(9)').text(),
-                    Onhand: row.find('td:nth-child(10)').text(),
-                    UOM: row.find('td:nth-child(11)').text(),
-                    itemcost: row.find('td:nth-child(12)').text(),
-                    tonase: row.find('td:nth-child(13)').text(),
-                    gudang: []
-                } : {
+                const tempData = {
                     ITEMID: checkbox.value,
                     itemcode: row.find('td:nth-child(3)').text(),
                     NamaItem: row.find('td:nth-child(4)').text(),
@@ -96,7 +82,7 @@
                     itemcost: row.find('td:nth-child(12)').text(),
                     gudang: []
                 };
-                for (let i = coy == 'KKS' ? 14 : 13; i <= row[0].children.length; i++) {
+                for (let i = 13; i <= row[0].children.length; i++) {
                     const gudangVar = row.find(`td:nth-child(${i})`).attr('gudang');
                     const gudangVal = row.find(`td:nth-child(${i})`).text();
                     tempData.gudang.push({
@@ -110,19 +96,23 @@
         return selectedItem;
     }
 
-    function submitImpor(button,coy) {
-        
+    function openModalPilihLingkup() {
+        $('#modalPilihLingkup').modal('show');
+        $('#modalImportItem').modal('hide');
+    }
+
+    function submitImpor(button) {
         button.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
         button.disabled = true;
         const typestok= `@if (isset($typestok)) {{$typestok}} @endif`;
-        // getCheckedItem(coy)
         $.ajax({
             url: "{{ route('import-stok.store') }}",
             type: 'POST',
             data: {
                 type: 1,
                 csotype: typestok,
-                data: JSON.stringify(getCheckedItem(coy))
+                data: JSON.stringify(getCheckedItem()),
+                jenis: document.getElementById('jenis').value
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -146,6 +136,7 @@
                 // Handle error cases if necessary
 
             }
+
         });
     }
 </script>

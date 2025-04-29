@@ -22,17 +22,21 @@
             <div class="col-7">
                 <div class="card mt-2">
                     <div class="card-header bg-secondary text-white">
-                        <h4 class="card-title pt-2">Pengaturan {{$csotype}} 
-                            @if($statuscekstok == 'A') BATCH @endif
-                        </h4>
+                        <h4 class="card-title pt-2">Pengaturan {{$csotype}}</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <p>Tipe Cek Stok :<strong>
                                 {{ $csotype }}
-                                @if($statuscekstok == 'A') BATCH @endif
                             </strong></p>
                         <p>Item yang di {{ $csotype }} :<strong>
                                 {{ $csoitem }}
+                            </strong></p>
+                            <p>Lingkup {{ $csotype }} :<strong>
+                                @if ($csojenis == 0)
+                                    Finish Good
+                                @else
+                                    Raw Material
+                                @endif
                             </strong></p>
                         <table class="table table-sm table-bordered table-hover table-responsive small"
                             style="background-color:rgb(255, 255, 255)">
@@ -45,7 +49,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($jobtype as  $jobtype)
+                                @foreach ($jobtype as   $jobtype)
                                     <tr class="text-center">
                                         <td class="align-middle">{{ $loop->iteration }}</td>
                                         <td class="align-middle">{{ $jobtype->name }}</td>
@@ -74,29 +78,18 @@
                         <form id="forminput" action="{{ route('pengaturan.store') }}" method="POST"
                             class="needs-validation mx-3" novalidate>
                             @csrf
-                            {{-- <input type="text" name="type" value="1" hidden> --}}
                             <div class="mb-2">
                                 <label for="" class="form-label">Tipe Cek Stok</label>
-                                {{-- <div class="row"> --}}
                                 <div style="width:100%" class="form-group">
                                     <select id="multipleSelect" name="typestock" placeholder="Tipe Cek Stok {{$csotype}}"
                                         data-search="true" data-silent-initial-value-set="true">
-                                        <option selected value="{{$csotype.$statuscekstok}}">{{$csotype}}</option>
+                                        <option selected value="{{$csotype}}">{{$csotype}}</option>
                                         {{-- <option value="{{$csotype}}" disabled></option> --}}
                                     </select>
-                                </div>
-                                {{-- <div style="width:30%" class="">
-                                <button type="submit" name="submitTypeStock" class="btn btn-primary">Submit</button>
-                            </div> --}}
-                                {{-- </div> --}}
-                            </div>
-                            {{-- </form>
-                        <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate > --}}
-                            {{-- @csrf --}}
-                            {{-- <input type="text" name="type" value="2" hidden> --}}
+                                </div>                                
+                            </div>                            
                             <div class="mb-2">
                                 <label for="" class="form-label">Item yang di {{$csotype}}</label>
-                                {{-- <div class="row"> --}}
                                 <div style="width:70%">
                                     <select multiple id="multipleItem" name="itemcso" placeholder="Item yang ada di {{$csotype}}"
                                         data-search="true" data-silent-initial-value-set="true" style="width: 10">
@@ -105,18 +98,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                {{-- <div style="width:30%" class="">
-                                <button type="submit" name="setMaterial" class="btn btn-primary">Submit</button>
                             </div>
-                        </div> --}}
-                            </div>
-                            {{-- </form>
-                        <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate > --}}
-                            {{-- @csrf --}}
-                            {{-- <input type="text" name="type" value="3" hidden> --}}
                             <div class="mb-2">
-                                <label for="" class="form-label">Masukkan Nama Pelaku</label>
-                                {{-- <div class="row"> --}}
+                                <label for="" class="form-label">Lingkup {{$csotype}}</label>
+                                <div style="width:70%">
+                                    <select id="multipleItem" name="jenis" placeholder="Lingkup {{$csotype}}"
+                                        data-silent-initial-value-set="true" style="width: 10">
+                                        <option value="0" selected>Finish Good</option>
+                                        <option value="1">Raw Material</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label for="" class="form-label">Masukkan Nama Pencatat</label>
                                 <div style="width:100%" class="form-group">
                                     <select multiple id="multiplePelaku" name="pelaku" placeholder="Pilih Nama Checker"
                                         data-search="true" data-silent-initial-value-set="true">
@@ -126,18 +120,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                {{-- <div style="width:30%" class="">
-                                <button type="submit" name="setpelaku" class="btn btn-primary">Submit</button>
                             </div>
-                        </div> --}}
-                            </div>
-                            {{-- </form>
-                        <form id="forminput" action="{{route('pengaturan.store')}}" method="POST" class="needs-validation mx-3" novalidate > --}}
-                            {{-- @csrf --}}
-                            {{-- <input type="text" name="type" value="4" hidden> --}}
                             <div class="mb-2">
                                 <label for="" class="form-label">Masukkan Nama Analisator</label>
-                                {{-- <div class="row"> --}}
                                 <div style="width:100%" class="form-group">
                                     <select multiple id="multipleAnalisator" name="analisator"
                                         placeholder="Pilih Nama Analisator" data-search="true"
@@ -149,14 +134,10 @@
 
                                     </select>
                                     <div class="invalid-feedback">
-                                        pelaku harus dipilih
+                                        Pencatat harus dipilih
                                     </div>
 
                                 </div>
-                                {{-- <div style="width:30%" class="">
-                                <button type="submit" name="setanalisator" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div> --}}
                             </div>
                             <div style="width:30%" class="">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -180,8 +161,7 @@
                             @method('DELETE')
                             <p id="warning"></p>
                             
-                            <input type="text" name="typecekstok" value="{{ $csotype.$statuscekstok }}" hidden>
-                            {{-- <input type="text" name="statuscekstok" value="{{ $statuscekstok }}" hidden> --}}
+                            <input type="text" name="typecekstok" value="{{ $csotype }}" hidden>
                             <button type="submit" class="btn btn-danger" name="simpan"><i
                                     class="bx bxs-save"></i>Iya</button>
                             <button type="button" data-bs-dismiss="modal" class="btn btn-primary" name="simpan"><i

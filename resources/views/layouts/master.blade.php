@@ -41,6 +41,8 @@
     <script src="{{ asset('assets/js/jquery.floatThead.1.2.9.js') }}"></script>
     <script src="{{ asset('assets/js/pusher.min.js') }}"></script>
 
+
+
     @yield('styles')
     
 </head>

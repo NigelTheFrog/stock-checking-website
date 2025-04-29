@@ -10,22 +10,108 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessController extends Controller
 {
+
     public function addItem(Request $request)
     {
         DB::beginTransaction();
-        $color = implode(",", $request->color);
         $coycode = Company::select('coycode')->first();
         $coy = strtoupper(substr($coycode->coycode, 0, 3));
-        if ($request->csodet2id == "") {
-            //Tambah request->grade di sebelah $color
+
+        $materialUtuh = json_decode($request->materialUtuh, true);
+        $csodet2idMaterialUtuh = json_decode($request->csodet2idMaterialUtuh, true);
+        $materialTidakUtuh = json_decode($request->materialTidakUtuh, true);
+
+        if ($request->csodetid) {
+            $simpanItem = DB::table('dbtcsodet')
+                ->where('dbtcsodet.csodetid', '=', $request->csodetid)
+                ->update([
+                    'trsdetid' => $request->trsdetid,
+                    'itemid' => $request->itemid,
+                    'locationid' => $request->lokasi,
+                    'remark' => $request->grade,
+                ]);
+
+            if ($simpanItem == true) {
+                if ($request->statusItem == "R") {
+                    $selectdbtcsodet2 = DB::table('dbtcsodet')
+                        ->join('dbttrsdet', 'dbttrsdet.trsdetid', '=', 'dbtcsodet.trsdetid')
+                        ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdet.statuscso"))
+                        ->where('csodetid', '=', $request->csodetid)
+                        ->first();
+                } else {
+                    $selectdbtcsodet2 = DB::table('dbtcsodet')
+                        ->join('dbttrsdeta', 'dbttrsdeta.trsdetid', '=', 'dbtcsodet.trsdetid')
+                        ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdeta.statuscso"))
+                        ->where('csodetid', '=', $request->csodetid)
+                        ->first();
+                }
+
+                $hasInserted = true;
+
+                foreach ($materialUtuh as $idx => $utuh) {
+                    if ($csodet2idMaterialUtuh[$idx] == "" && $utuh[0]) {
+                        $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
+                            'csodetid' => $selectdbtcsodet2->csodetid,
+                            'csoid' => $selectdbtcsodet2->csoid,
+                            'csocount' => $selectdbtcsodet2->statuscso,
+                            'type' => 1,
+                            'qty' => $utuh[0],
+                            'inputs' => $utuh[0],
+                            'operand' => $utuh[0],
+                            'history' => $utuh[0],
+                            'konversi' => $utuh[1],
+                            'total' => $utuh[2],
+                            'keterangan' => $utuh[3]
+                        ]);
+
+                        if ($insertdbtcsodet2 == false) {
+                            $hasInserted = false;
+                            break;
+                        }
+                    } elseif ($csodet2idMaterialUtuh[$idx] != "") DB::table('dbtcsodet2')->where('csodet2id','=',$csodet2idMaterialUtuh[$idx])->update(['keterangan' => $utuh[3]]);
+                }
+
+                if (!$request->csodet2idMaterialEcer && $materialTidakUtuh[0]) {
+                    $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
+                        'csodetid' => $selectdbtcsodet2->csodetid,
+                        'csoid' => $selectdbtcsodet2->csoid,
+                        'csocount' => $selectdbtcsodet2->statuscso,
+                        'type' => 0,
+                        'berat_kotor' => $materialTidakUtuh[0],
+                        'history_berat_kotor' => $materialTidakUtuh[0],
+                        'input_berat_kotor' => $materialTidakUtuh[0],
+                        'berat_kemasan' => $materialTidakUtuh[1],
+                        'history_berat_kemasan' => $materialTidakUtuh[1],
+                        'input_berat_kemasan' => $materialTidakUtuh[1],
+                        'berat_keran' => $materialTidakUtuh[2],
+                        'history_berat_keran' => $materialTidakUtuh[2],
+                        'input_berat_keran' => $materialTidakUtuh[2],
+                        'total' => $materialTidakUtuh[3],
+                        'keterangan' => $materialTidakUtuh[4]
+                    ]);
+                    if ($insertdbtcsodet2 == false) $hasInserted = false;
+                }
+                elseif ($request->csodet2idMaterialEcer) DB::table('dbtcsodet2')->where('csodet2id','=',$request->csodet2idMaterialEcer)->update(['keterangan' => $materialTidakUtuh[4]]);
+
+                if ($hasInserted == true) {
+                    DB::commit();
+                    return response()->json(['result' => 1]);
+                } else {
+                    DB::rollBack();
+                    return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+                }    
+            } else {
+                DB::rollBack();
+                return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+            }
+        } else {
             $selectdbtcsohed = DB::table('dbtcsohed')
-                ->select(DB::raw("csoid,'$request->trsdetid','$request->itemid', '$request->itembatchid','$request->lokasi','$request->grade','$color','$request->remark','$request->statusItem','D','D'"))
+                ->select(DB::raw("csoid,'$request->trsdetid','$request->itemid','$request->lokasi','$request->grade','$request->statusItem','D','D'"))
                 ->where('pelakuuname', '=', $request->username)
                 ->where('csoid', '=', $request->csoid)
                 ->where('status', '=', 'A');
-            //Tambah request->grade di sebelah 'color'
-            $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'trsdetid', 'itemid', 'itembatchid', 'locationid', 'grade', 'color', 'remark', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
 
+            $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'trsdetid', 'itemid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
             if ($insertdbtcsodet1 == true) {
                 $csodetid = DB::table('dbtcsodet')
                     ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
@@ -48,28 +134,54 @@ class ProcessController extends Controller
                         ->first();
                 }
 
-                $insertedDbtCsoDet2 = $coy == 'KKS' ? [
-                    'csodetid' => $selectdbtcsodet2->csodetid,
-                    'csoid' => $selectdbtcsodet2->csoid,
-                    'csocount' => $selectdbtcsodet2->statuscso,
-                    'qty' => $request->qtycso,
-                    'inputs' => $request->qtycso,
-                    'operand' => $request->qtycso,
-                    'history' => $request->qtycso,
-                    'tonase' => $request->tonasecso,
-                ] : [
-                    'csodetid' => $selectdbtcsodet2->csodetid,
-                    'csoid' => $selectdbtcsodet2->csoid,
-                    'csocount' => $selectdbtcsodet2->statuscso,
-                    'qty' => $request->qtycso,
-                    'inputs' => $request->qtycso,
-                    'operand' => $request->qtycso,
-                    'history' => $request->qtycso
-                ];
+                $hasInserted = true;
 
-                $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert($insertedDbtCsoDet2);
+                foreach ($materialUtuh as $utuh) {
+                    if ($utuh[0]) {
+                        $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
+                            'csodetid' => $selectdbtcsodet2->csodetid,
+                            'csoid' => $selectdbtcsodet2->csoid,
+                            'csocount' => $selectdbtcsodet2->statuscso,
+                            'type' => 1,
+                            'qty' => $utuh[0],
+                            'inputs' => $utuh[0],
+                            'operand' => $utuh[0],
+                            'history' => $utuh[0],
+                            'konversi' => $utuh[1],
+                            'total' => $utuh[2],
+                            'keterangan' => $utuh[3]
+                        ]);
 
-                if ($insertdbtcsodet2 == true) {
+                        if ($insertdbtcsodet2 == false) {
+                            $hasInserted = false;
+                            break;
+                        }
+                    }
+                }
+
+                if ($materialTidakUtuh[0]) {
+                    $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
+                        'csodetid' => $selectdbtcsodet2->csodetid,
+                        'csoid' => $selectdbtcsodet2->csoid,
+                        'csocount' => $selectdbtcsodet2->statuscso,
+                        'type' => 0,
+                        'berat_kotor' => $materialTidakUtuh[0],
+                        'history_berat_kotor' => $materialTidakUtuh[0],
+                        'input_berat_kotor' => $materialTidakUtuh[0],
+                        'berat_kemasan' => $materialTidakUtuh[1],
+                        'history_berat_kemasan' => $materialTidakUtuh[1],
+                        'input_berat_kemasan' => $materialTidakUtuh[1],
+                        'berat_keran' => $materialTidakUtuh[2],
+                        'history_berat_keran' => $materialTidakUtuh[2],
+                        'input_berat_keran' => $materialTidakUtuh[2],
+                        'total' => $materialTidakUtuh[3],
+                        'keterangan' => $materialTidakUtuh[4]
+                    ]);
+
+                    if ($insertdbtcsodet2 == false) $hasInserted = false;
+                }
+
+                if ($hasInserted == true) {
                     DB::commit();
                     return response()->json(['result' => 1]);
                 } else {
@@ -80,43 +192,43 @@ class ProcessController extends Controller
                 DB::rollBack();
                 return response()->json(['result' => 'fail', 'message' => 'Penambahan data gagal']);
             }
-        } else {
-            $updateItem = $coy == 'KKS' ? [
-                'dbtcsodet.trsdetid' => $request->trsdetid,
-                'dbtcsodet.itemid' => $request->itemid,
-                'dbtcsodet.locationid' => $request->lokasi,
-                'dbtcsodet.itembatchid' => $request->itembatchid,
-                'dbtcsodet.color' => $color,
-                'dbtcsodet.remark' => $request->remark,
-                'dbtcsodet2.qty' => $request->qtycso,
-                'dbtcsodet2.tonase' => $request->tonasecso,
-            ] : [
-                'dbtcsodet.trsdetid' => $request->trsdetid,
-                'dbtcsodet.itemid' => $request->itemid,
-                'dbtcsodet.locationid' => $request->lokasi,
-                'dbtcsodet.itembatchid' => $request->itembatchid,
-                'dbtcsodet.color' => $color,
-                'dbtcsodet.remark' => $request->remark,
-                'dbtcsodet2.qty' => $request->qtycso,
-                'dbtcsodet2.history' => $request->qtycso,
-                'dbtcsodet2.inputs' => $request->qtycso,
-            ];
+        }
+    }
 
-            $simpanItem = DB::table('dbtcsodet')
-                ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
-                ->where('dbtcsohed.pelakuuname', '=', $request->username)
-                ->where('dbtcsodet.csodetid', '=', $request->csodetid)
-                ->where('dbtcsohed.status', '=', 'A')
-                ->update($updateItem);
+    public function ubahItem(Request $request)
+    {
+        DB::beginTransaction();
+        $updateItem = DB::table('dbtcsodet')
+            ->where('csodetid', '=', $request->csodetid)
+            ->update([
+                'itemid' => $request->itemid,
+                'itembatchid' => $request->itembatchid,
+                'locationid' => $request->lokasi,
+                'trsdetid' => $request->trsdetid,
+                'grade' => null
+            ]);
 
-            // if ($simpanItem == true) {
+        if ($updateItem == true) {
+            DB::table('dbtcsodet2')->where('csodetid', '=', $request->csodetid)->delete();
             DB::commit();
-            return response()->json(['result' => 1, 'data' => $simpanItem]);
-            // } else {
-            //     DB::rollBack();
-            //     return response()->json(['result' => 0, 'message' => 'Penambahan data item gagal']);
-            // }
+            return response()->json(['result' => 1]);
+        } else {
+            DB::rollBack();
+            return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+        }
+    }
+
+    public function deleteHitung(Request $request)
+    {
+        DB::beginTransaction();
+        $delete = DB::table('dbtcsodet2')->where('csodet2id', '=', $request->csodet2id)->delete();
+
+        if ($delete == true) {
+            DB::commit();
+            return response()->json(['result' => 1]);
+        } else {
+            DB::rollBack();
+            return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
         }
     }
 
@@ -126,12 +238,11 @@ class ProcessController extends Controller
         $simpan = DB::table('dbtcsodet2')
             ->where('csodet2id', '=', $request->csodet2id)
             ->update([
-                'qty' => $request->qty,
-                'history' => $request->history,
-                'inputs' => $request->inputs,
-                'operand' => $request->operand,
-                'qty_pengali' => $request->pengali,
-                'pengali' => $request->qty_pengali
+                $request->fieldQty => $request->qty,
+                $request->fieldHistory => $request->history,
+                $request->fieldInput => $request->inputs,
+                'konversi' => $request->konversi,
+                'total' => $request->total,
             ]);
 
         if ($simpan == true) {
@@ -147,53 +258,33 @@ class ProcessController extends Controller
     {
         DB::beginTransaction();
 
-        $color = implode(",", $request->color);
-
-        $selectdbtcsohed = DB::table('dbtcsohed')
-            ->select(DB::raw("csoid,'$request->trsdetid','$request->itemid','$request->itembatchid','$request->lokasi','$request->grade','$color','$request->statusItem','D','D'"))
-            ->where('pelakuuname', '=', $request->username)
-            ->where('csoid', '=', $request->csoid)
-            ->where('status', '=', 'A');
-
-        $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'trsdetid', 'itemid', 'itembatchid', 'locationid', 'grade', 'color', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
-
-
-        if ($insertdbtcsodet1 == true) {
-
-            $csodetid = DB::table('dbtcsodet')
-                ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                ->select('csodetid')
-                ->where('dbtcsodet.csoid', '=', $request->csoid)
-                ->where('dbtcsohed.status', '=', 'A')
-                ->orderByDesc('csodetid')
-                ->limit(1)
-                ->first();
-
+        if ($request->csoDetId) {
             if ($request->statusItem == "R") {
                 $selectdbtcsodet = DB::table('dbtcsodet')
                     ->join('dbttrsdet', 'dbttrsdet.trsdetid', '=', 'dbtcsodet.trsdetid')
                     ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdet.statuscso"))
-                    ->where('csodetid', '=', $csodetid->csodetid)
+                    ->where('csodetid', '=', $request->csoDetId)
                     ->first();
             } else {
                 $selectdbtcsodet = DB::table('dbtcsodet')
                     ->join('dbttrsdeta', 'dbttrsdeta.trsdetid', '=', 'dbtcsodet.trsdetid')
                     ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdeta.statuscso"))
-                    ->where('csodetid', '=', $csodetid->csodetid)
+                    ->where('csodetid', '=', $request->csoDetId)
                     ->first();
             }
 
             $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
                 'csodetid' => $selectdbtcsodet->csodetid,
                 'csoid' => $selectdbtcsodet->csoid,
-                'csocount' => $selectdbtcsodet->statuscso
+                'csocount' => $selectdbtcsodet->statuscso,
+                'type' => $request->type,
             ]);
 
             if ($insertdbtcsodet2 == true) {
                 // $getdbtcsodet = $selectdbtcsodet->get();
                 $selectdbtcsodet2 = DB::table('dbtcsodet2')
                     ->select('csodet2id')
-                    ->where('csodetid', '=', $csodetid->csodetid)
+                    ->where('csodetid', '=', $selectdbtcsodet->csodetid)
                     ->orderByDesc('csodet2id')
                     ->first();
                 DB::commit();
@@ -203,8 +294,63 @@ class ProcessController extends Controller
                 return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
             }
         } else {
-            DB::rollBack();
-            return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+            $selectdbtcsohed = DB::table('dbtcsohed')
+                ->select(DB::raw("csoid,'$request->trsdetid','$request->itemid','$request->itembatchid','$request->lokasi','$request->grade','$request->statusItem','D','D'"))
+                ->where('pelakuuname', '=', $request->username)
+                ->where('csoid', '=', $request->csoid)
+                ->where('status', '=', 'A');
+
+            $insertdbtcsodet1 = DB::table('dbtcsodet')->insertUsing(['csoid', 'trsdetid', 'itemid', 'itembatchid', 'locationid', 'grade', 'statusitem', 'statussubmit', 'statushslcso'], $selectdbtcsohed);
+
+            if ($insertdbtcsodet1 == true) {
+
+                $csodetid = DB::table('dbtcsodet')
+                    ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
+                    ->select('csodetid')
+                    ->where('dbtcsodet.csoid', '=', $request->csoid)
+                    ->where('dbtcsohed.status', '=', 'A')
+                    ->orderByDesc('csodetid')
+                    ->limit(1)
+                    ->first();
+
+                if ($request->statusItem == "R") {
+                    $selectdbtcsodet = DB::table('dbtcsodet')
+                        ->join('dbttrsdet', 'dbttrsdet.trsdetid', '=', 'dbtcsodet.trsdetid')
+                        ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdet.statuscso"))
+                        ->where('csodetid', '=', $csodetid->csodetid)
+                        ->first();
+                } else {
+                    $selectdbtcsodet = DB::table('dbtcsodet')
+                        ->join('dbttrsdeta', 'dbttrsdeta.trsdetid', '=', 'dbtcsodet.trsdetid')
+                        ->select(DB::raw("dbtcsodet.csodetid,dbtcsodet.csoid,dbttrsdeta.statuscso"))
+                        ->where('csodetid', '=', $csodetid->csodetid)
+                        ->first();
+                }
+
+                $insertdbtcsodet2 = DB::table('dbtcsodet2')->insert([
+                    'csodetid' => $selectdbtcsodet->csodetid,
+                    'csoid' => $selectdbtcsodet->csoid,
+                    'csocount' => $selectdbtcsodet->statuscso,
+                    'type' => $request->type,
+                ]);
+
+                if ($insertdbtcsodet2 == true) {
+                    // $getdbtcsodet = $selectdbtcsodet->get();
+                    $selectdbtcsodet2 = DB::table('dbtcsodet2')
+                        ->select('csodet2id')
+                        ->where('csodetid', '=', $csodetid->csodetid)
+                        ->latest('csodet2id')
+                        ->first();
+                    DB::commit();
+                    return response()->json(['result' => 1, 'csodetid' => $selectdbtcsodet->csodetid, 'csodet2id' => $selectdbtcsodet2->csodet2id]);
+                } else {
+                    DB::rollBack();
+                    return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+                }
+            } else {
+                DB::rollBack();
+                return response()->json(['result' => 0, 'message' => 'Penambahan data gagal']);
+            }
         }
     }
 
@@ -215,39 +361,43 @@ class ProcessController extends Controller
         $color = implode(",", $request->color);
 
         if ($request->type == 1) {
-            // $itemId = DB::table('dbximpor')->select('itemid')->where('statusitem', '=', 'TR')->orderByDesc('createddate')->limit(1)->get();
             $type = DB::table('dbttrshed')->select('typecekstok')->where('trsid', '=', $request->trsid)->first();
-            $typecekstok = strtolower($type->typecekstok);
-            $impor = 'dbximpor';
-            $impordet = 'dbximpordet';
 
-            if ($typecekstok == 'css') {
-                $impor = 'dbximpor' . $typecekstok;
-                $impordet = 'dbximpordet' . $typecekstok;
+            if ($type->typecekstok == 'CSO') {
+                $itemId = DB::table('dbximpor')->select('itemid')->where('statusitem', '=', 'TR')->orderByDesc('createddate')->limit(1)->get();
+
+                if (count($itemId) > 0) $itemId = $itemId[0]->itemid + 1;
+                else $itemId = 9999001;
+
+                $insertDbxImpor = DB::table('dbximpor')->insert([
+                    'itemid' => $itemId,
+                    'itemname' => trim(ucwords($request->temuanname)),
+                    'statusitem' => 'TR'
+                ]);
+
+                DB::table('dbximpordet')->insert([
+                    'itemid' => $itemId,
+                    'wrh' => 'TEMUAN',
+                    'qty' => 0
+                ]);
+            } else {
+                $itemId = DB::table('dbximporcss')->select('itemid')->where('statusitem', '=', 'TR')->orderByDesc('createddate')->limit(1)->get();
+
+                if (count($itemId) > 0) $itemId = $itemId[0]->itemid + 1;
+                else $itemId = 9999001;
+
+                $insertDbxImpor = DB::table('dbximpor')->insert([
+                    'itemid' => $itemId,
+                    'itemname' => trim(ucwords($request->temuanname)),
+                    'statusitem' => 'TR'
+                ]);
+
+                DB::table('dbximpordetcss')->insert([
+                    'itemid' => $itemId,
+                    'wrh' => 'TEMUAN',
+                    'qty' => 0
+                ]);
             }
-
-            $checkExistingId = DB::table($impor)->select('itemid')->where('statusitem', '=', 'TR')->orderByDesc('createddate')->first();
-
-            // if (count($itemId) > 0) $itemId = $itemId[0]->itemid + 1;
-            if ($checkExistingId) $itemId = $checkExistingId->itemid + 1;
-            else $itemId = 9999001;
-
-            // $insertDbxImpor = DB::table('dbximpor')->insert([
-            $insertDbxImpor = DB::table($impor)->insert([
-                'itemid' => $itemId,
-                'itemname' => trim(ucwords($request->temuanname)),
-                'statusitem' => 'TR'
-            ]);
-
-            DB::table($impordet)->insert([
-                'itemid' => $itemId,
-                'wrh' => $request->lokasi,
-                // 'qty' => $request->qtycso ?? 0
-                'qty' => 0
-
-            ]);
-
-
             if ($insertDbxImpor == true) {
                 $getTrsId = DB::table('dbttrshed')->select('trsid')->orderByDesc('trsid')->limit(1)->get();
 
@@ -272,9 +422,7 @@ class ProcessController extends Controller
             $insertDbxImpor = DB::table('dbximporavalan')->insert([
                 'itemid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
-                'statusitem' => 'TA',
-                'dimension' => $request->dimension,
-                'tolerance' => $request->tolerance
+                'statusitem' => 'TA'
             ]);
             if ($insertDbxImpor == true) {
 
@@ -285,11 +433,8 @@ class ProcessController extends Controller
                 $insertdbttrsdet = DB::table('dbttrsdeta')->insert([
                     'trsid' => $trsId,
                     'itemid' => $itemId,
-                    'itembatchid' => $itemId,
                     'itemname' => trim(ucwords($request->temuanname)),
                     'statusitem' => 'TA',
-                    'dimension' => $request->dimension,
-                    'tolerance' => $request->tolerance,
                     'statuscso' => 1
                 ]);
             } else {
@@ -304,10 +449,23 @@ class ProcessController extends Controller
                 $getDbtTrsDet = DB::table('dbttrsdet')->select('trsdetid', 'statusitem')->latest('trsdetid')->first();
                 $trsdetid = $getDbtTrsDet->trsdetid;
                 $statusItem = $getDbtTrsDet->statusitem;
+                DB::table('dbttrsdet2')->insert([
+                    'trsdetid' => $trsdetid,
+                    'itemid' => $itemId,
+                    'wrh' => 'TEMUAN',
+                    'qty' => 0
+                ]);
             } else {
                 $getDbtTrsDet = DB::table('dbttrsdeta')->select('trsdetid', 'statusitem')->latest('trsdetid')->first();
                 $trsdetid = $getDbtTrsDet->trsdetid;
                 $statusItem = $getDbtTrsDet->statusitem;
+
+                DB::table('dbttrsdet2a')->insert([
+                    'trsdetid' => $trsdetid,
+                    'itemid' => $itemId,
+                    'wrh' => 'TEMUAN',
+                    'qty' => 0
+                ]);
             }
             $selectdbtcsohed = DB::table('dbtcsohed')
                 ->select(DB::raw("csoid,'$trsdetid','$itemId','$request->lokasi','$color','$statusItem','D','D'"))
@@ -385,19 +543,10 @@ class ProcessController extends Controller
                 'itemname' => trim(ucwords($request->temuanname)),
                 'statusitem' => 'TR'
             ]);
-            $getLoc = DB::table('dbmlocation')->get();
-            $loc = 0;
-            foreach ($getLoc as $key)
-            {
-                if($key->locationid == $request->lokasi)
-                {
-                    $loc = $key->locationname;
-                }
-            }
+
             DB::table($impordet)->insert([
                 'itemid' => $itemId,
-                'wrh' => ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc,
-                // 'wrh' => $request->lokasi,
+                'wrh' => $request->lokasi,
                 // 'qty' => $request->qtycso ?? 0
                 'qty' => 0
 
@@ -425,7 +574,7 @@ class ProcessController extends Controller
                 $insertDbtTrsDet2 = DB::table('dbttrsdet2')->insert([
                     'trsdetid' => $getTrsDet->trsdetid,
                     'itemid' => $itemId,
-                    'wrh' => ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc,
+                    'wrh' => $request->lokasi,
                     // 'qty' => $request->qtycso ?? 0
                     'qty' => 0
 
@@ -440,9 +589,9 @@ class ProcessController extends Controller
                 $getDbtTrsDet = DB::table('dbttrsdet')->select('trsdetid', 'statusitem')->latest('trsdetid')->first();
                 $trsdetid = $getDbtTrsDet->trsdetid;
 
-                $gradeCsodet = ($request->grade != NULL || $request->grade !="") ? $request->grade : $loc;
+
                 $selectdbtcsohed = DB::table('dbtcsohed')
-                    ->select(DB::raw("csoid,'$trsdetid','$itemId','$request->lokasi','$gradeCsodet','$color','$request->remark','TR','D','D'"))
+                    ->select(DB::raw("csoid,'$trsdetid','$itemId','$request->lokasi','$request->grade','$color','$request->remark','TR','D','D'"))
                     ->where('pelakuuname', '=', $request->username)
                     ->where('csoid', '=', $request->csoid)
                     ->where('status', '=', 'A');
@@ -527,8 +676,6 @@ class ProcessController extends Controller
                 'dbtcsodet.color' => $color,
                 'dbtcsodet.remark' => $request->remark,
                 'dbtcsodet2.qty' => $request->qtycso,
-                'dbtcsodet2.history' => $request->qtycso,
-                'dbtcsodet2.inputs' => $request->qtycso,
             ];
             DB::table('dbtcsodet')
                 ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
@@ -569,9 +716,7 @@ class ProcessController extends Controller
                 'itemid' => $itemId,
                 'itemname' => trim(ucwords($request->temuanname)),
                 'itembatchid' => $itemId,
-                'statusitem' => 'TA',
-                'dimension' => $request->dimension,
-                'tolerance' => $request->tolerance
+                'statusitem' => 'TA'
             ]);
 
             if ($insertDbxImpor == true) {
@@ -584,8 +729,6 @@ class ProcessController extends Controller
                     'itemid' => $itemId,
                     'itemname' => trim(ucwords($request->temuanname)),
                     'itembatchid' => $itemId,
-                    'dimension' => $request->dimension,
-                    'tolerance' => $request->tolerance,
                     'statusitem' => 'TA',
                     'statuscso' => 1
                 ]);
@@ -639,14 +782,12 @@ class ProcessController extends Controller
             $simpanDbxImpor = DB::table('dbximporavalan')
                 ->where('itemid', '=', $request->itemid)
                 ->update([
-                    'itemname' => $request->temuanname,
-                    'dimension' => $request->dimension,
-                    'tolerance' => $request->tolerance
+                    'itemname' => $request->temuanname
                 ]);
             if ($simpanDbxImpor == true) {
                 $simpanItem = DB::table('dbtcsodet')
                     ->join('dbtcsohed', 'dbtcsodet.csoid', '=', 'dbtcsohed.csoid')
-                    ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')                    
+                    ->leftJoin('dbtcsodet2', 'dbtcsodet2.csodetid', '=', 'dbtcsodet.csodetid')
                     ->where('dbtcsohed.pelakuuname', '=', $request->username)
                     ->where('dbtcsodet.csodetid', '=', $request->csodetid)
                     ->where('dbtcsohed.status', '=', 'A')

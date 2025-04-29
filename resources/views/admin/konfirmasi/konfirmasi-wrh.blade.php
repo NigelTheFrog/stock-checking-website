@@ -18,7 +18,7 @@
                                 <!-- <div class="input-group-prepend"> -->
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                                 <!-- </div> -->
-                                <select  id="select-pelaku" name="pelaku" placeholder="Daftar Nama Pelaku" >
+                                <select  id="select-pelaku" name="pelaku" placeholder="Daftar Nama Pencatat" >
                                     {{-- <option value="" style="color: grey" selected disabled>Daftar Nama Pelaku</option> --}}
                                     @foreach ( $pelaku as $pelaku )
                                     <option value="{{$pelaku->userid }}">{{$pelaku->username}} - {{$pelaku->name}}</option>
@@ -43,7 +43,7 @@
         ele: '#select-pelaku',
         silentInitialValueSet: false,
         maxWidth: '92%',
-        noSearchResultsText: "Nama Pelaku tidak ditemukan"
+        noSearchResultsText: "Nama Pencatat tidak ditemukan"
     });
 
     function showData(button) {

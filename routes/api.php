@@ -39,10 +39,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('mulai-cso-avalan', [AccountController::class, 'mulaiCSOAvalan']);
 
     Route::post('add-item', [ProcessController::class, 'addItem']);
+    Route::post('ubah-item', [ProcessController::class, 'ubahItem']);
     Route::post('add-temuan-item', [ProcessController::class, 'addTemuanItem']);
     Route::post('add-temuan-avalan', [ProcessController::class, 'addTemuanAvalan']);
 
     Route::post('tambah-perhitungan', [ProcessController::class, 'addHitung']);
+    Route::post('hapus-perhitungan', [ProcessController::class, 'deleteHitung']);
     Route::post('tambah-perhitungan-temuan', [ProcessController::class, 'addHitungTemuan']);
     Route::post('simpan-perhitungan', [ProcessController::class, 'simpanHitung']);
 

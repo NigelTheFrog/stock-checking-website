@@ -12,7 +12,7 @@
                     <div class="">
                         <div class="card card-secondary">
                             <div class="card-header bg-secondary text-white">
-                                <h3 class="card-title"> Laporan {{$typecekstok}} Item</h3>
+                                <h3 class="card-title"> Laporan {{$typecekstok}}</h3>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
                                 <div class="list-group">
@@ -42,6 +42,16 @@
                                         </div>
                                         <small>&nbsp</small>
                                     </button>
+                                    {{-- <a href="{{route('report/previewtest')}}"> --}}
+                                    {{-- <a href="{{ url('/previewtest') }}">
+                                    <button class="list-group-item list-group-item-action"
+                                        style="border-top: 1px solid #d2d2d2;">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <div class="fw-bold">Ajust Hpp Resume Hasil Pelaksanaan Cek Stok
+                                            </div>
+                                        </div>
+                                        <small>&nbsp</small>
+                                    </button></a> --}}
                                 </div>
                             </div>
                         </div>

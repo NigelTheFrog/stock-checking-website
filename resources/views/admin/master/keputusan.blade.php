@@ -23,9 +23,9 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($keputusan as  $kep)
+                            @foreach ($keputusan as   $kep)
                             <tr class="text-center">
-                                <td class="align-middle">{{$loop->iteration}}</td>
+                                <td class="align-middle">{{ $loop->iteration }}</td>
                                 <td class="align-middle">{{$kep->keputusandesc}}</td>
                                 <td class="align-middle"> 
                                     <button type="button" onclick="openModalEdit(this)" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=""><i class="bi bi-pencil-square"></i></button>

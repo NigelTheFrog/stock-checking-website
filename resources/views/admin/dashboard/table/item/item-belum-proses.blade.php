@@ -1,8 +1,33 @@
-<table class="table table-sm table-bordered table-hover table-responsive small table-striped" id="tableBlmProses">
+<table class="table table-sm table-bordered table-hover table-responsive small table-striped" id='tableBlmProses'>
     <thead class="table-dark">
         <tr class="text-center ">
             <th class="align-middle text-center" style="width: 2%"></th>
             <th class="align-middle text-center" style="width: 2%">No</th>
+            <th class="align-middle" style="width: 15%">
+            <div class="dropdown">
+                <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonStatus"
+                    style="height=50%;" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="d-flex">
+                        Item Code
+                        <div class="sortItemBlmProsesIcon" id="itemBlmProsesItemCodeIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                                <path
+                                    d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                            </svg>
+                        </div>
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
+                    <li><button type='button' class="dropdown-item filterItem"
+                            onclick="sortItem(0,2,'tableBlmProses','itemBlmProsesItemCodeIcon','sortItemBlmProsesIcon')">Ascending</button>
+                    </li>
+                    <li><button type='button' class="dropdown-item filterItem"
+                            onclick="sortItem(1,2,'tableBlmProses','itemBlmProsesItemCodeIcon','sortItemBlmProsesIcon')">Descending</button>
+                    </li>
+                </ul>
+            </div>
+        </th>
             <th class="align-middle" style="width: 15%">
                 <div class="dropdown">
                     <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonStatus"
@@ -20,10 +45,10 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
                         <li><button type='button' class="dropdown-item filterItem"
-                                onclick="sortItem(0,2,'tableBlmProses','itemBlmProsesItemNameIcon','sortItemBlmProsesIcon')">Ascending</button>
+                                onclick="sortItem(0,3,'tableBlmProses','itemBlmProsesItemNameIcon','sortItemBlmProsesIcon')">Ascending</button>
                         </li>
                         <li><button type='button' class="dropdown-item filterItem"
-                                onclick="sortItem(1,2,'tableBlmProses','itemBlmProsesItemNameIcon','sortItemBlmProsesIcon')">Descending</button>
+                                onclick="sortItem(1,3,'tableBlmProses','itemBlmProsesItemNameIcon','sortItemBlmProsesIcon')">Descending</button>
                         </li>
                     </ul>
                 </div>
@@ -45,10 +70,10 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
                         <li><button type='button' class="dropdown-item filterItem"
-                                onclick="sortItem(0,3,'tableBlmProses','itemBlmProsesSelisihIcon','sortItemBlmProsesIcon')">Ascending</button>
+                                onclick="sortItem(0,4,'tableBlmProses','itemBlmProsesSelisihIcon','sortItemBlmProsesIcon')">Ascending</button>
                         </li>
                         <li><button type='button' class="dropdown-item filterItem"
-                                onclick="sortItem(1,3,'tableBlmProses','itemBlmProsesSelisihIcon','sortItemBlmProsesIcon')">Descending</button>
+                                onclick="sortItem(1,4,'tableBlmProses','itemBlmProsesSelisihIcon','sortItemBlmProsesIcon')">Descending</button>
                         </li>
                     </ul>
                 </div>
@@ -71,16 +96,16 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
                             <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="sortItem(0,4,'tableBlmProses','itemBlmProsesOnHandIcon','sortItemBlmProsesIcon')">Ascending</button>
+                                    onclick="sortItem(0,5,'tableBlmProses','itemBlmProsesOnHandIcon','sortItemBlmProsesIcon')">Ascending</button>
                             </li>
                             <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="sortItem(1,4,'tableBlmProses','itemBlmProsesOnHandIcon','sortItemBlmProsesIcon')">Descending</button>
+                                    onclick="sortItem(1,5,'tableBlmProses','itemBlmProsesOnHandIcon','sortItemBlmProsesIcon')">Descending</button>
                             </li>
                         </ul>
                     </div>
                 </div>
             </th>
-            <th class="align-middle" style="width: 2%">
+            {{-- <th class="align-middle" style="width: 2%">
                 <div class="dropdown">
                     <div class="dropdown">
                         <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonStatus"
@@ -106,7 +131,7 @@
                         </ul>
                     </div>
                 </div>                
-            </th>
+            </th> --}}
             <th class="align-middle" style="width: 2%">
                 <div class="dropdown">
                     <div class="dropdown">
@@ -161,7 +186,7 @@
                     </div>
                 </div>                
             </th>
-            <th class="align-middle" style="width: 3%">
+            {{-- <th class="align-middle" style="width: 3%">
                 <div class="dropdown">
                     <div class="dropdown">
                         <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonStatus"
@@ -187,7 +212,7 @@
                         </ul>
                     </div>
                 </div>
-            </th>
+            </th> --}}
             <th class="align-middle" style="width: 2%">
                 <div class="dropdown">
                     <div class="dropdown">
@@ -206,10 +231,10 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
                             <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="sortItem(0,9,'tableBlmProses','itemBlmProsesStatusCsoIcon','sortItemBlmProsesIcon')">Ascending</button>
+                                    onclick="sortItem(0,8,'tableBlmProses','itemBlmProsesStatusCsoIcon','sortItemBlmProsesIcon')">Ascending</button>
                             </li>
                             <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="sortItem(1,9,'tableBlmProses','itemBlmProsesStatusCsoIcon','sortItemBlmProsesIcon')">Descending</button>
+                                    onclick="sortItem(1,8,'tableBlmProses','itemBlmProsesStatusCsoIcon','sortItemBlmProsesIcon')">Descending</button>
                             </li>
                         </ul>
                     </div>
@@ -240,7 +265,7 @@
                             </li>
                         </ul> --}}
                     </div>
-                </div>
+                </div>                
             </th>
             <th class="align-middle" style="width: 14%">
                 <div class="dropdown">
@@ -299,8 +324,6 @@
         </tr>
     </thead>
     <tbody>
-         
-        
         @foreach ($itemBlmProses as $barang)
             <tr>
                 <td class="align-middle text-center">
@@ -309,19 +332,20 @@
                     </div>    
                 </td>
                 <td class="align-middle text-center">{{ $loop->iteration }}</td>
+                <td>{{ $barang->itemcode }}</td>
                 <td>{{ $barang->itemname }}</td>
                 <td class="align-middle text-center">{{ $barang->selisih }}</td>
                 <td class="align-middle text-center">{{ $barang->onhand }}</td>
-                <td class="align-middle text-center">
+                {{-- <td class="align-middle text-center">
                     @if($barang->grade !='' && $barang->grade != NULL)
                         {{ $barang->grade }}    
                     @else
                         -
                     @endif
-                </td>
+                </td> --}}
                 <td class="align-middle text-center">{{ $barang->totalcso }}</td>
                 <td class="align-middle text-center">{{ $barang->koreksi }}</td>
-                <td class="align-middle text-center">{{ $barang->deviasi }}</td>
+                {{-- <td class="align-middle text-center">{{ $barang->deviasi }}</td> --}}
                 <td class="align-middle text-center">{{ $barang->statuscso }}</td>
                 <td class="align-middle text-center">
                     <input type="number" class="form-control form-control-sm"
@@ -332,8 +356,6 @@
                     value='{{$barang->group_value}}'
                     @endif
                     ></td>
-                {{-- <td class="align-middle text-center"><button type="button" onclick="groupValueBanner()"
-                    class="btn btn-primary">TEST</button></td> --}}
                 <td class="align-middle text-center">
                     <select class="form-select" name="group[]" id="groupingIdBanner" onchange="groupValueBanner(this,{{$barang->trsdetid}})">
                         <option value="" selected>--Pilih Group --</option>

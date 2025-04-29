@@ -13,10 +13,8 @@ class Company extends Model
     protected $fillable = [
         'coycode',
         'description',
-        'userwrhgrp',
     ];
     protected $primaryKey = "coyid";
     protected $coycode = "coycode";
     protected $description = "description";
-    protected $usewrhgrp = "usewrhgrp";
 }

@@ -24,9 +24,9 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($tipeUser as  $tipeUser)
+                            @foreach ($tipeUser as   $tipeUser)
                             <tr class="text-center">
-                                <td class="align-middle">{{$loop->iteration}}</td>
+                                <td class="align-middle">{{ $loop->iteration }}</td>
                                 <td class="align-middle">{{$tipeUser->jobtypecode}}</td>
                                 <td class="align-middle">{{$tipeUser->jobtypename}}</td>
                                 <td class="align-middle"> 
