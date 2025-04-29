@@ -9,9 +9,6 @@ use App\Models\Admin\Master\Level;
 use App\Models\Admin\Resume\SusunanCso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Admin\Master\Company;
-use Illuminate\Support\Facades\Log;
-
 
 class SusunanTimCsoController extends Controller
 {
@@ -25,19 +22,15 @@ class SusunanTimCsoController extends Controller
         // $checkCsoActive = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '=', 'E')
         // ->where('dbttrshed.typecekstok',$request->val)->orderByDesc('trsid')->first();
 
-        $dataCoy = Company::select('usewrhgrp')->first();
-
         $checkCsoActive = DB::table('dbttrshed')->where('dbttrshed.statusdoc', '<>', 'P')
         ->where('dbttrshed.typecekstok',$request->val)->orderByDesc('trsid')->first();
-    
+
         $tertukar = collect(DB::select('CALL ReportTertukar()'))->where('typecekstok',$request->val);
         $selisih = collect(DB::select('CALL ReportSelisih()'))->where('typecekstok',$request->val);
         $kesalahan_admin = collect(DB::select('CALL ReportKesalahanAdmin()'))->where('typecekstok',$request->val);
         $tidak_hitung = collect(DB::select('CALL ReportItemTidakHitung()'))->where('typecekstok',$request->val);
-        if($checkCsoActive && $dataCoy->usewrhgrp == 1) $gudang_tertukar = collect(DB::select('CALL GudangTertukar(?)',[$checkCsoActive->trsid]));
-
-        $keputusan = Keputusan::all();
         
+        $keputusan = Keputusan::all();
         $departemen = Departemen::all();
 
         if(!empty($checkCsoActive)){
@@ -47,13 +40,14 @@ class SusunanTimCsoController extends Controller
             'username','dept','note','jobid','jobtypeid')
             ->join('dbttrshed', 'dbtcsoprsn.trsid', '=', 'dbttrshed.trsid')
             ->where('dbttrshed.trsid',$checkCsoActive->trsid)
-            ->where('dbttrshed.typecekstok',$request->val)
-            ->where('dbtcsoprsn.tipecso','R');
+            ->where('dbttrshed.typecekstok',$request->val);
         }
 
         if(!empty($checkCsoActive))
         {
+            
             $analisator= DB::table($analisator1)->select('*')->where('jobtypeid', '=', '2')->get();
+            // dd($analisator1);
         }
         else $analisator=[];
 
@@ -74,11 +68,8 @@ class SusunanTimCsoController extends Controller
             'checkCsoActive' => $checkCsoActive,
             'departemen' => $departemen,
             'typecekstok'=>$request->val,
-            'trsid'=> $checkCsoActive->trsid ?? '',
-            'gudang_tertukar' => ($checkCsoActive && $dataCoy->usewrhgrp == 1) ? $gudang_tertukar : []
+            'trsid'=> $checkCsoActive->trsid ?? '' 
         ]);
-        
-        
     }
 
     /**
@@ -98,7 +89,7 @@ class SusunanTimCsoController extends Controller
             if ($request->deptPelaku[$idx]) DB::table('dbtcsoprsn')->where('jobid', '=', $pelaku)->update(['dept' => $request->deptPelaku[$idx]]);
             if ($request->ketPelaku[$idx]) DB::table('dbtcsoprsn')->where('jobid', '=', $pelaku)->update(['note' => $request->ketPelaku[$idx]]);
         }
-        
+
         if($request->jobidAnalisator) {
             foreach ($request->jobidAnalisator as $idx => $analisator) {
                 if ($request->deptAnalisator[$idx]) DB::table('dbtcsoprsn')->where('jobid', '=', $analisator)->update(['dept' => $request->deptAnalisator[$idx]]);
@@ -116,16 +107,6 @@ class SusunanTimCsoController extends Controller
             }
         }
 
-        if ($request->trsdetidGudangTertukar) {
-            foreach ($request->trsdetidGudangTertukar as $idx => $GudangTertukar) {
-                if ($request->keputusanGudangTertukar[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $GudangTertukar)->update(['keputusan' => $request->keputusanGudangTertukar[$idx]]);
-                if ($request->hppGudangTertukar[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $GudangTertukar)->update(['cogs_manual' => $request->hppGudangTertukar[$idx]]);
-                if ($request->pembebananGudangTertukar[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $GudangTertukar)->update(['pembebanan' => $request->pembebananGudangTertukar[$idx]]);
-                if ($request->nodokGudangTertukar[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $GudangTertukar)->update(['nodoc' => $request->nodokGudangTertukar[$idx]]);
-                if ($request->keteranganGudangTertukar[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $GudangTertukar)->update(['keterangan' => $request->keteranganGudangTertukar[$idx]]);
-            }
-        }
-        // dd($request->keteranganSelisih[1]);
         if ($request->trsdetidSelisih) {
             foreach ($request->trsdetidSelisih as $idx => $selisih) {
                 if ($request->keputusanSelisih[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $selisih)->update(['keputusan' => $request->keputusanSelisih[$idx]]);
@@ -135,7 +116,7 @@ class SusunanTimCsoController extends Controller
                 if ($request->keteranganSelisih[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $selisih)->update(['keterangan' => $request->keteranganSelisih[$idx]]);
             }
         }
-    
+
         if ($request->trsdetidKesalahanAdmin) {
             foreach ($request->trsdetidKesalahanAdmin as $idx => $kesalahanAdmin) {
                 if ($request->keputusanKesalahanAdmin[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $kesalahanAdmin)->update(['keputusan' => $request->keputusanKesalahanAdmin[$idx]]);
@@ -155,41 +136,40 @@ class SusunanTimCsoController extends Controller
                 if ($request->keteranganTidakHitung[$idx]) DB::table('dbttrsdet')->where('trsdetid', '=', $tidakHitung)->update(['keterangan' => $request->keteranganTidakHitung[$idx]]);
             }
         }
-        
+
         if ($request->draft == 1) return redirect()->route("susunan-tim-cso.index",['val'=>$request->typecekstok])
         ->with('status', "Berhasil menyimpan data draft resume ".$request->typecekstok." item");
         else {
-            
-            $test=DB::table('dbttrshed')
+            DB::table('dbttrshed')
                 ->where('statusdoc', '=', 'E')
                 ->where('typecekstok','=',$request->typecekstok)
                 ->update(['statusdoc' => 'P']);
-        
+
             if($request->typecekstok=='CSO')
             {
-                DB::table('dbximpor')->truncate();
-                DB::table('dbximpordet')->truncate();
-                DB::table('dbximpordetbatch')->truncate();
+            DB::table('dbximpor')->truncate();
+            DB::table('dbximpordet')->truncate();
+            // DB::table('dbximpordetbatch')->truncate();
             }
             else
             {
                 DB::table('dbximporcss')->truncate();
                 DB::table('dbximpordetcss')->truncate();
-                DB::table('dbximpordetbatchcss')->truncate();
+                // DB::table('dbximpordetbatchcss')->truncate();
             }
           
-            DB::table('dbxsetdate')->where('tipe', '=', 'I')->where('statuscekstok','R')
+            DB::table('dbxsetdate')->where('tipe', '=', 'I')
             ->where('typecekstok','=',$request->typecekstok)->delete();
 
-            DB::table('dbxmaterial')->where('typecekstok','=',$request->typecekstok)->where('statuscekstok','R')->delete();
+            DB::table('dbxmaterial')->where('typecekstok','=',$request->typecekstok)->delete();
 
-            DB::table('dbtcsohed')->where('trsid',$request->trsid)->where('tipecso','R')
+            DB::table('dbtcsohed')->where('trsid',$request->trsid)
                 ->update(['status' => 'P']);
 
-            DB::table('dbtcsoprsn')->where('trsid',$request->trsid)->where('tipecso','R')
+            DB::table('dbtcsoprsn')->where('trsid',$request->trsid)
                 ->update(['status' => 'P']);
 
-            DB::table('dbxjob')->where('typecekstok','=',$request->typecekstok)->where('statuscekstok','R')->delete();
+            DB::table('dbxjob')->where('typecekstok','=',$request->typecekstok)->delete();
             // DB::table('dbxcsotype')->where('typecekstok',$request->typcekstok)->delete();;
 
             return redirect()->route("item.index",['val'=>$request->typecekstok])->with('status', $request->typcekstok.' berhasil diakhiri');

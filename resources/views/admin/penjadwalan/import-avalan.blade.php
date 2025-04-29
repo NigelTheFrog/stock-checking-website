@@ -8,31 +8,22 @@
             padding: 10px 30px 10px 10px;
             border-radius: 7px
         }
-        .modal-90vw {
-            max-width: 90vw !important;
-        }
     </style>
     <div class="container-fluid px-4">
         <div class="row justify-content-md-center">
             <div id="main" class="col">
                 <div class="card mt-2">
                     <div class="card-header bg-secondary text-white">
-                        <h4 class="card-title pt-2">Impor Avalan {{ $csoType }}</h4>
+                        <h4 class="card-title pt-2">Impor Avalan</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                        <div class="d-flex">
+                        <div class="d-flex ">
                             <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
-                                data-bs-target="#modalImportAvalan"
-                                @if ($csoActive) @if ($csoType == 'CSO')
-                                disabled
-                                @else
-                                @if ($csoActive->statusdoc != 'A')
-                                disabled @endif
-                                @endif @endif>
+                                data-bs-target="#modalImportAvalan" @if ($csoEnd) disabled @endif>
                                 <i class="nav-icon fas fa-file-import"></i> Import Avalan
                             </button>
                         </div>
-                        <form action="{{ route('import-avalan.destroy', ['checkboxDelete','key'=>$csoType ]) }}" method="POST">
+                        <form action="{{ route('import-avalan.destroy', 'checkboxDelete') }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <div class="modal fade text-left" id="modalDeleteAvalan" tabindex="-1">
@@ -45,7 +36,7 @@
                                             <p>Apakah Anda yakin hendak menghapus item yang sudah dipilih?</p>
                                             <button type="submit" class="btn btn-danger" name="simpan"><i
                                                     class="bx bxs-save"></i>Iya</button>
-                                            <button type="button" data-bs-dismiss="modal" onclick="closeModalDelete()" class="btn btn-primary"
+                                            <button type="button" data-bs-dismiss="modal" class="btn btn-primary"
                                                 name="simpan"><i class="bx bxs-save"></i>Batal</button>
                                         </div>
                                     </div>
@@ -53,26 +44,18 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-group form-check ">
-                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete"
-                                        {{-- @if ($csoActive || $csoEnd) disabled @endif> --}}
-                                        @if ($csoActive) disabled @endif> 
+                                    <input class="form-check-input cekdelete" type="checkbox" value="" id="cekdelete"  @if ($csoActive || $csoEnd ) disabled @endif>
                                     <label class="form-check-label" for="cekdelete">
                                         Centang Semua
                                     </label>
                                 </div>
-                                <div class="d-flex">
-                                    <input type="text" class="form-control me-4" id="myInput"
-                                        onkeyup="searchItem(this.value.toLowerCase())" placeholder="Search Item">
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#modalDeleteAvalan" title="Hapus Centang" id="btnHapus" data-id=""
-                                    {{-- @if ($csoActive || $csoEnd) disabled @endif> --}}
-                                    @if ($csoActive) disabled @endif>
-                                    <i class="fas fa-trash-alt"></i>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#modalDeleteAvalan" title="Hapus Centang" id="btnHapus"
+                                    data-id=""  @if ($csoActive || $csoEnd ) disabled @endif><i class="fas fa-trash-alt"></i>
                                     Hapus Checklist</button>
-                                </div>
                             </div>
-                            <table class="table table-sm table-bordered table-hover sticky-header table-responsive small table-striped"
-                                style="background-color:rgb(255, 255, 255);overflow-y: auto;" id="tabelItem">
+                            <table class="table table-sm table-bordered table-hover table-responsive small table-striped"
+                                style="background-color:rgb(255, 255, 255)">
                                 <thead class="table-dark">
                                     <tr class="text-center ">
                                         <th style="width: 2%"></th>
@@ -85,19 +68,21 @@
                                         <th class="align-middle" style="width: 5%">Condition</th>
                                         <th class="align-middle" style="width: 5%">Jumlah</th>
                                         <th class="align-middle" style="width: 5%">Satuan</th>
+                                        @if ($csoType == 'CSS')
+                                            <th class="align-middle" style="width: 8%">Tanggal <br>Import</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($avalan as  $avalan)
                                         <tr
                                             class="text-center
-                                        @if ($avalan->statusitem == 'TA') table-info @endif">
+                                        @if ($avalan->statusitem == 'T') table-info @endif">
                                             <td class="align-middle">
                                                 <div class="form-check">
                                                     <input type="checkbox" name="checkboxDelete[]"
                                                         class="form-check-input cekboxdelete"
-                                                        value={{ $avalan->itembatchid }}
-                                                        @if ($csoActive) disabled @endif>
+                                                        value={{ $avalan->itembatchid }} @if ($csoActive || $csoEnd ) disabled @endif>
                                                 </div>
                                             </td>
                                             <td class="align-middle">{{ $loop->iteration }}</td>
@@ -136,6 +121,9 @@
                                             <td class="align-middle">{{ number_format((float) $avalan->qty, 2, '.', '') }}
                                             </td>
                                             <td class="align-middle">{{ $avalan->uom }}</td>
+                                            @if ($csoType == 'CSS')
+                                            <td class="align-middle">{{ \Carbon\Carbon::parse($avalan->createddate)->translatedFormat('d F Y')  }}</td>
+                                        @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -163,8 +151,6 @@
                             novalidate>
                             @csrf
                             <input type="text" name="type" value="2" hidden>
-                            <input type="text" name="csotype" value="{{$csoType}}" hidden>
-
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -228,18 +214,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                                    </div>
-                                    <input type="text" pattern="[0-9]*\.?[0-9]+" name="temuantonase"
-                                        class="form-control" id="temuantonase" placeholder="Tonase" required>
-                                    <div class="invalid-feedback">
-                                        Tonase harus diisi dan berupa angka
-                                    </div>
-                                </div>
-                            </div>
                             <button type="reset" class="btn btn-danger" name="reset" title="Kosongkan data"><i
                                     class="fas fa-undo-alt"></i><span class="ps-2">Reset</span></button>
                             <button type="submit" class="btn btn-primary" name="simpanavalan"
@@ -264,7 +238,7 @@
         </div>
     </div>
     <div class="modal fade text-left" id="modalImportAvalan" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-90vw modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mdlMoreLabel">Data Stok Avalan</h1>
@@ -280,8 +254,7 @@
                                 <select id="wrhSelect" multiple name="gudang[]" placeholder="Daftar Gudang"
                                     data-search="true" data-silent-initial-value-set="true">
                                     @foreach ($warehouse as $wrh)
-                                        <option value="{{ $wrh['WhseCode'] }}">{{ $wrh['WhseCode'] }} -
-                                            {{ $wrh['Name'] }}</option>
+                                        <option value="{{ $wrh['whs'] }}">{{ $wrh['whs'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -307,5 +280,75 @@
             </div>
         </div>
     </div>
-    @include('admin.penjadwalan.script.import-avalan')
+    <script>
+        VirtualSelect.init({
+            ele: '#wrhSelect',
+            maxWidth: '70%'
+        });
+
+        function tarikAvalan(button) {
+            var selectedGudang = $("#wrhSelect").val(); // Get the selected gudang values
+            var search = $("#searchAvalan").val();
+
+            // Make an AJAX request to fetch data from the server
+            $.ajax({
+                url: "{{ url('admin/penjadwalan/import-avalan/pull-import') }}",
+                method: "POST",
+                data: {
+                    gudang: selectedGudang,
+                    search: search
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#tableAvalan').html(data);
+                    // console.log(data);
+                },
+                error: function(xhr,data) {
+                    // console.log(xhr);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Tidak terdapat avalan pada gudang tersebut",
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $(".cekdelete").click(function() {
+                if ($(".cekboxdelete").prop("checked")) {
+                    $(".cekboxdelete").prop("checked", false);
+                } else {
+                    $(".cekboxdelete").prop("checked", true);
+                }
+            });
+            $("#openNav").click(function() {
+                $('#push-btn').addClass('d-none');
+                $("#mySidenav").removeClass('d-none');
+                $("#mySidenav").stop().animate({
+                    width: "29%"
+                }, 500); // 500 milliseconds (0.5 seconds) animation duration
+                $("#main").stop().animate({
+                    width: "70%"
+                }, 500); // 500 milliseconds (0.5 seconds) animation duration
+            });
+
+            /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+            $("#closeNav").click(function() {
+                $("#mySidenav").stop().animate({
+                    width: "0%"
+                }, 500); // 500 milliseconds (0.5 seconds) animation duration
+                $("#main").stop().animate({
+                    width: "96%"
+                }, 500); // 500 milliseconds (0.5 seconds) animation duration
+                setTimeout(function() {
+                    $("#push-btn").removeClass('d-none');
+                    $("#mySidenav").addClass('d-none');
+                }, 500); // Delay for 0.5 seconds (500 milliseconds)
+            });
+        });
+    </script>
+
 @endsection

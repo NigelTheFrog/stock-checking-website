@@ -5,23 +5,20 @@
 @section('content')
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Warehouse Data</h1>   
+    <h1 class="mt-4">Grading Data</h1>   
     <div class="row justify-content-md-center">
         <div class="col-7">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white">
-                    <h4 class="card-title pt-2">Gudang</h4>
+                    <h4 class="card-title pt-2">Master Grade</h4>
                 </div>                   
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
                     <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
                         <thead class="table-dark">
                             <tr class="text-center ">
                                 <th class="align-middle" style="width: 2%">No</th>
-                                <th class="align-middle" style="width: 2%">Gudang</th>
+                                <th class="align-middle" style="width: 2%">Grade</th>
                                 <th class="align-middle" style="width: 20%">Deskripsi</th>
-                                @if($useWrhGrp != 0)
-                                    <th class="align-middle" style="width: 10%">Group</th>
-                                @endif
                                 <th class="align-middle" style="width: 8%">Action</th>
                                 <th hidden></th>
                             </tr>
@@ -32,11 +29,8 @@
                                 <td class="align-middle">{{ $loop->iteration }}</td>
                                 <td class="align-middle">{{ $g->gradecode }}</td>
                                 <td class="align-middle">{{ $g->description }}</td>
-                                @if($useWrhGrp != 0)
-                                    <td class="align-middle">{{ $g->group }}</td>
-                                @endif
                                 <td class="align-middle"> 
-                                    <button type="button" onclick="openModalEdit(this,'{{ $g->gradecode }}','{{ $g->description }}','{{$g->group}}')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=""><i class="bi bi-pencil-square"></i></button>
+                                    <button type="button" onclick="openModalEdit(this,'{{ $g->gradecode }}','{{ $g->description }}')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target=""><i class="bi bi-pencil-square"></i></button>
                                     <button type="button" onclick="openModalDelete(this,'{{ $g->gradecode }}','{{ $g->description }}')" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
                                 </td>
                             </tr>                                    
@@ -49,7 +43,7 @@
         <div class="col-5">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white ">
-                    <h4 class="card-title mx-3 pt-2">Tambah Gudang</h4>
+                    <h4 class="card-title mx-3 pt-2">Tambah Grade</h4>
                 </div>
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
                     <form id="forminput" action="{{route("grade.store")}}" method="POST" class="needs-validation mx-3" novalidate >
@@ -59,10 +53,9 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                                 </div>
-                                {{-- <input type="text" name="code" class="form-control" id="code" placeholder="Kode Grade" maxlength="1" required> --}}
-                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode Gudang" required>
+                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode Grade" maxlength="1" required>
                                 <div class="invalid-feedback">
-                                    Kode Gudang harus diisi
+                                    Kode Grade harus diisi
                                 </div>
                             </div>                            
                         </div>  
@@ -71,20 +64,9 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="bi bi-pencil-fill"></i></span>
                                 </div>
-                                <input type="text" name="deskripsi" class="form-control" id="deskripsi" placeholder="Deskripsi Gudang" required>
+                                <input type="text" name="deskripsi" class="form-control" id="deskripsi" placeholder="Deskripsi Grade" required>
                                 <div class="invalid-feedback">
                                     Deskripsi harus diisi
-                                </div>
-                            </div>                           
-                        </div>
-                        <div class="form-group" @if($useWrhGrp == 0) hidden @endif>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="bi bi-box"></i></span>
-                                </div>
-                                <input type="text" name="groupGudang" class="form-control" id="groupGudang" placeholder="Group Gudang" required>
-                                <div class="invalid-feedback">
-                                    group gudang
                                 </div>
                             </div>                           
                         </div> 
@@ -118,17 +100,6 @@
                                 Deskripsi harus diisi
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group" @if($useWrhGrp == 0) hidden @endif>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="bi bi-box"></i></span>
-                            </div>
-                            <input type="text" name="groupGudang" class="form-control" id="editgroupGudang" placeholder="Group Gudang" required>
-                            <div class="invalid-feedback">
-                                group gudang
-                            </div>
-                        </div>
                     </div>                                                
                     <button type="reset" class="btn btn-danger" name="reset"><i class="bx bx-reset"></i> Reset</button>
                     <button type="submit" class="btn btn-primary" name="simpan"><i class="bx bxs-save"></i> Simpan</button>
@@ -156,11 +127,10 @@
     </div>
 </div>
 <script>
-    function openModalEdit(button,grade,description, groupGudang) {
+    function openModalEdit(button,grade,description) {
         console.log(grade);
         $('#ModalEditKeputusan').modal('show');
         $('#editdeskripsi').attr('value', description);
-        $('#editgroupGudang').attr('value', groupGudang);
         $('#editform').attr('action',`{{url('admin/master/grade/${grade}')}}`);
     }
     function closeModalEdit(button) {

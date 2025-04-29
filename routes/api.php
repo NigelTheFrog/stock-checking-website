@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('color-list', [AddController::class, 'warna']);
     Route::get('grade-list', [AddController::class, 'grade']);
 
+
     Route::post('ubah-password', [AccountController::class, 'ubahPassword']);
     Route::post('mulai-cso-item', [AccountController::class, 'mulaiCSOItem']);
     Route::post('mulai-cso-avalan', [AccountController::class, 'mulaiCSOAvalan']);

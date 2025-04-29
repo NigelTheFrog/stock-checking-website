@@ -2,47 +2,18 @@
     <thead class="table-dark">
         <tr class="text-center ">
             <th class="align-middle" style="width: 1%">No</th>
-
-            {{-- <th class="align-middle" style="width: 36%">
-                <div class="d-inline-flex my-0 align-items-center">
-                    <div>Nama Item</div>
-                    <div class="dropdown">
-                        <button class="btn btn-sm text-white text-center" type="button" id="filterMenu" 
-                        style="height=50%;margin-left: 5px" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" 
-                        width="24" height="24" fill="currentColor" 
-                        class="bi bi-filter" viewBox="0 0 16 16">
-                            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
-                          </svg>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
-                          {{-- <li><button class="dropdown-item">Action</button></li> --}}
-            {{-- <li><button type='button' class="dropdown-item filterItem" onclick="filterItemDash(this)" value='asc'>Ascending</button></li> --}}
-            {{-- <li><button type='button' class="dropdown-item filterItem" onclick="filterItemDash(this)" value='desc'>Descending</button></li> --}}
-            {{-- </ul> --}}
-            {{-- </div> --}}
-            {{-- </div> --}}
-
-            {{-- </th> --}}
+            {{-- <th class="align-middle" style="width: 36%">Nama Item</th>
+            <th class="align-middle" style="width: 10%">Status</th>
+            <th class="align-middle" style="width: 5%">Selisih</th>
+            <th class="align-middle" style="width: 5%">Onhand</th>
+            <th class="align-middle" style="width: 5%">Total CSO</th>
+            <th class="align-middle" style="width: 5%">Koreksi</th>
+            <th class="align-middle" style="width: 5%">Deviasi</th>
+            <th class="align-middle" style="width: 5%">Status CSO</th>
+            <th class="align-middle" style="width: 5%">Grouping</th>
+            <th class="align-middle" style="width: 5%">Group <br>value</th>
+            <th class="align-middle" style="width: 18%">Analisator</th> --}}
             <th style="width: 36%">
-                {{-- <div class="d-inline-flex my-0 align-items-center">
-                    <div>Nama Item</div>
-                    <div class="dropdown">
-                        <button class="btn btn-sm text-white text-center" type="button" id="filterMenu" 
-                        style="height=50%;margin-left: 5px" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" 
-                        width="24" height="24" fill="currentColor" 
-                        class="bi bi-filter" viewBox="0 0 16 16">
-                            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
-                          </svg>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
-                          <li><button class="dropdown-item">Action</button></li>
-                          <li><button type='button' class="dropdown-item filterItem" onclick="filterItemDash(this)" value='asc'>Ascending</button></li>
-                          <li><button type='button' class="dropdown-item filterItem" onclick="filterItemDash(this)" value='desc'>Descending</button></li>
-                        </ul>
-                      </div>
-                </div> --}}
                 <div class='row my-2 mx-2 align-middle'>
                     <div class="dropdown">
                         <button class="btn btn-sm text-white text-center fw-bold" type="button" id="filterMenu"
@@ -179,58 +150,6 @@
                     </ul>
                 </div>
             </th>
-            @if ($coy == 'KKS')
-                <th class="align-middle" style="width: 5%">
-                    <div class="dropdown">
-                        <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonTotalCSO"
-                            style="height=50%;" data-bs-toggle="dropdown" aria-expanded="false">Tonase<br>Onhand
-                            @if ($filter == 23)
-                                <i class="bi bi-arrow-up"></i>
-                            @elseif ($filter == 24)
-                                <i class="bi bi-arrow-down"></i>
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                                    <path
-                                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
-                                </svg>
-                            @endif
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
-                            {{-- <li><button class="dropdown-item">Action</button></li> --}}
-                            <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="filterItemDash(21)">Ascending</button></li>
-                            <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="filterItemDash(22)">Descending</button></li>
-                        </ul>
-                    </div>
-                </th>
-                <th class="align-middle" style="width: 5%">
-                    <div class="dropdown">
-                        <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonTotalCSO"
-                            style="height=50%;" data-bs-toggle="dropdown" aria-expanded="false">Tonase<br>CSO
-                            @if ($filter == 23)
-                                <i class="bi bi-arrow-up"></i>
-                            @elseif ($filter == 24)
-                                <i class="bi bi-arrow-down"></i>
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                                    <path
-                                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
-                                </svg>
-                            @endif
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
-                            {{-- <li><button class="dropdown-item">Action</button></li> --}}
-                            <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="filterItemDash(23)">Ascending</button></li>
-                            <li><button type='button' class="dropdown-item filterItem"
-                                    onclick="filterItemDash(24)">Descending</button></li>
-                        </ul>
-                    </div>
-                </th>
-            @endif
             <th class="align-middle" style="width: 5%">
                 <div class="dropdown">
                     <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonKoreksi"
@@ -335,24 +254,7 @@
                 <div class="dropdown">
                     <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonGrouping"
                         style="height=50%;" data-bs-toggle="dropdown" aria-expanded="false">Group <br>Value
-                        {{-- @if ($filter == 17)
-                            <i class="bi bi-arrow-up"></i>
-                        @elseif ($filter == 18)
-                            <i class="bi bi-arrow-down"></i>
-                        @else
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                                <path
-                                    d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
-                            </svg>
-                        @endif --}}
                     </button>
-                    {{-- <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
-                        <li><button type='button' class="dropdown-item filterItem"
-                                onclick="filterItemDash(17)">Ascending</button></li>
-                        <li><button type='button' class="dropdown-item filterItem"
-                                onclick="filterItemDash(18)">Descending</button></li>
-                    </ul> --}}
                 </div>
             </th>
             <th class="align-middle" style="width: 18%">
@@ -380,6 +282,32 @@
                     </ul>
                 </div>
             </th>
+            @if($typecekstok == 'CSS')
+                <th class="align-middle" style="width: 18%">
+                    <div class="dropdown">
+                        <button class="btn btn-sm text-white fw-bold text-center" type="button" id="filterMenu"
+                            style="height=50%;" data-bs-toggle="dropdown" aria-expanded="false">Tanggal
+                            {{-- @if ($filter == 19)
+                                <i class="bi bi-arrow-up"></i>
+                            @elseif ($filter == 20)
+                                <i class="bi bi-arrow-down"></i>
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                                    <path
+                                        d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                                </svg>
+                            @endif --}}
+                        </button>
+                        {{-- <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="filterMenu">
+                            <li><button type='button' class="dropdown-item filterItem"
+                                    onclick="filterItemDash(19)">Ascending</button></li>
+                            <li><button type='button' class="dropdown-item filterItem"
+                                    onclick="filterItemDash(20)">Descending</button></li>
+                        </ul> --}}
+                    </div>
+                </th>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -402,7 +330,7 @@
                     <div class="d-flex my-0 align-items-center">
                         <div class="mr-3">
                             <button type="button" class="btn btn-sm" id="detailcsoitem"
-                                @if ($coy == 'KKS') onclick="openModalDetailCSO(`{{ addslashes($barang->itemname) }}`, {
+                                onclick="openModalDetailCSO(`{{ addslashes($barang->itemname) }}`, {
                                 itemid: `{{ $barang->itemid }}`,
                                 trsdetid: `{{ $barang->trsdetid }}`,
                                 onhand: `{{ $barang->onhand }}`,
@@ -410,29 +338,13 @@
                                 selisih: `{{ $barang->selisih }}`,
                                 koreksi: `{{ $barang->koreksi }}`,
                                 deviasi: `{{ $barang->deviasi }}`,
-                                keterangan: `{{ $barang->keterangan }}`,    
-                                tonase: `{{ $barang->totalTonase }}`,                               
+                                keterangan: `{{ $barang->keterangan }}`, 
+                                groupValue: `{{ $barang->group_value }}`,                               
                             })"
-                            @else
-                            onclick="openModalDetailCSO(`{{ addslashes($barang->itemname) }}`, {
-                                itemid: `{{ $barang->itemid }}`,
-                                trsdetid: `{{ $barang->trsdetid }}`,
-                                onhand: `{{ $barang->onhand }}`,
-                                totalcso: `{{ $barang->totalcso }}`,
-                                selisih: `{{ $barang->selisih }}`,
-                                koreksi: `{{ $barang->koreksi }}`,
-                                deviasi: `{{ $barang->deviasi }}`,
-                                keterangan: `{{ $barang->keterangan }}`,
-                                groupValue:`{{ $barang->group_value }}`                                
-                            })" @endif
-                                {{-- style="color: rgb(81, 81, 81)" id="viewlistcso"> --}}
-                                @if ($barang->analisator_checked) style="color: #007cf7"
+                                @if ($barang->analisator_checked) style="color: #007cf7" 
                                 @else
-                                    style="color: rgb(81, 81, 81)" @endif
-                                id="viewlistcso">
-                                <i class="fas fa-eye"></i>
-                            </button>
-
+                                style="color: rgb(81, 81, 81)" @endif
+                                id="viewlistcso"><i class="fas fa-eye"></i></button>
                         </div>
                         <div>
                             {{-- @if ($barang->batchno != null)
@@ -447,13 +359,11 @@
                     @if ($barang->status == 1)
                         <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih min
                         @elseif ($barang->status == 2)
-                            <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih
-                                plus
+                            <span class='badge  rounded-pill text-bg-danger text-wrap' style='width: 5rem'>selisih plus
                             @elseif ($barang->status == 3)
                                 <span class='badge rounded-pill text-bg-success text-wrap' style='width: 5rem'>selesai
                                 @else
-                                    <span class='badge rounded-pill text-bg-warning text-wrap'
-                                        style='width: 5rem'>belum
+                                    <span class='badge rounded-pill text-bg-warning text-wrap' style='width: 5rem'>belum
                                         proses
                     @endif
                     </span>
@@ -461,16 +371,15 @@
                 <td class="align-middle text-center">{{ number_format($barang->selisih, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ number_format($barang->onhand, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ number_format($barang->totalcso, 2, ',', '.') }}</td>
-                @if ($coy == 'KKS')
-                    <td class="align-middle text-center">{{ (float) $barang->tonaseOnHand }}</td>
-                    <td class="align-middle text-center">{{ (float) $barang->totalTonase }}</td>
-                @endif
                 <td class="align-middle text-center">{{ number_format($barang->koreksi, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ number_format($barang->deviasi, 2, ',', '.') }}</td>
                 <td class="align-middle text-center">{{ $barang->statuscso }}</td>
                 <td class="align-middle text-center">{{ $barang->groupid }}</td>
-                <td class="align-middle text-center">{{ $barang->group_value }}</td>
+                <td class="align-middle text-center">{{ $barang->group_value}}</td>
                 <td class="align-middle text-center">{{ $barang->analisator }}</td>
+                @if($typecekstok == 'CSS')
+                    <td class="align-middle text-center" style="font-size:13px">{{ $barang->createddate }}</td>
+                @endif
             </tr>
         @endforeach
     </tbody>

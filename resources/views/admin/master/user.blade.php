@@ -3,7 +3,7 @@
 @section('title', 'User')
 
 @section('content')
-    <style>
+<style>
         .vscomp-toggle-button {
             padding: 10px 30px 10px 10px;
             border-radius: 7px
@@ -18,7 +18,7 @@
                         <h4 class="card-title pt-2">Daftar Pengguna</h4>
                     </div>
                     
-                    <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)">
+                    <div id="table-data" class="card-body" style="background-color:rgb(248, 248, 248)">                                             
                         <div class='row'>
                             <div class="d-flex col-sm-6">
                                 <button type="button" class="btn btn-primary float-start mb-3" data-bs-toggle="modal"
@@ -48,33 +48,29 @@
                             </thead>
                             <tbody id="userDatabase">
                                 @foreach ($userDatabase as $user)
-                                    <tr class="text-center">
-                                        <td class="align-middle">{{ $loop->iteration }}</td>
-                                        <td class="align-middle">{{ $user->name }}</td>
-                                        <td class="align-middle">{{ $user->nik }}</td>
-                                        <td class="align-middle">{{ $user->username }}</td>
-                                        <td class="align-middle">{{ $user->levelname }}</td>
-                                        <td class="align-middle">
-                                            <div class="row">
-                                                <div class="col-2 ms-2">
-                                                    <button onclick="openModalEdit(this)"
-                                                        class="btn btn-sm btn-primary edit" id="btnEditUser"><i
-                                                            class="bi bi-pencil-square", style="color: white"></i></button>
-                                                </div>
-                                                <div class="col-2 ms-2">
-                                                    <button onclick="openModalDelete(this)" class="btn btn-danger btn-sm"
-                                                        title="Hapus User" id="btnHapus" data-id=""><i
-                                                            class="bi bi-trash-fill"></i></button>
-                                                </div>
+                                <tr class="text-center">
+                                    <td class="align-middle">{{$loop->iteration}}</td>
+                                    <td class="align-middle">{{$user->name}}</td>
+                                    <td class="align-middle">{{$user->nik}}</td>
+                                    <td class="align-middle">{{$user->username}}</td>
+                                    <td class="align-middle">{{$user->levelname}}</td>                                
+                                    <td class="align-middle"> 
+                                        <div class="row">
+                                            <div class="col-2 ms-2">
+                                                <button onclick="openModalEdit(this)" class="btn btn-sm btn-primary edit" id="btnEditUser" ><i class="bi bi-pencil-square", style="color: white"></i></button>
                                             </div>
-
-                                        </td>
-                                        <td class="align-middle" hidden>{{ $user->level }}</td>
-                                        <td class="align-middle" hidden>{{ $user->id }}</td>
-                                    </tr>
-                                @endforeach
+                                            <div class="col-2 ms-2">
+                                                <button onclick="openModalDelete(this)" class="btn btn-danger btn-sm" title="Hapus User" id="btnHapus" data-id=""><i class="bi bi-trash-fill"></i></button>
+                                            </div>
+                                        </div>
+                    
+                                    </td>
+                                    <td class="align-middle" hidden>{{$user->level}}</td>
+                                    <td class="align-middle" hidden>{{$user->id}}</td>
+                                </tr>                                    
+                                @endforeach                                
                             </tbody>
-                        </table>
+                        </table>    
                     </div>
                 </div>
             </div>
@@ -84,8 +80,8 @@
                         <h4 class="card-title mx-3 pt-2">Tambah Pengguna</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
-                        <form id="forminput" action="{{ route('user.store') }}" method="POST"
-                            class="needs-validation mx-3">
+                        <form id="forminput" action="{{ route('user.store') }}" method="POST" class="needs-validation mx-3"
+                            novalidate>
                             @csrf
                             <input type="text" name="type" value="1" hidden>
                             <div class="form-group">
@@ -268,22 +264,21 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade text-left" id="modalImportUser" tabindex="-1">
+        {{-- <div class="modal fade text-left" id="modalImportUser" tabindex="-1">
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mdlMoreLabel">Data User</h1>
-                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal"
-                            aria-label="Close">
+                        <button type="button" class="btn-close align-middle" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
-                    <div class="modal-body" id="tabelUser">
-
+                    <div class="modal-body"  id="tabelUser">
+                        
                         @include('admin.master.table.table-user')
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <script>
             function openModalEdit(button) {
@@ -315,7 +310,7 @@
             function closeModalDelete(button) {
                 $('#ModalDeleteUser').modal('hide');
             }
-
+           
             $("#searchUser").keyup(function() {
             var search = $('#searchUser').val().toLowerCase();
             var table = $('#datatable').find('tr');
@@ -334,7 +329,7 @@
                         tr.style.display='';
                     }
                     else tr.style.display='none';
-                }
+                        }
             }
         });
         </script>

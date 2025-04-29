@@ -27,6 +27,7 @@
                 <td class="align-middle text-center">{{ $barang->deviasi }}</td>
                 <td class="align-middle text-center">{{ $barang->statuscso }}</td>
                 <td class="align-middle text-center">
+
                     <select class="form-select" name="group[]" id="">
                         <option value="" selected>--Pilih Group --</option>
                         @foreach ($dbmgroup as $group)

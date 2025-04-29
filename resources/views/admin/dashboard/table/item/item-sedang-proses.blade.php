@@ -14,8 +14,6 @@
         </tr>
     </thead>
     <tbody>
-         
-        
         @foreach ($itemSdgProses as $barang)
             <tr>
                 <td class="align-middle text-center">{{ $loop->iteration }}</td>

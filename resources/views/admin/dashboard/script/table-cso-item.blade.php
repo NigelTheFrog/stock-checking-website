@@ -1,5 +1,5 @@
 <script>    
-
+    // console.log(coyCode);
     Pusher.logToConsole=false;
     var pusher = new Pusher(`{{env('PUSHER_APP_KEY')}}`,{
         cluster:`{{env('PUSHER_APP_CLUSTER')}}`
@@ -84,7 +84,7 @@
     //         data: {
     //             search: searchValue,
     //             filter: filterItems,
-    //             typecekstok: typecekstok,
+    //             typecekstok: typecekstok
     //         },
     //         headers: {
     //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -127,10 +127,10 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function(data) {                
-                countAnalisator = data.countAnalisator;
-                $('#main-table-item').html(data.view);
-                $(".sticky-header").floatThead({ scrollingTop: 0 })
+            success: function(data) {
+            countAnalisator = data.countAnalisator;
+            $('#main-table-item').html(data.view);
+            $(".sticky-header").floatThead({ scrollingTop: 0 })
             }
         });
     }

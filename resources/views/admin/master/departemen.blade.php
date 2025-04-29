@@ -1,16 +1,16 @@
 @extends('layouts.master')
 
-@section('title','Tipe User')
+@section('title','Departemen')
 
 @section('content')
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Tipe User</h1>   
+    <h1 class="mt-4">Departemen</h1>   
     <div class="row justify-content-md-center">
         <div class="col-7">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white">
-                    <h4 class="card-title pt-2">Daftar Tipe User</h4>
+                    <h4 class="card-title pt-2">Daftar Departemen</h4>
                 </div>                   
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
                     <table class="table table-sm table-bordered table-hover table-responsive small" style="background-color:rgb(255, 255, 255)">
@@ -40,7 +40,7 @@
         <div class="col-5">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white ">
-                    <h4 class="card-title mx-3 pt-2">Tambah Tipe User</h4>
+                    <h4 class="card-title mx-3 pt-2">Tambah Departemen</h4>
                 </div>
                 <div class="card-body" style="background-color:rgb(248, 248, 248)">
                     <form id="forminput" action="{{route("departemen.store")}}" method="POST" class="needs-validation mx-3" novalidate >

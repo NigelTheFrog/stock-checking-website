@@ -126,7 +126,7 @@
         // 0 = Blm Proses
         // 1 = Item Ok
         // 2 = Item Selisih
-        const analisator = document.getElementById(selectedAnalisator).value;  
+        const analisator = document.getElementById(selectedAnalisator).value;
         const checkbox =  document.getElementById(checkAllId);
         button.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
         button.disabled = true;
@@ -183,19 +183,22 @@
             // console.log($('#itemBelumProsesSearch').val())
             var search = $('#itemBelumProsesSearch').val().toLowerCase();
             var table = $('#tableBlmProses').find('tr');
-            for (i = 1; i < table.length; i++) {
+            for(i=1;i<table.length;i++)
+            {
                 var tr = table[i];
                 var td = $(tr).children('td');
-                if (td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7]) {
-                    if ($(td[1]).text().toLowerCase().includes(search) ||
-                        $(td[2]).text().toLowerCase().includes(search) ||
-                        $(td[3]).text().toLowerCase().includes(search) ||
-                        $(td[4]).text().toLowerCase().includes(search) ||
-                        $(td[5]).text().toLowerCase().includes(search) ||
-                        $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase()
-                        .includes(search)) {
-                        tr.style.display = '';
-                    } else tr.style.display = 'none';
+                if(td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7])
+                {
+                    if($(td[1]).text().toLowerCase().includes(search) ||
+                    $(td[2]).text().toLowerCase().includes(search) ||
+                    $(td[3]).text().toLowerCase().includes(search) ||
+                    $(td[4]).text().toLowerCase().includes(search) ||
+                    $(td[5]).text().toLowerCase().includes(search) || 
+                    $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase().includes(search) )
+                    {
+                        tr.style.display='';
+                    }
+                    else tr.style.display='none';
                 }
             }
         });
@@ -204,19 +207,22 @@
             // console.log($('#itemBelumProsesSearch').val())
             var search = $('#itemOkSearch').val().toLowerCase();
             var table = $('#tableOk').find('tr');
-            for (i = 1; i < table.length; i++) {
+            for(i=1;i<table.length;i++)
+            {
                 var tr = table[i];
                 var td = $(tr).children('td');
-                if (td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7]) {
-                    if ($(td[1]).text().toLowerCase().includes(search) ||
-                        $(td[2]).text().toLowerCase().includes(search) ||
-                        $(td[3]).text().toLowerCase().includes(search) ||
-                        $(td[4]).text().toLowerCase().includes(search) ||
-                        $(td[5]).text().toLowerCase().includes(search) ||
-                        $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase()
-                        .includes(search)) {
-                        tr.style.display = '';
-                    } else tr.style.display = 'none';
+                if(td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7])
+                {
+                    if($(td[1]).text().toLowerCase().includes(search) ||
+                    $(td[2]).text().toLowerCase().includes(search) ||
+                    $(td[3]).text().toLowerCase().includes(search) ||
+                    $(td[4]).text().toLowerCase().includes(search) ||
+                    $(td[5]).text().toLowerCase().includes(search) || 
+                    $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase().includes(search) )
+                    {
+                        tr.style.display='';
+                    }
+                    else tr.style.display='none';
                 }
             }
         });
@@ -225,19 +231,22 @@
             // console.log($('#itemBelumProsesSearch').val())
             var search = $('#itemSelisihPlus').val().toLowerCase();
             var table = $('#tableSelisihPlus').find('tr');
-            for (i = 1; i < table.length; i++) {
+            for(i=1;i<table.length;i++)
+            {
                 var tr = table[i];
                 var td = $(tr).children('td');
-                if (td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7]) {
-                    if ($(td[1]).text().toLowerCase().includes(search) ||
-                        $(td[2]).text().toLowerCase().includes(search) ||
-                        $(td[3]).text().toLowerCase().includes(search) ||
-                        $(td[4]).text().toLowerCase().includes(search) ||
-                        $(td[5]).text().toLowerCase().includes(search) ||
-                        $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase()
-                        .includes(search)) {
-                        tr.style.display = '';
-                    } else tr.style.display = 'none';
+                if(td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7])
+                {
+                    if($(td[1]).text().toLowerCase().includes(search) ||
+                    $(td[2]).text().toLowerCase().includes(search) ||
+                    $(td[3]).text().toLowerCase().includes(search) ||
+                    $(td[4]).text().toLowerCase().includes(search) ||
+                    $(td[5]).text().toLowerCase().includes(search) || 
+                    $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase().includes(search) )
+                    {
+                        tr.style.display='';
+                    }
+                    else tr.style.display='none';
                 }
             }
         });
@@ -245,19 +254,22 @@
             // console.log($('#itemBelumProsesSearch').val())
             var search = $('#itemSelisihMinus').val().toLowerCase();
             var table = $('#tableSelisihMinus').find('tr');
-            for (i = 1; i < table.length; i++) {
+            for(i=1;i<table.length;i++)
+            {
                 var tr = table[i];
                 var td = $(tr).children('td');
-                if (td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7]) {
-                    if ($(td[1]).text().toLowerCase().includes(search) ||
-                        $(td[2]).text().toLowerCase().includes(search) ||
-                        $(td[3]).text().toLowerCase().includes(search) ||
-                        $(td[4]).text().toLowerCase().includes(search) ||
-                        $(td[5]).text().toLowerCase().includes(search) ||
-                        $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase()
-                        .includes(search)) {
-                        tr.style.display = '';
-                    } else tr.style.display = 'none';
+                if(td[1] || td[2] || td[3] || td[4] || td[5] || td[6] || td[7])
+                {
+                    if($(td[1]).text().toLowerCase().includes(search) ||
+                    $(td[2]).text().toLowerCase().includes(search) ||
+                    $(td[3]).text().toLowerCase().includes(search) ||
+                    $(td[4]).text().toLowerCase().includes(search) ||
+                    $(td[5]).text().toLowerCase().includes(search) || 
+                    $(td[6]).text().toLowerCase().includes(search) || $(td[7]).text().toLowerCase().includes(search) )
+                    {
+                        tr.style.display='';
+                    }
+                    else tr.style.display='none';
                 }
             }
         });

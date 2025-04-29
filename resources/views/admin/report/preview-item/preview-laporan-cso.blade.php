@@ -179,9 +179,9 @@
                                                 @endforeach
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.75cm">Total
                                                 </th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 1</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 2</th>
-                                                <th class="th-content-cso" colspan="5" style="width: 2.5cm">CSO 3</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 1</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 2</th>
+                                                <th class="th-content-cso" colspan="4" style="width: 2cm">CSO 3</th>
                                                 <th class="th-content-cso" colspan="3" style="width: 2cm">Trace</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Warna</th>
                                                 <th class="th-content-noncso" rowspan="2" style="width: 0.5cm">Keterangan
@@ -191,19 +191,16 @@
                                             <tr class="tr-head">
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
                                                 <th class="th-content-cso" style="width: 0.5cm">Realita Fisik</th>
                                                 <th class="th-content-cso" style="width: 0.5cm">Selisih Fisik</th>
-                                                <th class="th-content-cso" style="width: 0.25cm">Qty/lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.75cm">Lokasi</th>
                                                 <th class="th-content-cso" style="width: 0.25cm">Kesimpulan</th>
 
@@ -238,7 +235,6 @@
 
                                                     <td class="td-content">{{ $laporan->qtycso1 }}</td>
                                                     <td class="td-content">{{ $laporan->qtycso1 - $laporan->onhand }}</td>
-                                                    <td class="td-content">{{ $laporan->locqty1 }}</td>
                                                     <td class="td-content">{{ $laporan->loctcso1 }}</td>
                                                     @if ($laporan->qtycso1 != $laporan->onhand)
                                                         <td class="td-content"
@@ -258,7 +254,6 @@
                                                             {{ $laporan->qtycso2 - $laporan->onhand }}
                                                         @endif
                                                     </td>
-                                                    <td class="td-content">{{ $laporan->locqty2 }}</td>
                                                     <td class="td-content">{{ $laporan->loctcso2 }}</td>
                                                     @if ($laporan->qtycso1 != $laporan->onhand && $laporan->qtycso2 != $laporan->onhand)
                                                         <td class="td-content"
@@ -278,7 +273,6 @@
                                                             {{ $laporan->qtycso3 - $laporan->onhand }}
                                                         @endif
                                                     </td>
-                                                    <td class="td-content">{{ $laporan->locqty3 }}</td>
                                                     <td class="td-content">{{ $laporan->loctcso3 }}</td>
                                                     @if (
                                                         $laporan->qtycso1 != $laporan->onhand &&
@@ -498,35 +492,35 @@
                             r: 4
                         },
                         e: {
-                            c: 6 + caunt + 5,
+                            c: 6 + caunt + 4,
                             r: 4
                         }
                     }, //a5:l115
                     {
                         s: {
-                            c: 6 + caunt + 6,
+                            c: 6 + caunt + 5,
                             r: 4
                         },
                         e: {
-                            c: 6 + caunt + 10,
+                            c: 6 + caunt + 8,
                             r: 4
                         }
                     }, {
                         s: {
+                            c: 6 + caunt + 9,
+                            r: 4
+                        },
+                        e: {
                             c: 6 + caunt + 11,
+                            r: 4
+                        }
+                    }, {
+                        s: {
+                            c: 6 + caunt + 13,
                             r: 4
                         },
                         e: {
                             c: 6 + caunt + 15,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 6 + caunt + 16,
-                            r: 4
-                        },
-                        e: {
-                            c: 6 + caunt + 18,
                             r: 4
                         }
                     }
@@ -644,35 +638,35 @@
                             r: 4
                         },
                         e: {
-                            c: 5 + caunt + 5,
+                            c: 5 + caunt + 4,
                             r: 4
                         }
                     }, //a5:l115
                     {
                         s: {
-                            c: 5 + caunt + 6,
+                            c: 5 + caunt + 5,
                             r: 4
                         },
                         e: {
-                            c: 5 + caunt + 10,
+                            c: 5 + caunt + 8,
                             r: 4
                         }
                     }, {
                         s: {
+                            c: 5 + caunt + 9,
+                            r: 4
+                        },
+                        e: {
                             c: 5 + caunt + 11,
+                            r: 4
+                        }
+                    }, {
+                        s: {
+                            c: 5 + caunt + 13,
                             r: 4
                         },
                         e: {
                             c: 5 + caunt + 15,
-                            r: 4
-                        }
-                    }, {
-                        s: {
-                            c: 5 + caunt + 16,
-                            r: 4
-                        },
-                        e: {
-                            c: 5 + caunt + 18,
                             r: 4
                         }
                     }

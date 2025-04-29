@@ -40,13 +40,6 @@ class CompanyController extends Controller
         return redirect()->route("company.index");
     }
 
-    function updateStatusWrhGrp(Request $request)
-    {
-        $company = Company::find(1);
-        $company->usewrhgrp = $request->check == "true" ? 1 : 0;
-        $company->save();
-        return true;
-    }
     /**
      * Display the specified resource.
      */

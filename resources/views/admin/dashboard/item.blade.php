@@ -307,7 +307,7 @@
     <div class="modal fade text-left" id="ModalDetailCso" tabindex="-1">
         <form id="formSubmitCso" action="" method="POST">
             @csrf
-            <div class="modal-dialog modal-90vw modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-secondary text-white">
                         <h1 class="modal-title fs-5" id="detailCsoHeader"></h1>
@@ -317,7 +317,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="d-flex mb-2">
-                            <div style="width: 60%; max-height: 68.7vh; margin-right: 1%; overflow-y: auto; overflow-x: hidden;"
+                            {{-- <div style="width: 60%; max-height: 68.7vh; margin-right: 1%; overflow-y: auto; overflow-x: hidden;" --}}
+                            <div style="max-height: 68.7vh; overflow-y: auto; overflow-x: hidden;"
                                 id="detailCso">
                                 <table class="table table-sm table-bordered small mb-3 text-center">
                                     <thead class="table-secondary">
@@ -372,12 +373,10 @@
                                                 <th scope="col">No</th>
                                                 <th scope="col">Pelaku</th>
                                                 <th scope="col">Lokasi</th>
-                                                <th scope="col" style="text-align: center">Color</th>
+                                                <th scope="col">Color</th>
                                                 <th scope="col">Qty/lokasi</th>
                                                 <th scope="col">CSO ke-</th>
-                                                <th scope="col">Grade</th>
                                                 <th scope="col">Remark</th>
-                                                <th scope="col">History</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -438,14 +437,12 @@
                                 </div>
                             </div>
                             <div style="border-left:1px solid #ccccccb6;display: block;overflow: auto;"></div>
-                            <div style="width: 40%; margin-left: 1%" id="historyTransaksi">
-                                @include('admin.dashboard.table.item.history-transaksi-item')
-                            </div>
+
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <input type="text" name="typecekstok" value="{{ $typecekstok }}" hidden>
+                        <input type="text" name="typecekstok" value="{{ $typecekstok }}" hidden> 
                         <input type="text" name="searchCSO" value="" hidden>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button id="buttonSubmit" type="button" class="btn btn-primary">Simpan</button>
@@ -460,39 +457,40 @@
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
                 {{-- <form method="POST" action="{{ route('item.cso-ulang') }}"> --}}
-                {{-- @csrf --}}
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Keterangan CSO Ulang</h1>
-                    <button type="button" onclick="closeModalCsoUlang(this)" class="btn-close align-middle"
-                        data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @foreach ($keteranganCSOUlang as $keterangan)
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="checkboxketerangan"
-                                value="{{ $keterangan->keteranganid }}">
-                            {{-- <input class="form-check-input" type="radio" name="keteranganCsoUlang" value="{{$keterangan->keteranganid}}"> --}}
-                            <label class="form-check-label">
-                                {{ $keterangan->keterangan }}
-                            </label>
-                        </div>
-                        {{-- <input type="radio" name="keteranganCsoUlang" value="HTML"> --}}
-                        {{-- <p>{{$keterangan->keteranganid}}</p> --}}
-                    @endforeach
-                </div>
-                <div class="modal-footer">
-                    <div class="float-end d-flex">
-                        {{-- <button type="submit" class="btn btn-primary float-end">Submit</button> --}}
-                        <button type="button" class="btn btn-primary float-end" onclick="csoUlang()">Submit</button>
-                        <button type="button" class="ms-2 btn btn-danger float-end"
-                            onclick="closeModalCsoUlang(this)">Keluar</button>
+                    {{-- @csrf --}}
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="mdlMoreLabel">Keterangan CSO Ulang</h1>
+                        <button type="button" onclick="closeModalCsoUlang(this)" class="btn-close align-middle"
+                            data-bs-dismiss="modal" aria-label="Close">
+                        </button>
                     </div>
-                </div>
+                    <div class="modal-body">
+                        @foreach ($keteranganCSOUlang as $keterangan)
+                            <div class="form-check">
+                                <input type="checkbox"
+                                    class="form-check-input" name="checkboxketerangan" value="{{ $keterangan->keteranganid }}">
+                                {{-- <input class="form-check-input" type="radio" name="keteranganCsoUlang" value="{{$keterangan->keteranganid}}"> --}}
+                                <label class="form-check-label">
+                                    {{ $keterangan->keterangan }}
+                                </label>
+                            </div>
+                            {{-- <input type="radio" name="keteranganCsoUlang" value="HTML"> --}}
+                            {{-- <p>{{$keterangan->keteranganid}}</p> --}}
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <div class="float-end d-flex">
+                            {{-- <button type="submit" class="btn btn-primary float-end">Submit</button> --}}
+                            <button type="button" class="btn btn-primary float-end" onclick="csoUlang()">Submit</button>
+                            <button type="button" class="ms-2 btn btn-danger float-end"
+                                onclick="closeModalCsoUlang(this)">Keluar</button>
+                        </div>
+                    </div>
                 {{-- </form> --}}
             </div>
         </div>
     </div>
+
     @include('admin.dashboard.script.detail-cso-item')
     @include('admin.dashboard.script.table-cso-item')
     @include('admin.dashboard.script.banner-cso-item')
@@ -514,7 +512,9 @@
                     success: function(data) {
                         const t = Object.keys(data);
                         const csocss =  t.filter(e => String(e) == typecekstok.toLowerCase())
-                        // console.log(data[csocss])
+                        // // if(t[1]==typecekstok) console.log(typecekstok);
+                        // console.log(csocss);
+                        console.log(data[csocss])
                         if (data[csocss] > 0) {
                             buttonTutupCso.disabled = true;
                         } else {
@@ -528,7 +528,6 @@
         }
 
         function openModalCSO(button, type) {
-            console.log(`button analiator check: ${countAnalisator}`)
             
             if (type == 1) {
 
@@ -554,6 +553,7 @@
 
         function closeModalCSO(button) {
             $('#'+button.getAttribute('value')).modal('hide');
-        }
+        }        
+
     </script>
 @endsection

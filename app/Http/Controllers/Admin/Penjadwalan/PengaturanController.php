@@ -8,7 +8,6 @@ use App\Models\Admin\Penjadwalan\Pengaturan;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PengaturanController extends Controller
 {
@@ -17,38 +16,32 @@ class PengaturanController extends Controller
      */
     public function index(Request $param)
     {
-        $typecekstok = substr($param->val,0,3); 
-        $statuscekstok = substr($param->val,3);
-        
-        // log::info("TYPE". $typecekstok);
-        // log::info("STAT". $typecekstok);
-
-
         $jobtype = DB::table('dbxjob')
-            ->leftJoin('dbmjobtype', 'dbxjob.jobtypeid', '=', 'dbmjobtype.jobtypeid')
-            ->where('dbxjob.typecekstok',$typecekstok)
-            ->where('dbxjob.statuscekstok',$statuscekstok)->get();
-
+        ->leftJoin('dbmjobtype', 'dbxjob.jobtypeid', '=', 'dbmjobtype.jobtypeid')
+        ->where('dbxjob.typecekstok',$param->val)->get();
         $category = DB::table('dbmcategory')->get();
-
+        $typestokdup='';
+        if($param->val=="CSS")
+        {
+            $typestokdup='CSO';
+        }
+        else if ($param->val=="CSO")
+        {
+            $typestokdup='CSS';
+        }
 
         $job = DB::table("dbxjob")
-            ->select("userid as useridjob", "typecekstok","statuscekstok")
-            ->where("typecekstok","=",$typecekstok)
-            ->where("statuscekstok",$statuscekstok);
-
+            ->select("userid as useridjob", "typecekstok")->where('typecekstok','<>',$typestokdup);
         $user = DB::table('dbmuser')
             ->leftJoinSub($job, 'job', function (JoinClause $join) {
                 $join->on('dbmuser.userid', '=', 'job.useridjob');
-            })->whereNull('job.useridjob')
-            ->orWhereRaw('job.typecekstok <>"'.$typecekstok.'" AND statuscekstok <> "'.$statuscekstok.'"')->get();
+            })->whereNull('job.useridjob')->orWhere('job.typecekstok','<>',$param->val)->get();
 
         $fetchcsoitem = DB::table('dbxmaterial')->select('csomaterial')
-            ->where('typecekstok',$typecekstok)->where('statuscekstok',$statuscekstok)->limit(1)->get();
+        ->where('typecekstok',$param->val)->limit(1)->get();
 
         $fetchcsotype = DB::table('dbxcsotype')->select('csotype')
-            ->where('csotype','=',$typecekstok)->where('statuscekstok',$statuscekstok)->limit(1)->get();
-
+        ->where('csotype','=',$param->val)->limit(1)->get();
 
         if (count($fetchcsoitem) > 0) {
             $csoitem = $fetchcsoitem[0]->csomaterial;
@@ -66,9 +59,8 @@ class PengaturanController extends Controller
             "jobtype" => $jobtype,
             "category" => $category,
             "pelaku" => $user,
-            "csotype" => $typecekstok,
-            "csoitem" => $csoitem,
-            "statuscekstok" => $statuscekstok
+            "csotype" => $param->val,
+            "csoitem" => $csoitem
         ]);
     }
 
@@ -85,33 +77,18 @@ class PengaturanController extends Controller
      */
     public function store(Request $request)
     {
-        $typecekstok = substr($request->typestock,0,3); 
-        $statuscekstok = substr($request->typestock,3);
-
-        $csotype1 = DB::table('dbxcsotype')
-        ->where('csotype','=',$typecekstok)
-        ->where('statuscekstok',$statuscekstok)
-        ->first();
-
+        // DB::table('dbxcsotype')->truncate();
+        $csotype1 = DB::table('dbxcsotype')->where('csotype','=',$request->typestock)->first();
         if(empty($csotype1) || is_null($csotype1))
         {
-            DB::table('dbxcsotype')->insert([
-                                    'csotype' => $typecekstok,
-                                    'statuscekstok' => $statuscekstok
-                                    ]);
+        DB::table('dbxcsotype')->insert(['csotype' => $request->typestock]);
         }
 
         if ($request->itemcso) {
-            // DB::table('dbxmaterial')->truncate();
-            DB::table('dbxmaterial')
-            ->where('typecekstok',$typecekstok)
-            ->where('statuscekstok',$statuscekstok)
-            ->delete();
-
+            DB::table('dbxmaterial')->where('typecekstok',$request->typestock)->delete();
             DB::table('dbxmaterial')
             ->insert(['csomaterial' => $request->itemcso,
-                        'typecekstok'=>$typecekstok,
-                        'statuscekstok'=>$statuscekstok]);
+                      'typecekstok'=>$request->typestock]);
         }
 
         if ($request->pelaku) {
@@ -120,11 +97,14 @@ class PengaturanController extends Controller
             $datauser = ModelsUser::all();
             
             foreach ($pelaku as $p) {
-                $isDuplicatep = DB::table('dbxjob')->where('userid', $p)
-                ->where('typecekstok',$typecekstok)
-                ->where('statuscekstok',$statuscekstok)
-                ->exists();
+                // if ($datajob->contains($p)) {
+                //     dd('test');
+                //     continue;
+                // }
                 
+                $isDuplicatep = DB::table('dbxjob')->where('userid', $p)
+                ->where('typecekstok',$request->typestock)->exists();
+
                 if (!$isDuplicatep) {
                     $user = $datauser->firstWhere('userid', $p);
 
@@ -133,8 +113,7 @@ class PengaturanController extends Controller
                             'userid' => $p,
                             'username' => $user->username,
                             'name' => $user->name,
-                            'typecekstok' => $typecekstok,
-                            'statuscekstok' => $statuscekstok,
+                            'typecekstok'=>$request->typestock,
                             'coyid' => 1,
                             'jobtypeid' => 1
                         ]);
@@ -154,9 +133,7 @@ class PengaturanController extends Controller
                 //     continue;
                 // }
                 $isDuplicatep = DB::table('dbxjob')->where('userid', $a)
-                ->where('typecekstok',$typecekstok)
-                ->where('statuscekstok',$statuscekstok)
-                ->exists();
+                ->where('typecekstok',$request->typestock)->exists();
 
                 if (!$isDuplicatep) {
                     $user = $datauser->firstWhere('userid', $a);
@@ -165,9 +142,8 @@ class PengaturanController extends Controller
                         DB::table('dbxjob')->insert([
                             'userid' => $a,
                             'username' => $user->username,
+                            'typecekstok'=>$request->typestock,
                             'name' => $user->name,
-                            'typecekstok' => $typecekstok,
-                            'statuscekstok' => $statuscekstok,
                             'coyid' => 1,
                             'jobtypeid' => 2
                         ]);
@@ -177,11 +153,8 @@ class PengaturanController extends Controller
                 }
             }
         }
-        $message="";
-        if($statuscekstok == "A") $message = $typecekstok." BATCH";
-        else $message = $typecekstok; 
         return redirect()->route("pengaturan.index",['val'=>$request->typestock])
-        ->with('status', 'Berhasil mengubah data pengaturan '.$message);
+        ->with('status', 'Berhasil mengubah data pengaturan '.$request->typestock);
     }
 
     /**

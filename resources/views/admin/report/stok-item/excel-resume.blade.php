@@ -452,17 +452,6 @@
         $totalNominalSelisihMinusTertukar = 0;
         $totalNominalPembebananTertukar = 0;
 
-        $totalSlsLbrGudangTertukar = 0;
-        $totalRealitaLbrGudangTertukar = 0;
-        $totalBarangSelisihPlusGudangTertukar = 0;
-        $totalBarangSelisihMinusGudangTertukar = 0;
-        $totalHppGudangTertukar = 0;
-        $totalNominalSelisihPlusGudangTertukar = 0;
-        $totalNominalSelisihMinusGudangTertukar = 0;
-        $totalNominalPembebananGudangTertukar = 0;
-        $nameGudangTertukar="";
-        $showGudangTertukar=true;
-
         $totalSlsLbrSelisih = 0;
         $totalRealitaLbrSelisih = 0;
         $totalBarangSelisihPlusSelisih = 0;
@@ -530,12 +519,12 @@
                         $itemKesalahanAdmin->koreksi -
                         $itemKesalahanAdmin->deviasi);
 
-                        $nominalSelisihKesalahanAdmin =
-                            $barangSelisihKesalahanAdmin *
-                            $getHppKesalahanAdmin;
+                    $nominalSelisihKesalahanAdmin =
+                        $barangSelisihKesalahanAdmin *
+                        $getHppKesalahanAdmin;
 
                     if ( $itemKesalahanAdmin->onhand <
-                            $itemKesalahanAdmin->hasilcso +
+                        $itemKesalahanAdmin->hasilcso +
                             $itemKesalahanAdmin->koreksi +
                             $itemKesalahanAdmin->deviasi ) 
                     {
@@ -718,7 +707,7 @@
                             $getHppTertukar;
                     }
                     else {
-                    
+                        
                         $barangSelisihTertukar = $groupValue;
                         $nominalSelisihTertukar = $groupValue * $getHppTertukar;
                     }
@@ -741,9 +730,9 @@
                         $totalNominalPembebananTertukar += $itemTertukar->pembebanan;
                     } 
                     else if( $itemTertukar->onhand >
-                    $itemTertukar->hasilcso +
-                        $itemTertukar->koreksi +
-                        $itemTertukar->deviasi && $groupValue == 0 ) 
+                            $itemTertukar->hasilcso +
+                                $itemTertukar->koreksi +
+                            $itemTertukar->deviasi && $groupValue == 0 ) 
                     {
                         $barangSelisihMinusTertukar = number_format(
                             $barangSelisihTertukar,
@@ -876,9 +865,9 @@
                     @if (Auth::user()->level != 5 && Auth::user()->level != 6)
                         <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp. {{ number_format($totalHppTertukar, 2, ',', '.') }}
                         </td>
-                        <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
+                    <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
                             {{ number_format($totalNominalSelisihPlusTertukar, 2, ',', '.') }}</td>
-                        <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
+                    <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
                             {{ number_format($totalNominalSelisihMinusTertukar, 2, ',', '.') }}</td>
                     @endif
                     <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
@@ -886,189 +875,6 @@
                     <td colspan="2"></td>
                 </tr>
             @endif
-            <tr><td></td></tr>
-            {{-- gudang tertukar  --}}
-
-            @if(count($gudangTertukar)>0 && $useWrhGrp!=0)
-                <tr>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>No</th>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Nama Item</th>
-                    {{-- <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Keputusan</th> --}}
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Gudang</th>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>SLS LBR</th>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Realita LBR</th>
-                    <th colspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Barang Selisih</th>
-                    @if (Auth::user()->level != 5 && Auth::user()->level != 6)
-                        <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#C7B7A3'>HPP</th>
-                        <th colspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#C7B7A3'>Nominal</th>
-                    @endif
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Nominal
-                        Pembebanan</th>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>No. Adjust
-                        (GI/SJ &amp; GR)</th>
-                    <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Keterangan</th>
-                </tr>
-                <tr>
-                    <th style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#C7B7A3'>Plus</th>
-                    <th style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#C7B7A3'>Minus</th>
-                    @if (Auth::user()->level != 5 && Auth::user()->level != 6)
-                        <th style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Selisih Plus</th>
-                        <th style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>Selisih Minus</th>
-                    @endif
-                </tr>
-                <tr>
-                    <td style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#FBA518' 
-                    @if (Auth::user()->level == 6 || Auth::user()->level == 12) colspan="10" @else colspan="13" @endif>
-                        Grade Tertukar
-                    </td>
-                </tr>
-                @foreach ($gudangTertukar as $itemTertukar)
-                    @php
-                        $barangSelisihPlusTertukar = '';
-                        $barangSelisihMinusTertukar = '';
-                        $nominalSelisihPlusTertukar = '';
-                        $nominalSelisihMinusTertukar = '';
-                        $getHppTertukar = 0;
-                        if( $nameGudangTertukar=="" || $nameGudangTertukar!=$itemTertukar->trsdetid)
-                        {
-                            $nameGudangTertukar=$itemTertukar->trsdetid;
-                            $showGudangTertukar=true;
-                        }
-                        elseif ($nameGudangTertukar==$itemTertukar->trsdetid)
-                            {$showGudangTertukar=false;
-                        }
-
-                        if ($itemTertukar->cogs_manual == 0) {
-                            $getHppTertukar = $itemTertukar->cogs;
-                        } else {
-                            $getHppTertukar = $itemTertukar->cogs_manual;
-                        }
-
-                        $slsLbrTertukar = $itemTertukar->qty ;
-                        $realitaLbrTertukar = $itemTertukar->totalcso;
-                            
-                        // $barangSelisihTertukar = $itemTertukar->qty-$itemTertukar->totalcso;
-                        $barangSelisihTertukar = $itemTertukar->totalcso-$itemTertukar->qty;
-                        $nominalSelisihTertukar = $barangSelisihTertukar * $getHppTertukar;
-                        
-                        if($barangSelisihTertukar>0)
-                        {
-                            $barangSelisihPlusTertukar = number_format(
-                                $barangSelisihTertukar,
-                                2,
-                                ',',
-                                '.',
-                            );
-                            $nominalSelisihPlusTertukar =
-                                'Rp. ' . number_format($nominalSelisihTertukar, 2, ',', '.');
-                            $totalBarangSelisihPlusGudangTertukar += $barangSelisihTertukar;
-                            $totalNominalSelisihPlusGudangTertukar += $nominalSelisihTertukar;
-                        }
-                        else {
-                            $barangSelisihMinusTertukar = number_format(
-                                $barangSelisihTertukar,
-                                2,
-                                ',',
-                                '.',
-                            );
-                            $nominalSelisihMinusTertukar =
-                                'Rp. ' . number_format($nominalSelisihTertukar, 2, ',', '.');
-                            $totalBarangSelisihMinusGudangTertukar += $barangSelisihTertukar;
-                            $totalNominalSelisihMinusGudangTertukar += $nominalSelisihTertukar;
-                        }
-
-                        if($showGudangTertukar)
-                        {
-                            $totalNominalPembebananGudangTertukar += $itemTertukar->pembebanan;
-                        }
-
-                        $totalSlsLbrGudangTertukar += $slsLbrTertukar;
-                        $totalRealitaLbrGudangTertukar += $realitaLbrTertukar;
-                        $totalHppGudangTertukar += $getHppTertukar;
-                    @endphp
-                    <tr>
-                        <td style="text-align: center;vertical-align: middle">{{ $loop->iteration }}</td>
-                        <td style="text-align: center;vertical-align: middle;word-wrap: break-word;">{{ $itemTertukar->itemname }}
-                        </td>
-                        {{-- <td  style="text-align: center;vertical-align: middle">
-                            @if ($itemTertukar->keputusan != 0)
-                                {{ $itemTertukar->keputusandesc }}
-                            @else
-                                -
-                            @endif
-                        </td> --}}
-                        <td style="text-align: center;vertical-align: middle">
-                            @if ($itemTertukar->wrh != "")
-                                {{ $itemTertukar->wrh }}
-                            @else
-                                -
-                            @endif
-                        </td>
-                        <td style="text-align: center;vertical-align: middle">
-                            {{ number_format($slsLbrTertukar, 2, ',', '.') }}
-                        </td>
-                        <td style="text-align: center;vertical-align: middle">
-                            {{ number_format($realitaLbrTertukar, 2, ',', '.') }}
-                        </td>
-                        <td style="text-align: center;vertical-align: middle">
-                            {{ $barangSelisihPlusTertukar }}
-                        </td>
-                        <td style="text-align: center;vertical-align: middle;color: red">
-                            {{ $barangSelisihMinusTertukar }}
-                        </td>
-                        @if (Auth::user()->level != 5 && Auth::user()->level != 6)
-                            <td style="text-align: center;vertical-align: middle">Rp.
-                                {{ number_format($getHppTertukar, 2, ',', '.') }}
-                            </td>
-                            <td style="text-align: center;vertical-align: middle">
-                                {{ $nominalSelisihPlusTertukar }}
-                            </td>
-                            <td style="text-align: center;color: red;vertical-align: middle">
-                                {{ $nominalSelisihMinusTertukar }}
-                            </td>
-                        @endif
-                        <td style="text-align: center; color: red">
-                            @if (Auth::user()->level != 5 && Auth::user()->level != 6)
-                                @if ($showGudangTertukar)
-                                    Rp. {{ number_format($itemTertukar->pembebanan, 2, ',', '.') }}
-                                @else Rp. 0,00
-                                @endif
-                            @endif
-                        </td>
-                        <td style="text-align: center;vertical-align: middle">{{ $itemTertukar->nodoc }}</td>
-                        <td style="text-align: center;vertical-align: middle;word-wrap: break-word;">
-                            {{ $itemTertukar->keterangan }}
-                        </td>
-                    </tr>
-                @endforeach
-                @if (count($gudangTertukar) > 0)
-                    <tr style="font-size: 10pt">
-                        <td colspan="3" style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Total</td>
-                        <td  style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>{{ number_format($totalSlsLbrGudangTertukar, 2, ',', '.') }}
-                        </td>
-                        <td  style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>
-                            {{ number_format($totalRealitaLbrGudangTertukar, 2, ',', '.') }}
-                        </td>
-                        <td  style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>
-                            {{ number_format($totalBarangSelisihPlusGudangTertukar, 2, ',', '.') }}</td>
-                        <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">
-                            {{ number_format($totalBarangSelisihMinusGudangTertukar, 2, ',', '.') }}</td>
-                        @if (Auth::user()->level != 5 && Auth::user()->level != 6)
-                            <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp. {{ number_format($totalHppGudangTertukar, 2, ',', '.') }}
-                            </td>
-                            <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
-                                {{ number_format($totalNominalSelisihPlusGudangTertukar, 2, ',', '.') }}</td>
-                            <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
-                                {{ number_format($totalNominalSelisihMinusGudangTertukar, 2, ',', '.') }}</td>
-                        @endif
-                        <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
-                            {{ number_format($totalNominalPembebananGudangTertukar, 2, ',', '.') }}</td>
-                        <td colspan="2"></td>
-                    </tr>
-                @endif    
-            @endif
-
-            {{-- gudang tertukar --}}
             <tr><td></td></tr>
             <tr>
                 <th rowspan="2" style='font-weight: bold;text-align:center;vertical-align: middle;word-wrap: break-word;background-color:#C7B7A3'>No</th>
@@ -1135,8 +941,8 @@
                             {
                                 $barangSelisih =
                                     ($itemSelisih->hasilcso -
-                                    ($itemSelisih->onhand - 
-                                    $itemSelisih->koreksi - 
+                                    ($itemSelisih->onhand -
+                                    $itemSelisih->koreksi -
                                     $itemSelisih->deviasi))-
                                     abs($itemSelisih->group_value);
 
@@ -1152,7 +958,7 @@
                                         
                                 $nominalSelisih = $barangSelisih * $getHppSelisih;
                             }
-                        }
+                    }
                         if ( $itemSelisih->onhand <
                             $itemSelisih->hasilcso + 
                             $itemSelisih->koreksi + 
@@ -1243,9 +1049,9 @@
                         <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
                             {{ number_format($totalHppSelisih, 2, ',', '.') }}
                         </td>
-                        <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
+                    <td style='font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD'>Rp.
                             {{ number_format($totalNominalSelisihPlusSelisih, 2, ',', '.') }}</td>
-                        <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
+                    <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.
                             {{ number_format($totalNominalSelisihMinusSelisih, 2, ',', '.') }}</td>
                     @endif
                     <td style="color: red;font-weight: bold;text-align:center;vertical-align: middle;background-color:#D9EAFD">Rp.

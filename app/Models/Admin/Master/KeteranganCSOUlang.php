@@ -11,5 +11,5 @@ class KeteranganCSOUlang extends Model
 
     public $table = "dbmketerangan";
     protected $primaryKey = "keteranganid";
-    protected $keterangan = "keterangan";
+    // protected $keterangandesc = "keterangandesc";
 }

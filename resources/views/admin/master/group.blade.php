@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($group as  $group)
+                            @foreach ($group as   $group)
                             <tr class="text-center">
                                 <td class="align-middle">{{$loop->iteration}}</td>
                                 <td class="align-middle">{{$group->groupdesc}}</td>

@@ -13,5 +13,4 @@ class Grade extends Model
     public $table = "dbmgrade";
     protected $primaryKey = "gradecode";
     protected $description = "description";
-    protected $group = "group";
 }

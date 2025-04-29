@@ -12,7 +12,7 @@
                     <div class="">
                         <div class="card card-secondary">
                             <div class="card-header bg-secondary text-white">
-                                <h3 class="card-title"> Laporan {{$typecekstok}} Item</h3>
+                                <h3 class="card-title"> Laporan {{$typecekstok}}</h3>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
                                 <div class="list-group">

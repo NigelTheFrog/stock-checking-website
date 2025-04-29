@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($kategori as  $kat)
+                            @foreach ($kategori as   $kat)
                             <tr class="text-center">
                                 <td class="align-middle">{{$loop->iteration}}</td>
                                 <td class="align-middle">{{$kat->categorydesc}}</td>

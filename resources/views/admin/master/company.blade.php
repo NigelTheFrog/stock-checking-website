@@ -1,33 +1,13 @@
 @extends('layouts.master')
 
 @section('title','Company')
-@section('styles')
-<style>
-    /* .form-switch.form-switch-lg { */
-        /* margin-bottom: 1rem; JUST FOR STYLING PURPOSE      */
-    /* } */
-
-    .form-switch.form-switch-lg .form-check-input {
-        height: 1.5rem;
-        width: 3rem;
-        /* margin: 0 auto !important; */
-        /* padding-left: 100px ; */
-        /* border-radius: 3rem; */
-    }
-    .form-check-input {
-        clear: left;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-</style>
-@endsection
 
 @section('content')
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Company</h1>   
-    <div class="row justify-content-md-left">
-        <div class="col-9">
+    <div class="row justify-content-md-center">
+        <div class="col-7">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white">
                     <h4 class="card-title pt-2">Daftar Company</h4>
@@ -44,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($company as  $coy)
+                            @foreach ($company as   $coy)
                             <tr class="text-center">
                                 <td class="align-middle">{{$loop->iteration}}</td>
                                 <td class="align-middle">{{$coy->coycode}}</td>
@@ -57,25 +37,11 @@
                             </tr>                                    
                             @endforeach                                
                         </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="form-check form-switch form-switch-lg" style='padding-left:0;'>
-                                {{-- <h6>Gunakan Cek Stok Pergudang</h6> --}}
-                                <label class="form-check-label" for="flexSwitchCheckChecked" style="margin-right: 10px;"><h5>Gunakan Cek Stok Pergudang</h5></label>
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" style="margin-left: 0;"
-                                @if($company[0]->usewrhgrp == 1) checked @endif>
-        
-                            </div>   
-                        </div>
-                        <div class="col-7" style="padding-left:0">
-                            <span style="color:lime" id='checkActive' @if($company[0]->usewrhgrp == 0) hidden @endif><strong>active</strong></span>                           
-                        </div>
-                    </div>                             
+                    </table>                                
                 </div>
             </div> 
         </div> 
-        <div class="col-5" hidden>
+        <div class="col-5">
             <div class="card mt-2">
                 <div class="card-header bg-secondary text-white ">
                     <h4 class="card-title mx-3 pt-2">Tambah Company</h4>
@@ -195,30 +161,5 @@
     function closeModalDelete(button) {
         $('#ModalDeleteCompany').modal('hide');
     }
-
-    $('#flexSwitchCheckChecked').on('change',function(){
-        // console.log($('#flexSwitchCheckChecked').is(":checked"))
-        let status = $('#flexSwitchCheckChecked').is(":checked");
-        if(status) $('#checkActive').prop('hidden',false);
-        else $('#checkActive').prop('hidden',true);
-        $.ajax({
-                url: `{{ url('admin/master/company/update-wrh-grp') }}`,
-                type: 'POST',
-                data: {
-                    check: status
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    console.log(data);
-                    // countAnalisator = data.countAnalisator;
-                    // $('#main-table-item').html(data.view);
-                    // $(".sticky-header").floatThead({ scrollingTop: 0 })
-                }
-            });
-
-    })
-
 </script>
 @endsection

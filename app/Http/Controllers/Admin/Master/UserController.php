@@ -20,16 +20,8 @@ class UserController extends Controller
     {
         $user = DB::table('dbmuser')->leftJoin('dbmlevel', 'dbmuser.level', '=', 'dbmlevel.levelid')->get();
         $level = Level::all();
-        // dd($level);
-        $companyID = config('values.companyId');
 
-        $token = Http::get('http://allapi.local.sutindo.net/getToken');
-        $userImport = Http::post('http://allapi.local.sutindo.net/sos/getUser', [
-            "token" => $token['token'],
-            "companyId" => $companyID,
-        ]);
-
-        return view("admin.master.user", ["userDatabase" => $user, "importedUser" => $userImport['data'], "level" => $level]);
+        return view("admin.master.user", ["userDatabase" => $user, "level" => $level]);
     }
 
     /**
@@ -143,6 +135,7 @@ class UserController extends Controller
         $user->save();
         return redirect()->route("user.index")->with('status', "Data pengguna $request->nama berhasil diubah");
     }
+
     /**
      * Remove the specified resource from storage.
      */

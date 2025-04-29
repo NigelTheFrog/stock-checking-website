@@ -1,4 +1,83 @@
 <script>
+     $(document).ready(function() {
+        $("#ceksemuaitem").click(function() {
+            if ($(".checkboxsemuaitem").prop("checked")) {
+                $(".checkboxsemuaitem").prop("checked", false);
+            } else {
+                $(".checkboxsemuaitem").prop("checked", true);
+            }
+        });
+    });
+
+    function getCheckedItem() {
+        let selectedItem = [];
+        const checkboxes = document.querySelectorAll('.checkboxsemuaitem');
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const row = $(checkbox).closest('tr');
+                const tempData = {
+                    ITEMID: checkbox.value,
+                    NamaItem: row.find('td:nth-child(3)').text(),
+                    Onhand: row.find('td:nth-child(4)').text(),
+                    UOM: row.find('td:nth-child(5)').text(),
+                    itemcost: row.find('td:nth-child(6)').text(),
+                    gudang: []
+                };
+                for (let i = 7; i <= row[0].children.length; i++) {
+                    const gudangVar = row.find(`td:nth-child(${i})`).attr('gudang');
+                    const gudangVal = row.find(`td:nth-child(${i})`).text();
+                    if(gudangVal > 0) {
+                        tempData.gudang.push({
+                        namaGudang: gudangVar,
+                        qty: gudangVal
+                    });
+                    }
+                    
+                }
+                selectedItem.push(tempData);
+            }
+        });
+        return selectedItem;
+    }
+
+    function clickImpor(button) {
+        button.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
+        button.disabled = true;
+        const typestok= `@if (isset($typestok)) {{$typestok}} @endif`;
+        $.ajax({
+            url: "{{ route('import-stok.store') }}",
+            type: 'POST',
+            data: {
+                type: 1,
+                csotype: typestok,
+                data: JSON.stringify(getCheckedItem())
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                console.log(data);
+                if (data.task == 1)
+                    window.location.reload();
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: data.message,
+                    });
+                    button.innerHTML = 'Impor';
+                    button.disabled = false;
+                }
+                    
+            },
+            error: function() {
+                // Handle error cases if necessary
+
+            }
+
+        });
+    }
+
     function sortItem(order, columnIndex, iconSort, allIconSort) {
         const table = document.getElementById('tableImport');
         const rows = Array.from(table.rows).slice(1); // Exclude the header row
@@ -35,117 +114,6 @@
         // Reorder rows in the table
         rows.forEach(row => table.tBodies[0].appendChild(row));
 
-        resetRowNumbers();
-    }
-
-    function resetRowNumbers() {
-        const table = document.getElementById('tableImport');
-        const rows = table.tBodies[0].rows;
-
-        for (let i = 0; i < rows.length; i++) {
-            rows[i].cells[1].textContent = i + 1;
-        }
-    }
-
-    function checkAllItem(button) {
-        button.addEventListener('change', (event) => {
-            const checkboxes = document.querySelectorAll('.checkboxsemuaitem');
-            if (event.currentTarget.checked) {
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = true;
-                }, this);
-            } else {
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = false;
-                }, this);
-            }
-        });
-
-    }
-
-    function getCheckedItem(coy) {
-        let selectedItem = [];
-        const checkboxes = document.querySelectorAll('.checkboxsemuaitem');
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                const row = $(checkbox).closest('tr');
-                console.log(row.find('td:nth-child(9)').text())
-                const tempData = coy == 'KKS' ? {
-                    ITEMID: checkbox.value,
-                    itemcode: row.find('td:nth-child(3)').text(),
-                    NamaItem: row.find('td:nth-child(4)').text(),
-                    ProductID: row.find('td:nth-child(6)').text(),
-                    Product: row.find('td:nth-child(7)').text(),
-                    subproductid: row.find('td:nth-child(8)').text(),
-                    SubProduct: row.find('td:nth-child(9)').text(),
-                    Onhand: row.find('td:nth-child(10)').text(),
-                    UOM: row.find('td:nth-child(11)').text(),
-                    itemcost: row.find('td:nth-child(12)').text(),
-                    tonase: row.find('td:nth-child(13)').text(),
-                    gudang: []
-                } : {
-                    ITEMID: checkbox.value,
-                    itemcode: row.find('td:nth-child(3)').text(),
-                    NamaItem: row.find('td:nth-child(4)').text(),
-                    ProductID: row.find('td:nth-child(6)').text(),
-                    Product: row.find('td:nth-child(7)').text(),
-                    subproductid: row.find('td:nth-child(8)').text(),
-                    SubProduct: row.find('td:nth-child(9)').text(),
-                    Onhand: row.find('td:nth-child(10)').text(),
-                    UOM: row.find('td:nth-child(11)').text(),
-                    itemcost: row.find('td:nth-child(12)').text(),
-                    gudang: []
-                };
-                for (let i = coy == 'KKS' ? 14 : 13; i <= row[0].children.length; i++) {
-                    const gudangVar = row.find(`td:nth-child(${i})`).attr('gudang');
-                    const gudangVal = row.find(`td:nth-child(${i})`).text();
-                    tempData.gudang.push({
-                        namaGudang: gudangVar,
-                        qty: gudangVal
-                    });
-                }
-                selectedItem.push(tempData);
-            }
-        });
-        return selectedItem;
-    }
-
-    function submitImpor(button,coy) {
-        
-        button.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
-        button.disabled = true;
-        const typestok= `@if (isset($typestok)) {{$typestok}} @endif`;
-        // getCheckedItem(coy)
-        $.ajax({
-            url: "{{ route('import-stok.store') }}",
-            type: 'POST',
-            data: {
-                type: 1,
-                csotype: typestok,
-                data: JSON.stringify(getCheckedItem(coy))
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                console.log(data);
-                if (data.task == 1)
-                    window.location.reload();
-                else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: data.message,
-                    });
-                    button.innerHTML = 'Impor';
-                    button.disabled = false;
-                }
-                    
-            },
-            error: function() {
-                // Handle error cases if necessary
-
-            }
-        });
+        // resetRowNumbers();
     }
 </script>

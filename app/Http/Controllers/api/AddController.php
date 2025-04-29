@@ -8,8 +8,6 @@ use App\Models\Admin\Master\Grade;
 use App\Models\Admin\Master\Warna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Admin\Master\Company;
-use Illuminate\Support\Facades\Log;
 
 class AddController extends Controller
 {
@@ -41,59 +39,8 @@ class AddController extends Controller
         return response()->json(['data'=>$warna]); 
     }
 
-    public function grade(Request $request) {
-        $useWrhGrp = Company::select('usewrhgrp')->where('coyid',1)->get();
-        $grade = [];
-        // if($request->statusitem == 'TR' || $request->statusitem == 'TA') 
-        // {
-            $tableGrade = Grade::all()->sortBy('gradecode');
-            // // $grade = [];
-            $check = [];
-            foreach ($tableGrade as $gdg) 
-            {
-                if($gdg->group!=NULL || $gdg->group!='')
-                {
-                    if(in_array($gdg->group,$check)) continue;
-                        array_push($grade,['description' => $gdg->group, 'gradecode' => $gdg->group]);
-                        array_push($check,$gdg->group);
-                }
-                else
-                {
-                    array_push($grade,['description' => $gdg->description, 'gradecode' => $gdg->gradecode]);
-                }
-            }
-        // }
-        // else
-        // {
-        //     // $grade = [];
-        //     if($useWrhGrp[0]->usewrhgrp == 0 ) {
-        //         // array_push($grade,['description'=>"",'gradecode'=>""]); 
-        //         return response()->json(['data'=>$grade]); 
-        //     }
-        //     $dbttrsdet2 = db::table($request->statusitem == 'R' ? 'dbttrsdet2' : 'dbttrsdet2a')->select('wrh')
-        //     ->where('trsdetid','=',$request->trsdetid)
-        //     ->get();
-        //     $tableGrade = DB::table('dbmgrade')->get();
-        //     $check = [];
-            
-        //     foreach($dbttrsdet2 as $wrh)
-        //     {
-        //         foreach($tableGrade as $gdg)
-        //         {
-        //             if($gdg->gradecode == $wrh->wrh)
-        //             {
-        //                 array_push($grade,['description' => $gdg->description, 'gradecode' => $gdg->gradecode]);
-        //             }
-        //             elseif ($gdg->group == $wrh->wrh)
-        //             {
-        //                 if(in_array($gdg->group,$check)) continue;
-        //                 array_push($grade,['description' => $gdg->group, 'gradecode' => $gdg->group]);
-        //                 array_push($check,$gdg->group);
-        //             }
-        //         }
-        //     }
-        //     // array_push($grade,['description' => 'test1', 'gradecode' => 'test1']);
-        // }
+    public function grade() {
+        $grade = Grade::all()->sortBy('gradecode');
         return response()->json(['data'=>$grade]); 
-    }      
+    }   
 }

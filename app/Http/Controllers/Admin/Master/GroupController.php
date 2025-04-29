@@ -59,9 +59,6 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        // dd($group->all());  
-
-        // dd($group->groupdesc);
         $group->groupdesc = $request->deskripsi;
         $group->updated_by = Auth::user()->username;
         $group->save();

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Master\Grade;
 use Illuminate\Http\Request;
-use App\Models\Admin\Master\Company;
-
 
 class GradeController extends Controller
 {
@@ -16,8 +14,7 @@ class GradeController extends Controller
     public function index()
     {
         $gradeData = Grade::all();
-        $company = Company::all();
-        return view("admin.master.grade",["grade"=> $gradeData,"useWrhGrp" => $company[0]->usewrhgrp]);
+        return view("admin.master.grade",["grade"=> $gradeData]);
     }
 
     /**
@@ -36,7 +33,6 @@ class GradeController extends Controller
         $data = new Grade;
         $data->gradecode = $request->code;   
         $data->description = $request->deskripsi;           
-        $data->group = $request->groupGudang;           
         $data->save();
         return redirect()->route("grade.index");
     }
@@ -63,7 +59,6 @@ class GradeController extends Controller
     public function update(Request $request, Grade $grade)
     {
         $grade->description = $request->deskripsi;
-        $grade->group = $request->groupGudang;
         $grade->save();
         return redirect()->route("grade.index")->with('status', 'Data grade berhasil diubah');
     }

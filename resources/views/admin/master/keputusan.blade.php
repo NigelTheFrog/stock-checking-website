@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($keputusan as  $kep)
+                            @foreach ($keputusan as   $kep)
                             <tr class="text-center">
                                 <td class="align-middle">{{$loop->iteration}}</td>
                                 <td class="align-middle">{{$kep->keputusandesc}}</td>

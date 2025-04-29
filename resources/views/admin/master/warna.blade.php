@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>                                
-                            @foreach ($color as  $col)
+                            @foreach ($color as   $col)
                             <tr class="text-center">
                                 <td class="align-middle">{{$loop->iteration}}</td>
                                 <td class="align-middle">{{$col->colordesc}}</td>

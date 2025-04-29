@@ -18,7 +18,7 @@
         <tbody>
             @foreach ($datauser as $index=>$datauser)
                 <tr>
-                    <td class="align-middle text-center">{{ $loop->iteration }}</td>
+                    <td class="align-middle text-center"> {{ $loop->iteration }}</td>
                     <td class="align-middle text-center">{{ $datauser->pelakuuname }}</td>
                     <td class="align-middle text-center">{{ $datauser->name }}</td>
                     <td class="align-middle text-center">{{ $datauser->itemname }}</td>

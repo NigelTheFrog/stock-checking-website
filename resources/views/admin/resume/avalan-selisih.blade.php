@@ -44,11 +44,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($tertukar as  $tertukar)
+                                    @foreach ($tertukar as   $tertukar)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $tertukar->trsdetid }}"></td>
-                                            <th>{{ $loop->iteration }}</th>
+                                            <th> {{ $loop->iteration }}</th>
                                             <td>{{ $tertukar->itemname }}</td>
                                             <td><select class="form-select form-select-sm" name="keputusan[]">
                                                    @if ($tertukar->keputusan != null)
@@ -158,11 +158,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($selisih as  $selisih)
+                                    @foreach ($selisih as $index => $selisih)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $selisih->trsdetid }}"></td>
-                                            <td>{{ $loop->iteration }}</th>
+                                            <td>{{ $index + 1 }}</th>
                                             <td>{{ $selisih->itemname }}</td>
                                             <td><select class="form-select form-select-sm" name="keputusan[]">
                                                     @if ($selisih->keputusan != null)
@@ -286,11 +286,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($kesalahan_admin as  $admin)
+                                    @foreach ($kesalahan_admin as $index => $admin)
                                         <tr>
                                             <td hidden><input type="text" name="trsdetid[]"
                                                     value="{{ $admin->trsdetid }}"></td>
-                                            <td>{{ $loop->iteration }}</th>
+                                            <td>{{ $index + 1 }}</th>
                                             <td>{{ $admin->itemname }}</td>
                                             <td><select class="form-select form-select-sm" name="keputusan[]">
                                                     @if ($admin->keputusan != null)

@@ -10,7 +10,7 @@
             <div class="col-7">
                 <div class="card mt-2">
                     <div class="card-header bg-secondary text-white">
-                        <h4 class="card-title pt-2">Data Area</h4>
+                        <h4 class="card-title pt-2">Data Lokasi</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <div class='row mb-1'>
@@ -24,13 +24,13 @@
                             <thead class="table-dark">
                                 <tr class="text-center ">
                                     <th class="align-middle" style="width: 2%">No</th>
-                                    <th class="align-middle" style="width: 5%">Kode Area</th>
-                                    <th class="align-middle" style="width: 20%">Nama Area</th>
+                                    <th class="align-middle" style="width: 5%">Kode Lokasi</th>
+                                    <th class="align-middle" style="width: 20%">Nama Lokasi</th>
                                     <th class="align-middle" style="width: 2%">Default</th>
                                     <th class="align-middle" style="width: 8%">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="lokasiDatabase">
                                 @foreach ($lokasi as $loct)
                                     <tr class="text-center">
                                         <td class="align-middle">{{ $loop->iteration }}</td>
@@ -66,7 +66,7 @@
             <div class="col-5">
                 <div class="card mt-2">
                     <div class="card-header bg-secondary text-white ">
-                        <h4 class="card-title mx-3 pt-2">Tambah Area</h4>
+                        <h4 class="card-title mx-3 pt-2">Tambah Lokasi</h4>
                     </div>
                     <div class="card-body" style="background-color:rgb(248, 248, 248)">
                         <form id="forminput" action="{{ route('area-lokasi.store') }}" method="POST"
@@ -80,7 +80,7 @@
                                     <input type="text" name="locationcode" class="form-control" id="locationcode"
                                         placeholder="Kode Lokasi" required>
                                     <div class="invalid-feedback">
-                                        Kode Area harus diisi
+                                        Kode lokasi harus diisi
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                     <input type="text" name="namalokasi" class="form-control" id="namalokasi"
                                         placeholder="Nama Lokasi" required>
                                     <div class="invalid-feedback">
-                                        Nama Area harus diisi
+                                        Nama lokasi harus diisi
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Ubah Data Area</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Ubah Data Lokasi</h1>
                     <button type="button" class="btn-close align-middle" onclick="closeModalEdit(this)"
                         aria-label="Close">
                     </button>
@@ -127,7 +127,7 @@
                                 <input type="text" name="locationcode" class="form-control" id="editlocationcode"
                                     placeholder="Kode Lokasi" required>
                                 <div class="invalid-feedback">
-                                    Kode Area harus diisi
+                                    Kode Lokasi harus diisi
                                 </div>
                             </div>
                         </div>
@@ -139,7 +139,7 @@
                                 <input type="text" name="namalokasi" class="form-control" id="editnamalokasi"
                                     placeholder="Nama Lokasi" required>
                                 <div class="invalid-feedback">
-                                    Nama Area harus diisi
+                                    Nama lokasi harus diisi
                                 </div>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
         <div class="modal-dialog modal modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Hapus Data Area</h1>
+                    <h1 class="modal-title fs-5" id="mdlMoreLabel">Hapus Data Lokasi</h1>
                 </div>
                 <div class="modal-body">
                     <form id="deleteform" action="" method="POST" class="needs-validation mx-3" novalidate>
@@ -194,7 +194,9 @@
                                 icon: "success",
                                 title: "Berhasil",
                                 text: "Data default lokasi berhasil diganti",
-                                willClose: () => { window.location.reload() }
+                                willClose: () => {
+                                    window.location.reload()
+                                }
                             });
                         },
                         error: function() {

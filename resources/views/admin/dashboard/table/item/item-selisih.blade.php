@@ -228,7 +228,7 @@
                         </div>
                     </div>                
                 </th>
-                <th class="align-middle" style="width: 14%">    
+                <th class="align-middle" style="width: 14%">
                     <div class="dropdown">
                         <div class="dropdown">
                             <button class="btn btn-sm text-white fw-bold text-center" type="button" id="buttonStatus"

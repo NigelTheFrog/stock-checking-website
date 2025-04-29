@@ -1,18 +1,10 @@
+
 <script>
     VirtualSelect.init({
         ele: '#itemSelect',
-        maxWidth: '100%'
-    });
-
-    VirtualSelect.init({
-        ele: '#batchSelect',
         maxWidth: '70%'
     });
 
-    VirtualSelect.init({
-        ele: '#groupingSelect',
-        maxWidth: '100%'
-    });
 
     function searchItem(input) {
         const tabel = document.getElementById("tabelItem");
@@ -25,9 +17,9 @@
                 const statusBatch = td[4].innerText.toLowerCase();
                 const jumlahItem = td[5].innerText.toLowerCase();
                 const satuanItem = td[6].innerText.toLowerCase();
-                const tanggalImport = td[7].innerText.toLowerCase();
+                // const tanggalImport = td[7].innerText.toLowerCase();
                 if (itemCode.includes(input) || namaItem.includes(input) || statusBatch.includes(input) || jumlahItem
-                    .includes(input) || satuanItem.includes(input) || tanggalImport.includes(input)) tr[i].style
+                    .includes(input) || satuanItem.includes(input)) tr[i].style
                     .display = "";
                 else tr[i].style.display = "none";
             }
@@ -39,18 +31,14 @@
     }
 
     function tarikItem(button) {
-        const selectedGudang = document.getElementById('itemSelect').value; // Get the selected gudang values
-        const search = document.getElementById('searchItem').value;
-        const selectGrouping = document.getElementById('groupingSelect').value;
-
-
+        var selectedGudang = $("#itemSelect").val(); // Get the selected gudang values
+        var search = $("#searchItem").val();
         // Make an AJAX request to fetch data from the server
         $.ajax({
             url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
             method: "POST",
             data: {
                 gudang: selectedGudang,
-                grouping: selectGrouping,
                 search: search,
                 type: 1,
                 typestok: `{{ $csoType }}`
@@ -59,42 +47,9 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
-                if (data.status == 1) $('#tableItem').html(data.page);
-                else Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Tidak ada item pada gudang / grouping yang dipilih",
-                });
-            },
-            error: function() {
-                // Handle error cases if necessary
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Silahkan Hubungi Tim IT",
-                });
-            }
-        });
-    }
-
-    function tarikBatch(button) {
-        var selectedGudang = $("#batchSelect").val(); // Get the selected gudang values
-        var search = $("#searchBatch").val();
-        // Make an AJAX request to fetch data from the server
-        $.ajax({
-            url: "{{ url('admin/penjadwalan/import-stok/pull-import') }}",
-            method: "POST",
-            data: {
-                gudang: selectedGudang,
-                search: search,
-                type: 2
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
                 // console.log(data);
-                $('#tableBatch').html(data);
+
+                $('#tableItem').html(data);
             },
             error: function() {
                 // Handle error cases if necessary
@@ -103,7 +58,6 @@
                     title: "Oops...",
                     text: "Tidak terdapat item pada gudang tersebut",
                 });
-                // console.log(xhr);
             }
         });
     }
@@ -115,7 +69,7 @@
     $(document).ready(function() {
 
         $(".sticky-header").floatThead({ scrollingTop: 0 })
-        
+
         $(".cekdelete").click(function() {
             if ($(".cekboxdelete").prop("checked")) {
                 $(".cekboxdelete").prop("checked", false);

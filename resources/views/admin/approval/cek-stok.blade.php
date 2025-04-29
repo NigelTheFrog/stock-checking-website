@@ -12,7 +12,7 @@
                     <div class="">
                         <div class="card card-secondary">
                             <div class="card-header bg-secondary text-white">
-                                <h3 class="card-title"> Laporan Cek Stok</h3>
+                                <h3 class="card-title"> Laporan CSO</h3>
                             </div>
                             <div class="card-body" style="background-color: #f8f8f8;">
                                 {{-- <h1 class="modal-title fs-5 mb-2" id="mdlMoreLabel">Laporan Resume Hasil Pelaksanaan Cek
@@ -25,20 +25,19 @@
                                         id="tabel-transaksi">
                                         <thead class="table-dark" style="position: -webkit-sticky;position: sticky;top: 0;">
                                             <tr class="text-center" style="font-size: 11pt">
-                                                <th class="align-middle" rowspan="2" style="width: 2vw">No</th>
+                                                <th class="align-middle" rowspan="2" style="width: 2vw ">No</th>
                                                 {{-- <th class="align-middle" rowspan="2">Tipe</th> --}}
                                                 <th class="align-middle" rowspan="2">Dokumen</th>
                                                 <th class="align-middle" rowspan="2">Tanggal</th>
                                                 <th class="align-middle" rowspan="2">Material</th>
                                                 <th class="align-middle"
-
                                                     @if (Auth::user()->level == 1 ||
                                                             Auth::user()->level == 2 ||
                                                             Auth::user()->level == 6 ||
                                                             Auth::user()->level == 7 ||
                                                             Auth::user()->level == 8 ||
                                                             Auth::user()->level == 9 ||
-                                                            Auth::user()->level == 10 ||  Auth::user()->level == 14) colspan="7"
+                                                            Auth::user()->level == 10) colspan="7"
                                                     {{-- @elseif (Auth::user()->level == 2 ||
                                                             Auth::user()->level == 7 ||
                                                             Auth::user()->level == 8 ||
@@ -57,10 +56,7 @@
                                                         Auth::user()->level == 7 ||
                                                         Auth::user()->level == 8 ||
                                                         Auth::user()->level == 9 ||
-                                                        Auth::user()->level == 10 ||
-                                                        Auth::user()->level == 13 ||
-                                                        Auth::user()->level == 14 || 
-                                                        Auth::user()->level == 15)
+                                                        Auth::user()->level == 10)
 
                                                     <th class="align-middle">Staff Stok</th>
                                                     <th class="align-middle">PIC Wrh</th>
@@ -141,10 +137,7 @@
                                                             Auth::user()->level == 7 ||
                                                             Auth::user()->level == 8 ||
                                                             Auth::user()->level == 9 ||
-                                                            Auth::user()->level == 10 ||
-                                                            Auth::user()->level == 13 ||
-                                                            Auth::user()->level == 14 || 
-                                                            Auth::user()->level == 15)
+                                                            Auth::user()->level == 10)
 
                                                         <td class="align-middle">
                                                             @if ($nodoc->picwrhapproval == 1)
@@ -636,10 +629,7 @@
                                                                 Auth::user()->level == 7 ||
                                                                 Auth::user()->level == 8 ||
                                                                 Auth::user()->level == 9 ||
-                                                                Auth::user()->level == 10 ||
-                                                                Auth::user()->level == 13 ||
-                                                                Auth::user()->level == 14 || 
-                                                                Auth::user()->level == 15)
+                                                                Auth::user()->level == 10)
                                                             <form action="{{ route('cek-stok.store') }}"
                                                                 method="POST">
                                                                 @csrf
