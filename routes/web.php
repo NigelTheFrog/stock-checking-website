@@ -1,0 +1,122 @@
+<?php
+
+use App\Http\Controllers\Admin\Approval\ApprovalCekStokItemController;
+use App\Http\Controllers\Admin\Approval\ApprovalCekStokAvalanController;
+use App\Http\Controllers\Admin\Dashboard\AvalanController;
+use App\Http\Controllers\Admin\Dashboard\ItemController;
+use App\Http\Controllers\Admin\Konfirmas\KonfrimasiWarehouseController;
+use App\Http\Controllers\Admin\Master\AreaLokasiController;
+use App\Http\Controllers\Admin\Master\CompanyController;
+use App\Http\Controllers\Admin\Master\DepartemenController;
+use App\Http\Controllers\Admin\Master\GradeController;
+use App\Http\Controllers\Admin\Master\GroupController;
+use App\Http\Controllers\Admin\Master\KategoriProdukController;
+use App\Http\Controllers\Admin\Master\KeputusanController;
+use App\Http\Controllers\Admin\Master\KeteranganCSOUlangController;
+use App\Http\Controllers\Admin\Master\TipeUserController;
+use App\Http\Controllers\Admin\Master\UserController;
+use App\Http\Controllers\Admin\Master\WarnaController;
+use App\Http\Controllers\Admin\Report\ReportCekStokController;
+use App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController;
+use App\Http\Controllers\Admin\Penjadwalan\ImportItemController;
+use App\Http\Controllers\Admin\Penjadwalan\PengaturanController;
+use App\Http\Controllers\Admin\Report\ReportCekStokAvalanController;
+use App\Http\Controllers\Admin\Resume\AvalanSelisihController;
+use App\Http\Controllers\Admin\Resume\BarangSelisihController;
+use App\Http\Controllers\Admin\Resume\SusunanTimCsoAvalanController;
+use App\Http\Controllers\Admin\Resume\SusunanTimCsoController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/', function () {
+//         return view('welcome');
+//     });
+// });
+Route::middleware('checkurl')->group(function () {
+    Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
+        Route::prefix('dashboard')->group(function () {
+            Route::resource('avalan', AvalanController::class);
+            Route::resource('item', ItemController::class);
+            Route::post('item/detail-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showDetailCso'])->name('item.detail-cso');
+            Route::post('item/history/transaksi-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showHistoryTransaksi'])->name('item.history-transaksi');
+            Route::post('item/update-cso-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateCsoItem'])->name('item.update-cso');
+            Route::post('item/set-analisator', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'setAnalisatorItem'])->name('item.set-analisator');
+            Route::post('item/cso-ulang', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'csoUlang'])->name('item.cso-ulang');
+            Route::post('item/hapus-temuan-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'hapusTemuanItem'])->name('item.hapus-temuan-item');
+            Route::post('item/update-grouping-analisator-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'updateGroupingAndAnalisatorItem'])->name('item.update-grouping-analisator-item');
+            Route::post("main-table-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showMainTable']);
+            Route::get("banner-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBanner']);
+            // Route::get("banner-item-search", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerSearch']);
+            Route::get("check-item", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'checkItemBlmProses']);
+            Route::get('print-item', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'print'])->name('item.print');
+            Route::get('banner-item/{request}', [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'showBannerTable'])->name('request'); //gk kepake
+            
+            Route::post('avalan/detail-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showDetailCsoAvalan'])->name('avalan.detail-cso');
+            Route::post('avalan/update-cso-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateCsoAvalan'])->name('avalan.update-cso');
+            Route::post('avalan/set-analisator', [App\Http\Controllers\Admin\Dashboard\avalanController::class, 'setAnalisatorAvalan'])->name('avalan.set-analisator');
+            Route::post('avalan/hapus-temuan-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'hapusTemuanAvalan'])->name('avalan.hapus-temuan-avalan');
+            Route::post('avalan/update-grouping-analisator-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'updateGroupingAndAnalisatorAvalan'])->name('avalan.update-grouping-analisator-avalan');
+            Route::post('avalan/cso-ulang', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'csoUlang'])->name('avalan.cso-ulang');
+            Route::post("main-table-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showMainTable']);
+            Route::get("banner-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBanner']);
+            Route::get('banner-avalan/{request}', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'showBannerTable'])->name('request');
+            Route::get("check-avalan", [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'checkAvalanBlmProses']);
+            Route::get('print-avalan', [App\Http\Controllers\Admin\Dashboard\AvalanController::class, 'print'])->name('avalan.print');
+        });
+        Route::prefix('master')->group(function () {
+            Route::resource('user', UserController::class);
+            Route::resource('tipe-user', TipeUserController::class);
+            Route::resource('company', CompanyController::class);
+            Route::post('company/update-wrh-grp', [CompanyController::class,'updateStatusWrhGrp']);
+            Route::resource('area-lokasi', AreaLokasiController::class);
+            Route::post('area-lokasi/set-default', [AreaLokasiController::class,'setLokasi'])->name('area-lokasi.set-default');
+            Route::resource('keterangan-cso-ulang', KeteranganCSOUlangController::class);
+            Route::resource('keputusan', KeputusanController::class);
+            Route::resource('departemen', DepartemenController::class);
+            Route::resource('warna', WarnaController::class);
+            Route::resource('group', GroupController::class);
+            Route::resource('grade', GradeController::class);
+            Route::resource('kategori-produk', KategoriProdukController::class);
+        });
+        Route::prefix('penjadwalan')->group(function () {
+            Route::resource('import-stok', ImportItemController::class);
+            Route::post('import-stok/pull-import', [App\Http\Controllers\Admin\Penjadwalan\ImportItemController::class, 'showTable']);
+            Route::resource('import-avalan', ImportAvalanController::class);
+            Route::post('import-avalan/pull-import', [App\Http\Controllers\Admin\Penjadwalan\ImportAvalanController::class, 'showTable']);
+            Route::resource('pengaturan', PengaturanController::class);
+        });
+        Route::resource('konfirmasi-wrh', KonfrimasiWarehouseController::class);
+        Route::prefix('resume')->group(function () {
+            Route::resource('susunan-tim-cso', SusunanTimCsoController::class);
+            Route::resource('susunan-tim-cso-avalan', SusunanTimCsoAvalanController::class);
+            Route::resource('barang-selisih', BarangSelisihController::class);
+            Route::resource('avalan-selisih', AvalanSelisihController::class);
+        });
+        Route::prefix('report')->group(function () {
+            Route::resource('cek-stok', ReportCekStokController::class);
+            Route::post('cek-stok/exportExcel', [ReportCekStokController::class,'exportExcel'])->name('item.exportExcel');
+            Route::resource('cek-stok-avalan', ReportCekStokAvalanController::class);
+            Route::post('cek-stok-avalan/exportExcel', [ReportCekStokAvalanController::class,'exportExcel'])->name('avalan.exportExcel');
+
+        });
+        Route::prefix('approval')->group(function () {
+            Route::resource('approval-stok', ApprovalCekStokItemController::class);
+            Route::resource('approval-avalan', ApprovalCekStokAvalanController::class);
+        });
+    });
+
+    Auth::routes();
+    Route::get("/", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth', 'isAdmin']);
+    Route::get("home", [App\Http\Controllers\Admin\Dashboard\ItemController::class, 'index'])->middleware(['auth', 'isAdmin']);
+});
